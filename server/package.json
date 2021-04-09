@@ -1,0 +1,39 @@
+{
+  "name": "fastify-server",
+  "version": "1.0.0",
+  "description": "fastify server starter",
+  "main": "index.js",
+  "scripts": {
+    "dev": "fastify start -w -l info -P -o -p 5000 index.js",
+    "fix": "standard --fix",
+    "migrate": "node-pg-migrate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "fastify": "^3.13.0",
+    "fastify-autoload": "^3.5.2",
+    "fastify-cli": "^2.8.0",
+    "fastify-cors": "^5.2.0",
+    "fastify-plugin": "^3.0.0",
+    "fastify-postgres": "^3.5.0",
+    "node-pg-migrate": "^5.9.0",
+    "pg": "^8.5.1"
+  },
+  "devDependencies": {
+    "husky": "^4.3.7",
+    "lint-staged": "^10.5.3",
+    "sinon": "^9.2.4",
+    "standard": "^16.0.3",
+    "tap": "^14.11.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "npm run fix"
+  }
+}

@@ -2,7 +2,7 @@
 
 exports.shorthands = undefined;
 
-xports.up = pgm => {
+exports.up = pgm => {
   pgm.createTable('recipe_ingredients', {
     id: {
       type: 'SERIAL PRIMARY KEY',

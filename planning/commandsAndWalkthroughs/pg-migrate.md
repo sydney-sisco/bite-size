@@ -5,6 +5,13 @@ to create new migration:
 
  `npm run migrate create <name of new migration>`
 
+to add new migrations to database
+
+`npm run migrate up`
+
+to rollback a migration
+
+`npm run migrate down`
 
 ## Columns / Column Operations
 

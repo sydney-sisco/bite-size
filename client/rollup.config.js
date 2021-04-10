@@ -12,6 +12,7 @@ import pkg from './package.json';
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
+const server = process.env.SERVER_HOST || 'http://localhost:5001'
 
 const onwarn = (warning, onwarn) =>
 	(warning.code === 'MISSING_EXPORT' && /'preload'/.test(warning.message)) ||
@@ -27,8 +28,14 @@ export default {
 				preventAssignment: true,
 				values:{
 					'process.browser': true,
-					'process.env.NODE_ENV': JSON.stringify(mode)
+					'process.env.NODE_ENV': JSON.stringify(mode),
+          'process.env.SERVER_HOST': JSON.stringify('http://localhost:5001')
 				},
+        process: JSON.stringify({
+          env: {
+            SERVER_HOST: server,
+          }
+        }),
 			}),
 			svelte({
 				compilerOptions: {

@@ -6,20 +6,21 @@ exports.up = pgm => {
 
   pgm.renameColumn( users, user_id, id);
 
+
   pgm.createTable('recipes', {
     id: {
       type: 'SERIAL PRIMARY KEY',
       notNull: true
     },
     user_id: {
-      type: 'VARCHAR(256)',
+      type: 'INTEGER',
       references: users(id),
-      notNull: true
+      onDelete: 'CASCADE'
     },
     difficulty_id: {
-      type: 'VARCHAR(256)',
+      type: 'INTEGER',
       references: difficulties(id),
-      notNull: true
+      onDelete: 'CASCADE'
     },
     title: {
       type: 'VARCHAR(256)',

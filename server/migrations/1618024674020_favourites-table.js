@@ -10,12 +10,12 @@ exports.up = pgm => {
     },
     user_id: {
       type: 'INTEGER',
-      references: users(id),
+      references: 'users(id)',
       onDelete: 'CASCADE'
     },
     recipe_id: {
       type: 'INTEGER',
-      references: recipes(id),
+      references: 'recipes(id)',
       onDelete: 'CASCADE'
     }
   })

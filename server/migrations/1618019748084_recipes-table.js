@@ -4,7 +4,7 @@ exports.shorthands = undefined;
 
 exports.up = pgm => {
 
-  pgm.renameColumn( users, user_id, id);
+  pgm.renameColumn('users', 'user_id', 'id');
 
 
   pgm.createTable('recipes', {
@@ -14,12 +14,12 @@ exports.up = pgm => {
     },
     user_id: {
       type: 'INTEGER',
-      references: users(id),
+      references: 'users(id)',
       onDelete: 'CASCADE'
     },
     difficulty_id: {
       type: 'INTEGER',
-      references: difficulties(id),
+      references: 'difficulties(id)',
       onDelete: 'CASCADE'
     },
     title: {

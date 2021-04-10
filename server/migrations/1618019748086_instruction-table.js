@@ -3,35 +3,31 @@
 exports.shorthands = undefined;
 
 exports.up = pgm => {
-  pgm.createTable('recipe_ingredients', {
+  pgm.createTable('instructions', {
     id: {
       type: 'SERIAL PRIMARY KEY',
       notNull: true
     },
     recipe_id: {
       type: 'INTEGER',
-      references: recipes(id),
+      references: 'recipes(id)',
       onDelete: 'CASCADE'
     },
-    ingredient_id: {
-      type: 'INTEGER',
-      references: ingredients(id),
-      onDelete: 'CASCADE'
-    },
-    quantity: {
-      type: 'INTEGER',
+    instruction: {
+      type: 'TEXT',
       notNull: true
     },
-    unit_of_measure_id: {
-      type: 'VARCHAR(256)',
+    step: {
+      type: 'INTEGER',
       notNull: true
     }
   })
 };
 
 exports.down = pgm => {
-  pgm.dropTable('recipe_ingredients', {
+  pgm.dropTable('instructions', {
     ifExists: true,
     cascade: true
   })
 };
+

@@ -3,17 +3,17 @@
 
   let name = 'world';
 
-  // let user = {};
+  let user = {};
 
   // Make a request for a user with a given ID
-  axios.get('/api/users/10')
+  axios.get('/api/users/13')
     .then(function (response) {
       // handle success
-      console.log(response.data[0]);
+      console.log(response.data[0]); // log the user data
 
-      name = response.data[0].username;
+      name = response.data[0].username; // save user name 
 
-      // user = {...response.data[0]};
+      user = {...response.data[0]}; // save entire user object
     })
     .catch(function (error) {
       // handle error
@@ -24,4 +24,9 @@
     });
 </script>
 
+<!-- test output -->
 <h2>Hello {name}</h2>
+
+<p>id: {user.id}</p>
+<p>email: {user.email_address}</p>
+<p>password: {user.password}</p>

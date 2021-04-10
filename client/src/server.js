@@ -4,17 +4,15 @@ import compression from 'compression';
 import * as sapper from '@sapper/server';
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-const { PORT, NODE_ENV } = process.env;
+const { PORT, NODE_ENV, API_PORT } = process.env;
 const dev = NODE_ENV === 'development';
-
-const host = 'localhost:5001';
 
 polka()
 	.use(
     createProxyMiddleware('/api', {
       changeOrigin: true,
       logLevel: 'debug',
-      target: 'http://localhost:5001',
+      target: `http://localhost:${5001}`, // TODO: This should pull from .env
       pathRewrite: {
         '^/api': ''
       }

@@ -9,9 +9,11 @@
     "start": "node __sapper__/build"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "compression": "^1.7.1",
     "fastify": "^3.14.2",
     "fastify-postgres": "^3.5.0",
+    "http-proxy-middleware": "^1.1.1",
     "pg": "^8.5.1",
     "polka": "next",
     "sirv": "^1.0.0"

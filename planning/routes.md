@@ -9,15 +9,15 @@ Delete
 DELETE /users/:id
  
 ## RECIPES
-Browse
+Browse - Page that shows all recipes
 GET /recipes 
-Read
+Read - shows one specific recipe
 GET /recipes/:id
-Edit
+Edit - edit a specific recipe
 PATCH /recipes/:id
-Add
-POST /recipes 
-Delete
+Add - new recipe form
+POST /recipes - POST route for submitting new recipe (redirect to the recipe specific page)
+Delete - DELETE route for deleting a recipe (redirect to list page)
 DELETE /recipes/:id
  
 ## FAVOURITES

@@ -24,6 +24,7 @@
 <img style="width: 30%" src="{recipeDetails.recipe[0].image_url}" alt="recipe">
 
 <p>Difficulty: {recipeDetails.recipe[0].difficulty}</p>
+<p>Favs: {recipeDetails.recipe[0].favourite_count}</p>
 <p>Duration: {recipeDetails.recipe[0].duration} minutes</p>
 <p>Servings: {recipeDetails.recipe[0].servings}</p>
 

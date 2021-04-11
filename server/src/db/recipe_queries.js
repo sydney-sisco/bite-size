@@ -32,9 +32,11 @@ const getRecipe = async (fastify, id) => {
   const client = await fastify.pg.connect()
     
   const { rows } = await client.query(
-    `SELECT r.*, d.name AS difficulty FROM recipes r
+    `SELECT r.*, d.name AS difficulty, COUNT(f.*) as favourite_count FROM recipes r
     JOIN difficulties d on d.id = r.difficulty_id
-    WHERE r.id=$1`, [id]
+    JOIN favourites f on f.recipe_id = r.id
+    WHERE r.id=$1
+    GROUP BY r.id, d.name`, [id]
   )
   client.release()
 

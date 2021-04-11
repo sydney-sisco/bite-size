@@ -9,6 +9,8 @@ import { terser } from 'rollup-plugin-terser';
 import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
 
+const svelteConfig = require('./svelte.config.js');  // it has to be a CommonJS impor
+
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
@@ -41,7 +43,8 @@ export default {
 				compilerOptions: {
 					dev,
 					hydratable: true
-				}
+				},
+        ...svelteConfig,
 			}),
 			url({
 				sourceDir: path.resolve(__dirname, 'src/node_modules/images'),

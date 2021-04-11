@@ -21,6 +21,7 @@
 
 <div class="recipe-card">
   <a href="/recipes/{recipe.id}"><h3>{recipe.title}</h3></a>
+  <p>favs: {recipe.favourites}</p>
   <p>{recipe.description}</p>
   <p>created by: {recipe.username}</p>
 </div>

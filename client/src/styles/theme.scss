@@ -1,6 +1,6 @@
 @forward '~attractions/_variables' with (
-  $font: "'Ubuntu', sans-serif",
-  $main: #4300b0,
+  // $font: "'Ubuntu', sans-serif",
+  $main: #2b6969,
   $background: #fff,
   $main-text: #fff,
   $danger: #b80000,
@@ -19,3 +19,4 @@
   $chip-fg: #656565,
   $snackbar-fg: #fff,
 );
+$main: #2b6969

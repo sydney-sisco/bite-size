@@ -10,7 +10,7 @@ module.exports = {
         themeFile: path.join(__dirname, 'src/styles/theme.scss'),
       }),
       // not mandatory but nice to have for concise imports
-      includePaths: [path.join(__dirname, './src/styles')],
+      // includePaths: [path.join(__dirname, './static/css')],
     },
   })],
 };

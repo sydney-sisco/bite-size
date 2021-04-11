@@ -1,7 +1,8 @@
 const getRecipes = async (fastify) => {
   const client = await fastify.pg.connect()
   const { rows } = await client.query(
-    'SELECT * FROM recipes'
+    `SELECT r.*, u.username FROM recipes r
+    JOIN users u on r.user_id = u.id`
   )
   client.release()
   return rows;

@@ -27,7 +27,7 @@
       $session.token = parsed.token;
       // $session.userID = parsed.userID;
       $session.user = parsed.user;
-      goto("/recipes/my");
+      goto("/my-recipes");
     }
   };
 </script>

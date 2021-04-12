@@ -10,8 +10,9 @@
 </script>
 
 <script>
-  import {Button } from 'attractions';
+  import { Button } from 'attractions';
   import { goto } from '@sapper/app';
+  import fetch from "cross-fetch";
 
   
   export let recipeDetails;
@@ -33,6 +34,25 @@
       console.error(error)
     }
   }  
+
+
+  async function favouriteRecipe() {
+   console.log("id is:", id)
+    try {
+      await fetch(`http://localhost:5001/users/1/favourites/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+        recipe_id: id
+        }),
+      });
+      // goto('/') //redirect to user's recipes (once built)
+    }
+    catch (error) {
+      console.error(error)
+    }
+  };
+
 </script>
 
 <svelte:head>
@@ -45,6 +65,8 @@
   <div>{emoji}x{count}</div>
 {/each}
 <img style="width: 30%" src="{recipeDetails.recipe[0].image_url}" alt="recipe">
+
+<Button on:click={() => favouriteRecipe()}>Favourite Recipe</Button>
 
 <p>Difficulty: {recipeDetails.recipe[0].difficulty}</p>
 <p>Favs: {recipeDetails.recipe[0].favourite_count}</p>

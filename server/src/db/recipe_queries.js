@@ -1,5 +1,20 @@
 const format = require('pg-format')
 
+const getUserEmojiReactionsForRecipe = async (fastify, user_id, recipe_id) => {
+  const client = await fastify.pg.connect()
+  const { rows } = await client.query(
+    `SELECT e.id,
+    CASE 
+      WHEN u.id IS NULL THEN 'false'
+      ELSE 'true'
+    END AS selected
+    FROM emojis e
+    LEFT JOIN user_emoji_reactions u ON e.id = u.emoji_id AND u.user_id = $1 AND u.recipe_id = $2;`, [user_id, recipe_id]
+  )
+  client.release()
+  return rows;
+}
+
 const getUserEmojiReactions = async (fastify, recipe_id) => {
   const client = await fastify.pg.connect()
   const { rows } = await client.query(
@@ -23,7 +38,7 @@ const getRecipes = async (fastify) => {
   )
   client.release()
 
-  const userEmojiReactions = getUserEmojiReactions(fastify)
+  // const userEmojiReactions = getUserEmojiReactions(fastify)
 
   return rows;
 };
@@ -70,12 +85,14 @@ const getRecipeIngredients = async (fastify, id) => {
   return rows;
 }
 
-const getRecipeDetails = async (fastify, id) => {
+const getRecipeDetails = async (fastify, user_id, recipe_id) => {
 
-  const recipe = await getRecipe(fastify, id);
-  const instructions = await getRecipeInstructions(fastify, id);
-  const ingredients = await getRecipeIngredients(fastify, id); // recipe_ingredients table or something 
-  const emojiReactions = await getUserEmojiReactions(fastify, id); // recipe_ingredients table or something 
+  const recipe = await getRecipe(fastify, recipe_id);
+  const instructions = await getRecipeInstructions(fastify, recipe_id);
+  const ingredients = await getRecipeIngredients(fastify, recipe_id);
+  const emojiReactions = await getUserEmojiReactions(fastify, recipe_id);
+
+  const userEmojiReactions = await getUserEmojiReactionsForRecipe(fastify, user_id, recipe_id);
 
   return {recipe, instructions, ingredients, emojiReactions};
 };

@@ -16,7 +16,17 @@ const getUser = async (fastify, id) => {
     return rows;
 };
 
+const getUserByEmail = async (fastify, email) => {
+  const client = await fastify.pg.connect()
+  const { rows } = await client.query(
+    'SELECT * FROM users WHERE email_address=$1', [email]
+  )
+  client.release()
+  return rows;
+}
+
 module.exports = {
   getUsers,
-  getUser
+  getUser,
+  getUserByEmail
 }

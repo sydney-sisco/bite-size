@@ -11,10 +11,18 @@
 
 <script>
   import { Button } from 'attractions';
-  import { goto } from '@sapper/app';
+  import { goto, stores } from '@sapper/app';
   import fetch from "cross-fetch";
 
-  
+  const { session } = stores(); // session data is stored here
+
+  // console.log('the session is:', $session); // access it like this 
+
+  // // user info, including id, is stored in a user object in the session
+  // console.log('the session is:', $session);
+  // console.log('the user ID is:', $session.user.id);
+  // console.log('the user email is:', $session.user.email_address);
+
   export let recipeDetails;
   export let id;
   
@@ -39,7 +47,7 @@
   async function favouriteRecipe() {
    console.log("id is:", id)
     try {
-      await fetch(`http://localhost:5001/users/1/favourites/`, {
+      await fetch(`http://localhost:5001/users/${$session.user.id}/favourites/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

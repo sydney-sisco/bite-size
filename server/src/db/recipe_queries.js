@@ -1,10 +1,10 @@
 const getUserEmojiReactions = async (fastify, recipe_id) => {
   const client = await fastify.pg.connect()
   const { rows } = await client.query(
-    `SELECT e.name, e.emoji, COUNT(uer.*) FROM emojis e 
-    LEFT JOIN user_emoji_reactions uer ON uer.emoji_id = e.id
-    WHERE (uer.recipe_id = 1 OR uer.recipe_id IS NULL)
-    GROUP BY e.id`
+    `SELECT e.*, count(u.*) AS count FROM emojis e
+    LEFT JOIN user_emoji_reactions u ON e.id = u.emoji_id
+      AND u.recipe_id = $1
+    GROUP BY e.id;`, [recipe_id]
   )
   client.release()
   return rows;

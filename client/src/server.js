@@ -41,7 +41,9 @@ polka()
 		sapper.middleware({
       session: (req, res) => {
         return ({
-          token: req.session.token
+          // if you need more key/value pairs in the session, add them here
+          token: req.session.token,
+          user: req.session.user
         })
       }
     })

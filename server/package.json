@@ -19,7 +19,8 @@
     "fastify-plugin": "^3.0.0",
     "fastify-postgres": "^3.5.0",
     "node-pg-migrate": "^5.9.0",
-    "pg": "^8.5.1"
+    "pg": "^8.5.1",
+    "pg-format": "^1.0.4"
   },
   "devDependencies": {
     "lint-staged": "^10.5.3",

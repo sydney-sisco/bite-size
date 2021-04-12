@@ -28,7 +28,7 @@
           method: 'DELETE',
         }
       )
-      goto('/') // redirect to recipes homepage 
+      goto('/recipes') // redirect to recipes homepage 
     } catch (error) {
       console.error(error)
     }

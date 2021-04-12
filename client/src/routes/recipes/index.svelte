@@ -1,3 +1,12 @@
+<style>
+  .recipe-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+</style>
+
 <script context="module">
 
   import RecipeCard from "../../components/RecipecCard.svelte";
@@ -21,6 +30,8 @@
 	<title>Bite Size</title>
 </svelte:head>
 
-{#each recipeList as recipe, id}
-  <RecipeCard recipe={recipe} />
-{/each}
+<div class="recipe-container">
+  {#each recipeList as recipe, id}
+    <RecipeCard recipe={recipe} />
+  {/each}
+</div>

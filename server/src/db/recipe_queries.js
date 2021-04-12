@@ -78,7 +78,20 @@ const getRecipeDetails = async (fastify, id) => {
   return {recipe, instructions, ingredients, emojiReactions};
 };
 
+const deleteSpecificRecipe = async (fastify, id) => {
+  const client = await fastify.pg.connect()
+    
+  const { rows } = await client.query(
+    `DELETE FROM recipes
+    WHERE id=$1`, [id]
+  )
+  client.release()
+
+  return rows;
+}
+
 module.exports = {
   getRecipes,
-  getRecipeDetails
+  getRecipeDetails,
+  deleteSpecificRecipe
 }

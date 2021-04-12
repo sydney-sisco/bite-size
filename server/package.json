@@ -18,6 +18,7 @@
     "fastify-cors": "^5.2.0",
     "fastify-plugin": "^3.0.0",
     "fastify-postgres": "^3.5.0",
+    "fastify-secure-session": "^2.3.1",
     "node-pg-migrate": "^5.9.0",
     "pg": "^8.5.1"
   },

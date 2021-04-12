@@ -1,4 +1,6 @@
 const { getUsers, getUser, getUserByEmail } = require('../../src/db/user_queries');
+const { getRecipesForUser } = require('../../src/db/recipe_queries');
+
 
 
 const usersRoute = async (fastify) => {
@@ -29,7 +31,7 @@ const usersRoute = async (fastify) => {
       return;
     }
 
-    console.log(user[0]);
+    console.log('found this user:', user[0]);
 
     if (user[0].password !== req.body.password) { // TODO: hash the passwords at the very least
       console.log('bad password');
@@ -38,22 +40,24 @@ const usersRoute = async (fastify) => {
     }
     
     console.log('good password');
-    reply.send({token: user[0].id});
+    reply.send({
+      user: {...user[0], password: null},
+      token: user[0].id,
+    });
   })
 
-  fastify.get('/test-session', (request, reply) => {
-    const data = request.session.get('data')
-    console.log('session:', data);
-    if (!data) {
-      reply.code(404).send()
-      return
-    }
-    reply.send(data)
-  })
+  fastify.get('/users/:id/recipes', async (req, reply) => {
+    console.log('fetching user recipes for', req.params.id);
+    console.log(req);
+
+    // TODO: check Authorization header somehow
   
-  fastify.post('/logout', (request, reply) => {
-    request.session.delete()
-    reply.send('logged out')
+    const rows = await getRecipesForUser(fastify, req.params.id);
+  
+    console.log('rows:', rows);
+  
+    reply.send({recipes: rows});
+
   })
 }
 

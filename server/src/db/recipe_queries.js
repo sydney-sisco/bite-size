@@ -85,16 +85,19 @@ const getRecipeIngredients = async (fastify, id) => {
   return rows;
 }
 
-const getRecipeDetails = async (fastify, user_id, recipe_id) => {
+const getRecipeDetails = async (fastify, recipe_id, user_id) => {
 
   const recipe = await getRecipe(fastify, recipe_id);
   const instructions = await getRecipeInstructions(fastify, recipe_id);
   const ingredients = await getRecipeIngredients(fastify, recipe_id);
+  
   const emojiReactions = await getUserEmojiReactions(fastify, recipe_id);
-
   const userEmojiReactions = await getUserEmojiReactionsForRecipe(fastify, user_id, recipe_id);
 
-  return {recipe, instructions, ingredients, emojiReactions};
+  console.log(emojiReactions)
+  console.log(userEmojiReactions);
+
+  return {recipe, instructions, ingredients, emojiReactions, userEmojiReactions};
 };
 
 

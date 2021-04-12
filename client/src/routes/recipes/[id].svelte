@@ -1,18 +1,38 @@
 <script context="module">
-
   export async function preload(page, session) {
-		const { id } = page.params;
-
+    const { id } = page.params;
+    
 		const res = await this.fetch(`http://localhost:5001/recipes/${id}`);
 		const recipeDetails = await res.json();
-
-		return { recipeDetails };
+    
+		return { recipeDetails, id };
 	}
-
 </script>
 
 <script>
-	export let recipeDetails;
+  import {Button } from 'attractions';
+  import { goto } from '@sapper/app';
+
+  
+  export let recipeDetails;
+  export let id;
+  
+  async function deleteRecipe() {
+    console.log('the id is: ', id)
+    // const { id } = page.params;
+
+    try {
+      const res = await fetch(
+        `http://localhost:5001/recipes/${id}`,
+        {
+          method: 'DELETE',
+        }
+      )
+      goto('/') // redirect to recipes homepage 
+    } catch (error) {
+      console.error(error)
+    }
+  }  
 </script>
 
 <svelte:head>
@@ -44,3 +64,4 @@
     </li>
   {/each}
 </ul>
+<Button on:click={() => deleteRecipe()}>Delete a Recipe</Button>

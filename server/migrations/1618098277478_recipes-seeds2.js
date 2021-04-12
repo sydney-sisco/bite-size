@@ -44,5 +44,10 @@ INSERT INTO units_of_measure (unit) VALUES ('tbs');
 }
 
 
-
-
+exports.down = pgm => {
+  pgm.sql('DELETE FROM recipes;')
+  pgm.sql('DELETE FROM instructions;')
+  pgm.sql('DELETE FROM ingredients;')
+  pgm.sql('DELETE FROM recipe_ingredients;')
+  pgm.sql('DELETE FROM units_of_measure;')
+}

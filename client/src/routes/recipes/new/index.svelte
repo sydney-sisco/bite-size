@@ -53,7 +53,7 @@
           }),
         });
         loadingState = false
-        goto('/') //redirect to user's recipes (once built)
+        goto('/recipes') //redirect to user's recipes (once built)
       }
       catch (error) {
         console.error(error)

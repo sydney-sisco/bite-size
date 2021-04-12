@@ -17,6 +17,8 @@ export async function post(req, res) {
 
     const parsed = await result.json();
 
+    console.log('parsed:', parsed);
+
     if (typeof parsed.error !== "undefined") {
       throw new Error(parsed.error);
     }

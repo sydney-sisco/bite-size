@@ -23,10 +23,22 @@ const usersRoute = async (fastify) => {
 
     const user = await getUserByEmail(fastify, req.body.email);
 
-    console.log(user);
+    if (user.length === 0) {
+      console.log('no user found');
+      reply.send({error: 'Invalid email.'});
+      return;
+    }
 
-    // req.session.set('data', req.params.id)
-    reply.send('hello world')
+    console.log(user[0]);
+
+    if (user[0].password !== req.body.password) { // TODO: hash the passwords at the very least
+      console.log('bad password');
+      reply.send({error: 'Invalid Password.'});
+      return;
+    }
+    
+    console.log('good password');
+    reply.send({token: user[0].id});
   })
 
   fastify.get('/test-session', (request, reply) => {

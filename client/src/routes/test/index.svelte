@@ -6,9 +6,10 @@
   let user = {};
 
   // Make a request for a user with a given ID
-  axios.get('/api/users/13')
+  axios.get('/api/users/2')
     .then(function (response) {
       // handle success
+      console.log("response is:",response)
       console.log(response.data[0]); // log the user data
 
       name = response.data[0].username; // save user name 

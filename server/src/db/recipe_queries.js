@@ -1,3 +1,5 @@
+const format = require('pg-format')
+
 const getUserEmojiReactions = async (fastify, recipe_id) => {
   const client = await fastify.pg.connect()
   const { rows } = await client.query(
@@ -78,6 +80,43 @@ const getRecipeDetails = async (fastify, id) => {
   return {recipe, instructions, ingredients, emojiReactions};
 };
 
+
+const postNewRecipe = async (fastify, body) => {
+  const {
+    title,
+    difficulty,
+    duration,
+    image_url,
+    servings,
+    description,
+    instructionSteps,
+  } = body
+
+  const recipe = await fastify.pg.transact(async client => {
+    const { rows } = await client.query(
+        `INSERT INTO recipes (title, duration, image_url, servings, description) VALUES ($1, $2, $3, $4, $5)
+          RETURNING *;
+        `, [title, duration, image_url, servings, description]
+      )
+    return rows;
+  })
+
+  const recipeId = recipe[0].id
+  // Do this in a for...of loop
+    
+      await fastify.pg.transact(async client => {
+        //for loop here.
+        instructionSteps.forEach((step, index) => {
+          if (step) {
+            return client.query(`INSERT INTO instructions (instruction, step, recipe_id) VALUES ($1, $2, $3)
+            RETURNING *;
+            `, [step, (index +1), recipeId]
+          )
+          }
+        })
+      })
+}
+
 const deleteSpecificRecipe = async (fastify, id) => {
   const client = await fastify.pg.connect()
     
@@ -111,5 +150,6 @@ module.exports = {
   getRecipes,
   getRecipeDetails,
   deleteSpecificRecipe,
-  getRecipesForUser
+  getRecipesForUser,
+  postNewRecipe,
 }

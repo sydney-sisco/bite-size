@@ -1,36 +1,37 @@
-<script>
-  import fetch from 'cross-fetch';
+<style>
+  .recipe-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+</style>
 
-  async function fetchRecipe() {
-    try {
-      const response = await fetch(`http://localhost:5001/recipes/1`);
-      return response.json();
-      
-    } catch (error) {
-      throw new Error(error);
-    }
+<script context="module">
+
+  import RecipeCard from "../../components/RecipecCard.svelte";
+
+  export async function preload(page, session) {
+		const { id } = page.params;
+
+		const res = await this.fetch(`http://localhost:5001/recipes`);
+		const recipeList = await res.json();
+
+		return { recipeList };
 	}
 
+</script>
+
+<script>
+	export let recipeList;
 </script>
 
 <svelte:head>
 	<title>Bite Size</title>
 </svelte:head>
 
-{#await fetchRecipe()}
-	<p>...waiting</p>
-{:then recipeData}
-  <h3>{recipeData.recipe[0].title}</h3>
-  <p>{recipeData.recipe[0].description}</p>
-  <img style="width: 30%" src="{recipeData.recipe[0].image_url}" alt="recipe">
-  <h3>Instructions:</h3>
-  <ul>
-    {#each recipeData.instructions as { instruction }}
-      <li>
-        {instruction}
-      </li>
-    {/each}
-  </ul>
-{:catch error}
-	<p style="color: red">This is the error:{error.message}</p>
-{/await}
+<div class="recipe-container">
+  {#each recipeList as recipe, id}
+    <RecipeCard recipe={recipe} />
+  {/each}
+</div>

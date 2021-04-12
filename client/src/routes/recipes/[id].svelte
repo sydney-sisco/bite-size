@@ -21,9 +21,13 @@
 
 <h3>{recipeDetails.recipe[0].title}</h3>
 <p>{recipeDetails.recipe[0].description}</p>
+{#each recipeDetails.emojiReactions as {name, emoji, count}}
+  <div>{emoji}x{count}</div>
+{/each}
 <img style="width: 30%" src="{recipeDetails.recipe[0].image_url}" alt="recipe">
 
 <p>Difficulty: {recipeDetails.recipe[0].difficulty}</p>
+<p>Favs: {recipeDetails.recipe[0].favourite_count}</p>
 <p>Duration: {recipeDetails.recipe[0].duration} minutes</p>
 <p>Servings: {recipeDetails.recipe[0].servings}</p>
 

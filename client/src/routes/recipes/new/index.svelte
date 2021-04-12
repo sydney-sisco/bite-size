@@ -20,6 +20,7 @@
   let servings = null;
   let description = null;
   let instructionSteps = ["", "", ""];
+  let ingredientList = [""];
   let loadingState = false
 
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
@@ -51,6 +52,7 @@
             servings,
             description,
             instructionSteps,
+            ingredientList
           }),
         });
         loadingState = false
@@ -92,6 +94,17 @@
   const removeStep = () => {
     instructionSteps.pop("");
     instructionSteps = instructionSteps;
+  };
+
+  const addIngredient = () => {
+    ingredientList.push("");
+    ingredientList = ingredientList;
+    console.log(ingredientList);
+  };
+
+  const removeIngredient = () => {
+    ingredientList.pop("");
+    ingredientList = ingredientList;
   };
 
   const items = [
@@ -156,6 +169,16 @@
     <output for="difficulty-slider">{difficultyNames[difficulty - 1]}</output>
   </FormField>
 
+  {#each ingredientList as ingredient, index}
+    <FormField name="Ingredients" required>
+      <TextField bind:value={ingredientList[index]} />
+
+    </FormField>
+  {/each}
+
+  <Button on:click={addIngredient}>Add Ingredient</Button>
+  <Button on:click={removeIngredient}>Remove</Button>
+
   {#if !image_url}
     <FileDropzone accept="image/*" max={1} on:change={uploadImage}>
       <span slot='empty-layer'>Choose an Image</span>
@@ -174,6 +197,7 @@
   {/each}
 
   <Button on:click={addStep}>Add Another Step</Button>
+  {#if ingredientList.length > 0}
   <Button on:click={removeStep}>Remove Step</Button>
-
+  {/if}
   <Button filled class="btn" on:click={handleSubmit}>{!loadingState ? 'Submit Recipe' : 'Loading...'}</Button>

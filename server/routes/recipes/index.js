@@ -2,6 +2,8 @@ const { getRecipeDetails, getRecipes , postNewRecipe , deleteSpecificRecipe } = 
 
 
 const recipesRoutes = async (fastify) => {
+  const { dbQuery } = fastify
+
   fastify.get('/recipes', async (req, reply) => {
     const rows = await getRecipes(fastify);
     reply.send(rows);
@@ -22,6 +24,7 @@ const recipesRoutes = async (fastify) => {
                
   fastify.delete('/recipes/:id', async (req, reply) => {
     const deleteRecipe = await deleteSpecificRecipe(fastify, req.params.id);
+    // const deleteRecipe = await dbQuery.deleteRecipe(req.params.id);
 
     reply.send(deleteRecipe);
   })

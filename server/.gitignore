@@ -103,6 +103,3 @@ dist
 
 # TernJS port file
 .tern-port
-
-# key for fastify-secure-sessions
-secret-key

@@ -12,6 +12,7 @@
   import RecipeCard from "../../components/RecipecCard.svelte";
 
   export async function preload(page, session) {
+    console.log(session);
 		const { id } = page.params;
 
 		const res = await this.fetch(`http://localhost:5001/recipes`);

@@ -91,28 +91,37 @@ const postNewRecipe = async (fastify, body) => {
     servings,
     description,
     instructionSteps,
+    ingredientList
   } = body
 
   const recipe = await fastify.pg.transact(async client => {
     const { rows } = await client.query(
-        `INSERT INTO recipes (title, duration, image_url, servings, description) VALUES ($1, $2, $3, $4, $5)
+        `INSERT INTO recipes (title, difficulty_id, duration, image_url, servings, description) VALUES ($1, $2, $3, $4, $5, $6)
           RETURNING *;
-        `, [title, duration, image_url, servings, description]
+        `, [title, difficulty, duration, image_url, servings, description]
       )
     return rows;
   })
 
   const recipeId = recipe[0].id
-  // Do this in a for...of loop
-    
+
       await fastify.pg.transact(async client => {
-        //for loop here.
+     
         instructionSteps.forEach((step, index) => {
           if (step) {
             return client.query(`INSERT INTO instructions (instruction, step, recipe_id) VALUES ($1, $2, $3)
             RETURNING *;
             `, [step, (index +1), recipeId]
           )
+          }
+        })
+      })
+
+      await fastify.pg.transact(async client => {
+
+        ingredientList.forEach((ingredient) => {
+          if (ingredient) {
+            return client.query(`INSERT INTO ingredients (name) VALUES ($1) RETURNING *;`, [ingredient])
           }
         })
       })

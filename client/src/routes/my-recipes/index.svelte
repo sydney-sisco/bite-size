@@ -32,9 +32,6 @@
   
   const { session } = stores();
   export let recipes = [];
-
-  console.log('the session is:', $session);
-  
 </script>
 
 <style>
@@ -51,6 +48,3 @@
     <RecipeCard recipe={recipe} />
   {/each}
 </div>
-
-<p>session id: {$session.token}</p>
-<p>session user.id: {$session.user.id}</p>

@@ -103,28 +103,20 @@ const postNewRecipe = async (fastify, body) => {
   })
 
   const recipeId = recipe[0].id
-
-  const stepsWithoutBlanks = instructionSteps.map((step, index) => {
-    if (step) {
-      return [step, (index + 1), recipeId]
-    }
-  })
-  
-  const formattedQuery = format('INSERT INTO instructions (instruction, step, recipe_id) VALUES %L', stepsWithoutBlanks)
-
-  console.log(formattedQuery);
-
-  const instructions = await fastify.pg.transact(async client => {
-    // will resolve to an id, or reject with an error
-    const { rows } = await client.query(formattedQuery, [stepsWithoutBlanks])
-    return rows;
-  })
-  
-  console.log(instructions);
-  
-  // return recipe;
- 
-};
+  // Do this in a for...of loop
+    
+      await fastify.pg.transact(async client => {
+        //for loop here.
+        instructionSteps.forEach((step, index) => {
+          if (step) {
+            return client.query(`INSERT INTO instructions (instruction, step, recipe_id) VALUES ($1, $2, $3)
+            RETURNING *;
+            `, [step, (index +1), recipeId]
+          )
+          }
+        })
+      })
+}
 
 const deleteSpecificRecipe = async (fastify, id) => {
   const client = await fastify.pg.connect()

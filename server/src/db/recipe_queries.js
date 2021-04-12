@@ -1,3 +1,5 @@
+const format = require('pg-format')
+
 const getRecipes = async (fastify) => {
   const client = await fastify.pg.connect()
   const { rows } = await client.query(
@@ -56,7 +58,53 @@ const getRecipeDetails = async (fastify, id) => {
   return {recipe, instructions, ingredients};
 };
 
+const postNewRecipe = async (fastify, body) => {
+  const {
+    title,
+    difficulty,
+    duration,
+    image_url,
+    servings,
+    description,
+    instructionSteps,
+  } = body
+
+  const recipe = await fastify.pg.transact(async client => {
+    const { rows } = await client.query(
+        `INSERT INTO recipes (title, duration, image_url, servings, description) VALUES ($1, $2, $3, $4, $5)
+          RETURNING *;
+        `, [title, duration, image_url, servings, description]
+      )
+    return rows;
+  })
+
+  const recipeId = recipe[0].id
+
+  const stepsWithoutBlanks = instructionSteps.map((step, index) => {
+    if (step) {
+      return [step, (index + 1), recipeId]
+    }
+  })
+  
+  const formattedQuery = format('INSERT INTO instructions (instruction, step, recipe_id) VALUES %L', stepsWithoutBlanks)
+
+  console.log(formattedQuery);
+
+  const instructions = await fastify.pg.transact(async client => {
+    // will resolve to an id, or reject with an error
+    const { rows } = await client.query(formattedQuery, [stepsWithoutBlanks])
+    return rows;
+  })
+  
+  console.log(instructions);
+  
+  // return recipe;
+ 
+
+};
+
 module.exports = {
   getRecipes,
-  getRecipeDetails
+  getRecipeDetails,
+  postNewRecipe
 }

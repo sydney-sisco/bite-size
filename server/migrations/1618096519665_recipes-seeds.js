@@ -13,3 +13,6 @@ INSERT INTO difficulties (name) VALUES ('Advanced');
 
 }
 
+exports.down = pgm => {
+  pgm.sql('DELETE FROM difficulties;')
+}

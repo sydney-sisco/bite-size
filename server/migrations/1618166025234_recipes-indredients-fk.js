@@ -4,35 +4,10 @@ exports.shorthands = undefined;
 
 exports.up = pgm => {
 
-  pgm.dropTable('recipe_ingredients', {
-    ifExists: true,
-    cascade: true
-  });
-
-  pgm.createTable('recipe_ingredients', {
-    id: {
-      type: 'SERIAL PRIMARY KEY',
-      notNull: true
-    },
-    recipe_id: {
-      type: 'INTEGER',
-      references: 'recipes(id)',
-      onDelete: 'CASCADE'
-    },
-    ingredient_id: {
-      type: 'INTEGER',
-      references: 'ingredients(id)',
-      onDelete: 'CASCADE'
-    },
-    quantity: {
-      type: 'INTEGER',
-      notNull: true
-    },
-    unit_of_measure_id: {
-      type: 'INTEGER',
+  pgm.alterColumn('recipe_ingredients', 'unit_of_measure_id', {
+      type: 'integer USING CAST(unit_of_measure_id AS integer)',
       references: 'units_of_measure(id)',
       onDelete: 'CASCADE'
-    }
   });
 
   pgm.sql(`INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_of_measure_id) VALUES (1, 1, 6, 1);
@@ -45,5 +20,8 @@ exports.up = pgm => {
   INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_of_measure_id) VALUES (1, 8, 1, 2);
   `)
 
-  
+};
+
+exports.down = pgm => {
+  pgm.sql('DELETE FROM recipe_ingredients;')
 };

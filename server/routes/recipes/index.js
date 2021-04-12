@@ -1,4 +1,4 @@
-const { getRecipeDetails, getRecipes , postNewRecipe } = require('../../src/db/recipe_queries');
+const { getRecipeDetails, getRecipes , postNewRecipe , deleteSpecificRecipe } = require('../../src/db/recipe_queries');
 
 
 const recipesRoutes = async (fastify) => {
@@ -18,6 +18,12 @@ const recipesRoutes = async (fastify) => {
     const { body } = req
     await postNewRecipe(fastify, body)
     reply.code(204)
+  })
+               
+  fastify.delete('/recipes/:id', async (req, reply) => {
+    const deleteRecipe = await deleteSpecificRecipe(fastify, req.params.id);
+
+    reply.send(deleteRecipe);
   })
 }
 

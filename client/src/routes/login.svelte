@@ -17,12 +17,17 @@
     });
 
     const parsed = await response.json();
+    
+    // console.log('session parsed from server:', parsed);
 
     if (parsed.error) {
       error = parsed.error;
     } else {
+      // $session.foo = 'bar';
       $session.token = parsed.token;
-      goto("/recipes");
+      // $session.userID = parsed.userID;
+      $session.user = parsed.user;
+      goto("/recipes/my");
     }
   };
 </script>

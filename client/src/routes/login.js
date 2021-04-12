@@ -17,14 +17,16 @@ export async function post(req, res) {
 
     const parsed = await result.json();
 
-    console.log('parsed:', parsed);
-
     if (typeof parsed.error !== "undefined") {
       throw new Error(parsed.error);
     }
 
     req.session.token = parsed.token;
-    res.end(JSON.stringify({ token: parsed.token }));
+    req.session.user = parsed.user;
+    res.end(JSON.stringify({
+      token: parsed.token,
+      user: parsed.user
+    }));
   } catch (error) {
     res.end(JSON.stringify({ error: error.message }));
   }

@@ -1,8 +1,18 @@
 <script context="module">
   export async function preload(page, session) {
     const { id } = page.params;
+    const { token, user } = session;
     
-		const res = await this.fetch(`http://localhost:5001/recipes/${id}`);
+		const res = await this.fetch(
+      `http://localhost:5001/recipes/${id}`, 
+      {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: token? `Bearer ${token}` : null,
+        }
+      });
 		const recipeDetails = await res.json();
     
 		return { recipeDetails, id };

@@ -11,7 +11,7 @@
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: token,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -31,6 +31,7 @@
   import RecipeCard from "../../components/RecipecCard.svelte";
   
   const { session } = stores();
+  console.log($session);
   export let recipes = [];
 </script>
 

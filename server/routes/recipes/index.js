@@ -7,8 +7,17 @@ const recipesRoutes = async (fastify) => {
     reply.send(rows);
   })
 
-  fastify.get('/recipes/:id', async (req, reply) => {
-    const recipeDetails = await getRecipeDetails(fastify, req.params.id);
+  fastify.get('/recipes/:id', async (request, reply) => {
+
+    const auth = request.headers.authorization;
+    let decoded;
+    if (auth !== 'null') {
+      const token = auth.split(' ')[1]
+      decoded = fastify.jwt.verify(token);
+      // console.log('decoded token:', decoded);
+    }
+
+    const recipeDetails = await getRecipeDetails(fastify, request.params.id, decoded && decoded.id);
 
     // console.log(recipeDetails);
     reply.send(recipeDetails);

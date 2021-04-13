@@ -27,7 +27,7 @@ const deleteUserFavourite = async (fastify, user_id, recipe_id) => {
   const { rows } = await client.query(
     `DELETE FROM favourites
     WHERE user_id = $1
-    AND item_id = $2;
+    AND recipe_id = $2;
     `, [user_id, recipe_id]
   )
   client.release()

@@ -1,3 +1,4 @@
+require('dotenv').config()
 import sirv from 'sirv';
 import polka from 'polka';
 import compression from 'compression';
@@ -9,7 +10,7 @@ const FileStore = new sessionFileStore(session);
 
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-const { PORT, NODE_ENV, API_PORT } = process.env;
+const { PORT, NODE_ENV, CLOUDINARY, CLOUDKEY } = process.env;
 const dev = NODE_ENV === 'development';
 
 polka()
@@ -43,7 +44,9 @@ polka()
         return ({
           // if you need more key/value pairs in the session, add them here
           token: req.session.token,
-          user: req.session.user
+          user: req.session.user,
+          site: CLOUDINARY,
+          key: CLOUDKEY
         })
       }
     })

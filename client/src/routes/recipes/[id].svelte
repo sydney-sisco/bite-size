@@ -22,11 +22,11 @@
 <script>
   import {Button } from 'attractions';
   import { goto } from '@sapper/app';
+  import Emoji from '../../components/Emoji.svelte';
 
-  
   export let recipeDetails;
   export let id;
-  
+
   async function deleteRecipe() {
     console.log('the id is: ', id)
     // const { id } = page.params;
@@ -51,9 +51,11 @@
 
 <h3>{recipeDetails.recipe[0].title}</h3>
 <p>{recipeDetails.recipe[0].description}</p>
-{#each recipeDetails.emojiReactions as {name, emoji, count}}
-  <div>{emoji}x{count}</div>
+
+{#each recipeDetails.emojiReactions as emojiReaction }
+  <Emoji recipeID={id} {emojiReaction} />
 {/each}
+
 <img style="width: 30%" src="{recipeDetails.recipe[0].image_url}" alt="recipe">
 
 <p>Difficulty: {recipeDetails.recipe[0].difficulty}</p>

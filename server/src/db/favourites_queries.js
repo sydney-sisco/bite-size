@@ -1,10 +1,12 @@
 const getUserFavourites = async (fastify, user_id) => {
   const client = await fastify.pg.connect()
   const { rows } = await client.query(
-    `SELECT * FROM favourites
-    JOIN recipes r ON r.id = r.user_id
-    WHERE favourites.user_id = $1;
-    `, [user_id]
+    `SELECT r.*, u.username, count(f.*) AS favourites FROM recipes r
+    JOIN users u ON u.id = r.user_id
+    JOIN favourites f ON r.id = f.recipe_id
+    WHERE f.user_id = $1
+    GROUP BY r.id, u.username
+    ORDER BY r.id`, [user_id]
   )
   client.release()
   return rows;

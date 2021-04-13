@@ -103,8 +103,8 @@ const getRecipeDetails = async (fastify, recipe_id, user_id) => {
   if (user_id) {
     console.log('found user_id:', user_id);
 
-    // recipeDetails.userFavourite = await getUserFavouriteForRecipe(fastify, user_id, recipe_id);
-    // console.log(recipeDetails.userFavourite);
+    recipeDetails.recipe[0].userFavourite = await hasUserFavourited(fastify, user_id, recipe_id);
+    console.log(recipeDetails.recipe[0].userFavourite);
 
     const userEmojiReactions = await getUserEmojiReactionsForRecipe(fastify, user_id, recipe_id);
     // console.log('userEmojiReactions:', userEmojiReactions);
@@ -117,9 +117,22 @@ const getRecipeDetails = async (fastify, recipe_id, user_id) => {
     // console.log(recipeDetails.emojiReactions);
   }
 
+  console.log('recipeDetails', recipeDetails)
   return recipeDetails;
 };
 
+const hasUserFavourited = async (fastify, user_id, recipe_id) => {
+  const client = await fastify.pg.connect()
+    
+  const { rows } = await client.query(
+    `SELECT * FROM favourites    
+    WHERE user_id = $1
+    AND recipe_id = $2;`, [user_id, recipe_id]
+  )
+  client.release()
+
+  return rows.length !== 0;
+}
 
 const postNewRecipe = async (fastify, body) => {
   const {

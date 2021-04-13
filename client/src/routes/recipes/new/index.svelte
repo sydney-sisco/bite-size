@@ -1,7 +1,18 @@
+<script context="module">
+  export async function preload(page, session) {
+   const { user, token, key, site } = session;
+   return session;
+  }
+</script>
+
 <script>
+  // export let token;
+  // export let user;
+  // export let site;
+  export let key;
   import { afterUpdate } from "svelte";
   import fetch from "cross-fetch";
-  import { goto } from '@sapper/app';
+  import { goto, stores } from '@sapper/app';
   import {
     CheckboxChipGroup,
     Headline,
@@ -11,6 +22,7 @@
     FileDropzone,
   } from "attractions";
 
+  
   let hours;
   let minutes;
   let title = null;
@@ -25,7 +37,7 @@
   let quantity = 10;
 
   let loadingState = false
-
+  console.log(key)
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
 
   const handleSubmit = async () => {
@@ -39,8 +51,8 @@
     //   description,
     //   instructionSteps
     // );
+    console.log('KEY', key, "PAGE", page)
     duration = (hours * 60) + minutes;
-    
     //Create an if statement to make sure we have everything to make a recipe...
     loadingState = true
       try {
@@ -71,41 +83,39 @@
   const uploadImage = async (e) => {
     const uploadedImage = e.detail.files[0];
     const data = new FormData();
-
     data.append("file", uploadedImage);
-    data.append("upload_preset", "nau31oag");
-
+    data.append("upload_preset", `'${key}`);
     const res = await fetch(
-      "https://api.cloudinary.com/v1_1/bitesizerecipes/upload",
+      `'${site}'`,
       {
         method: "POST",
         body: data,
       }
-    );
-    const { secure_url } = await res.json();
-    image_url = secure_url;
-  };
-
-  const changePhoto = () => {
-    image_url = null;
-  };
-
-  const addStep = () => {
-    instructionSteps.push("");
-    instructionSteps = instructionSteps;
-    console.log(instructionSteps);
-  };
-
-  const removeStep = () => {
-    instructionSteps.pop("");
-    instructionSteps = instructionSteps;
-  };
-
-  const addIngredient = () => {
-    ingredientList.push("");
-    ingredientList = ingredientList;
-    console.log(ingredientList);
-  };
+      );
+      const { secure_url } = await res.json();
+      image_url = secure_url;
+    };
+    
+    const changePhoto = () => {
+      image_url = null;
+    };
+    
+    const addStep = () => {
+      instructionSteps.push("");
+      instructionSteps = instructionSteps;
+      console.log(instructionSteps);
+    };
+    
+    const removeStep = () => {
+      instructionSteps.pop("");
+      instructionSteps = instructionSteps;
+    };
+    
+    const addIngredient = () => {
+      ingredientList.push("");
+      ingredientList = ingredientList;
+      console.log(ingredientList);
+    };
 
   const removeIngredient = () => {
     ingredientList.pop("");

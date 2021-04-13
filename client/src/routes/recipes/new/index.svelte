@@ -21,6 +21,9 @@
   let description = null;
   let instructionSteps = ["", "", ""];
   let ingredientList = [""];
+  let unit_of_measure = 1;
+  let quantity = 10;
+
   let loadingState = false
 
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
@@ -52,7 +55,9 @@
             servings,
             description,
             instructionSteps,
-            ingredientList
+            ingredientList,
+            unit_of_measure,
+            quantity
           }),
         });
         loadingState = false
@@ -117,6 +122,11 @@
     { value: 7, label: "Gluten-Free" },
     { value: 8, label: "Lactose-Free" },
     { value: 9, label: "Halal" },
+    { value: 10, label: "Breakfast" },
+    { value: 11, label: "Brunch" },
+    { value: 12, label: "Lunch" },
+    { value: 13, label: "Dinner" },
+    { value: 14, label: "Dessert" }
   ];
 </script>
 

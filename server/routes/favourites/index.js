@@ -8,12 +8,14 @@ const favouritesRoutes = async (fastify) => {
 
   fastify.post('/users/:user_id/favourites/', async (req, reply) => {
     const { body } = req
-    console.log('body', body)
+    console.log('post body', body)
     await addUserFavourite(fastify, req.params.user_id, body.recipe_id)
     reply.code(204)
   })
 
-  fastify.delete('/users/:user_id/favourites/:favourite_id', async (req, reply) => {
+  fastify.delete('/users/:user_id/favourites/:recipe_id', async (req, reply) => {
+    const { body } = req
+    console.log('delete body', body)
     const deleteFavourite = await deleteUserFavourite(fastify, req.params.user_id, req.params.recipe_id);
     reply.send(deleteFavourite);
   })

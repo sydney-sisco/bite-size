@@ -32,18 +32,34 @@ const usersRoute = async (fastify) => {
       reply.send({error: 'Invalid Password.'});
       return;
     }
-    
+
+    const token = fastify.jwt.sign({ ...user[0], password: null })
     reply.send({
-      user: {...user[0], password: null},
-      token: user[0].id,
-    });
+      token,
+      user: {...user[0], password: null}
+    })
   })
 
-  fastify.get('/users/:id/recipes', async (req, reply) => {
+  fastify.get('/users/:id/recipes', async (request, reply) => {
     
-    // TODO: check Authorization header somehow
-  
-    const rows = await getRecipesForUser(fastify, req.params.id);
+    const auth = request.headers.authorization;
+    const token = auth.split(' ')[1]
+
+    console.log('auth:', auth);
+    console.log('token', token);
+
+    const decoded = fastify.jwt.verify(token);
+    console.log('decoded token:', decoded);
+
+    if (request.params.id !== decoded.id) {
+      // TODO: handle unathorized requests
+      console.log('redirect to login?');
+    }
+
+    console.log('req param:', request.params.id)
+    console.log('from token:', decoded.id)
+
+    const rows = await getRecipesForUser(fastify, request.params.id);
   
     reply.send({recipes: rows});
   })

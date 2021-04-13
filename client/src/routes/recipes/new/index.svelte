@@ -1,6 +1,7 @@
 <script>
   import { afterUpdate } from "svelte";
   import fetch from "cross-fetch";
+  import { goto } from '@sapper/app';
   import {
     CheckboxChipGroup,
     Headline,
@@ -19,6 +20,10 @@
   let servings = null;
   let description = null;
   let instructionSteps = ["", "", ""];
+  let ingredientList = [""];
+  let unit_of_measure = 1;
+  let quantity = 10;
+
   let loadingState = false
 
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
@@ -50,6 +55,9 @@
             servings,
             description,
             instructionSteps,
+            ingredientList,
+            unit_of_measure,
+            quantity
           }),
         });
         loadingState = false
@@ -93,6 +101,17 @@
     instructionSteps = instructionSteps;
   };
 
+  const addIngredient = () => {
+    ingredientList.push("");
+    ingredientList = ingredientList;
+    console.log(ingredientList);
+  };
+
+  const removeIngredient = () => {
+    ingredientList.pop("");
+    ingredientList = ingredientList;
+  };
+
   const items = [
     { value: 1, label: "Vegetarian" },
     { value: 2, label: "Vegan" },
@@ -103,6 +122,11 @@
     { value: 7, label: "Gluten-Free" },
     { value: 8, label: "Lactose-Free" },
     { value: 9, label: "Halal" },
+    { value: 10, label: "Breakfast" },
+    { value: 11, label: "Brunch" },
+    { value: 12, label: "Lunch" },
+    { value: 13, label: "Dinner" },
+    { value: 14, label: "Dessert" }
   ];
 </script>
 
@@ -155,6 +179,16 @@
     <output for="difficulty-slider">{difficultyNames[difficulty - 1]}</output>
   </FormField>
 
+  {#each ingredientList as ingredient, index}
+    <FormField name="Ingredients" required>
+      <TextField bind:value={ingredientList[index]} />
+
+    </FormField>
+  {/each}
+
+  <Button on:click={addIngredient}>Add Ingredient</Button>
+  <Button on:click={removeIngredient}>Remove</Button>
+
   {#if !image_url}
     <FileDropzone accept="image/*" max={1} on:change={uploadImage}>
       <span slot='empty-layer'>Choose an Image</span>
@@ -173,6 +207,7 @@
   {/each}
 
   <Button on:click={addStep}>Add Another Step</Button>
+  {#if ingredientList.length > 0}
   <Button on:click={removeStep}>Remove Step</Button>
-
+  {/if}
   <Button filled class="btn" on:click={handleSubmit}>{!loadingState ? 'Submit Recipe' : 'Loading...'}</Button>

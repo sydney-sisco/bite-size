@@ -48,7 +48,7 @@
   async function favouriteRecipe() {
    console.log("fav recipe id is:", id)
     try {
-      await fetch(`http://localhost:5001/users/${$session.user.id}/favourites/`,
+      await fetch(`http://localhost:5001/users/${$session.user.id}/favourites`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

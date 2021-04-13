@@ -86,18 +86,31 @@ const getRecipeIngredients = async (fastify, id) => {
 }
 
 const getRecipeDetails = async (fastify, recipe_id, user_id) => {
-
-  const recipe = await getRecipe(fastify, recipe_id);
-  const instructions = await getRecipeInstructions(fastify, recipe_id);
-  const ingredients = await getRecipeIngredients(fastify, recipe_id);
   
-  const emojiReactions = await getUserEmojiReactions(fastify, recipe_id);
-  const userEmojiReactions = await getUserEmojiReactionsForRecipe(fastify, user_id, recipe_id);
+  const recipeDetails = {};
 
-  console.log(emojiReactions)
-  console.log(userEmojiReactions);
+  recipeDetails.recipe = await getRecipe(fastify, recipe_id);
+  recipeDetails.instructions = await getRecipeInstructions(fastify, recipe_id);
+  recipeDetails.ingredients = await getRecipeIngredients(fastify, recipe_id);
+  recipeDetails.emojiReactions = await getUserEmojiReactions(fastify, recipe_id);
 
-  return {recipe, instructions, ingredients, emojiReactions, userEmojiReactions};
+  // console.log(recipeDetails.emojiReactions);
+
+  // if a user_id was passed in, get user-specific information about the recipe
+  // has the user favourited this recipe (not yet implemented)
+  // has the user added emoji reactions to the recipe
+  if (user_id) {
+    console.log('found user_id:', user_id);
+
+    // recipeDetails.userFavourite = await getUserFavouriteForRecipe(fastify, user_id, recipe_id);
+    // console.log(recipeDetails.userFavourite);
+
+    recipeDetails.userEmojiReactions = await getUserEmojiReactionsForRecipe(fastify, user_id, recipe_id);
+    console.log(recipeDetails.userEmojiReactions);
+  }
+
+  return recipeDetails;
+  // return {recipe, instructions, ingredients, emojiReactions, userEmojiReactions};
 };
 
 

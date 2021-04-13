@@ -1,6 +1,4 @@
 
-const format = require('pg-format')
-
 const getUserEmojiReactions = async (fastify, recipe_id) => {
   const client = await fastify.pg.connect()
   const { rows } = await client.query(
@@ -91,40 +89,58 @@ const postNewRecipe = async (fastify, body) => {
     servings,
     description,
     instructionSteps,
-    ingredientList
+    ingredientList,
+    unit_of_measure,
+    quantity
   } = body
 
   const recipe = await fastify.pg.transact(async client => {
-    const { rows } = await client.query(
-        `INSERT INTO recipes (title, difficulty_id, duration, image_url, servings, description) VALUES ($1, $2, $3, $4, $5, $6)
-          RETURNING *;
-        `, [title, difficulty, duration, image_url, servings, description]
-      )
+    const { rows } = await client.query(`
+        INSERT INTO recipes (title, difficulty_id, duration, image_url, servings, description)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *;
+      `, [title, difficulty, duration, image_url, servings, description]
+    )
     return rows;
   })
 
   const recipeId = recipe[0].id
 
-      await fastify.pg.transact(async client => {
-     
-        instructionSteps.forEach((step, index) => {
-          if (step) {
-            return client.query(`INSERT INTO instructions (instruction, step, recipe_id) VALUES ($1, $2, $3)
-            RETURNING *;
-            `, [step, (index +1), recipeId]
-          )
-          }
-        })
-      })
+  await fastify.pg.transact(async client => {
+    const newInstructions = []
+    for (const [index, step] of instructionSteps.entries()) {
+      if (step) {
+        const { rows } = await client.query(`
+          INSERT INTO instructions (instruction, step, recipe_id)
+          VALUES ($1, $2, $3)
+          RETURNING *;
+        `, [step, (index + 1), recipeId]
+        )
+        newInstructions.push(rows[0])
+      }
+    }
+    return newInstructions
+  })
 
-      await fastify.pg.transact(async client => {
+  await fastify.pg.transact(async client => {
+    for (const ingredient of ingredientList) {
+      if (ingredient) {
+        const { rows } = await client.query(`
+          INSERT INTO ingredients (name) 
+          VALUES ($1)
+          RETURNING id;
+        `, [ingredient])
 
-        ingredientList.forEach((ingredient) => {
-          if (ingredient) {
-            return client.query(`INSERT INTO ingredients (name) VALUES ($1) RETURNING *;`, [ingredient])
-          }
-        })
-      })
+        const ingredientId = rows[0].id
+
+        await client.query(`
+          INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_of_measure_id) 
+          VALUES ($1, $2, $3, $4)
+          RETURNING *;
+        `, [recipeId, ingredientId, quantity, unit_of_measure])
+      }
+    }
+  })
 }
 
 const deleteSpecificRecipe = async (fastify, id) => {

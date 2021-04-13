@@ -1,6 +1,7 @@
 <script>
   import { afterUpdate } from "svelte";
   import fetch from "cross-fetch";
+  import { goto } from '@sapper/app';
   import {
     CheckboxChipGroup,
     Headline,

@@ -10,15 +10,24 @@
 </script>
 
 <script>
-  import {Button } from 'attractions';
-  import { goto } from '@sapper/app';
+  import { Button } from 'attractions';
+  import { goto, stores } from '@sapper/app';
+  import fetch from "cross-fetch";
 
-  
+  const { session } = stores(); // session data is stored here
+
+  // console.log('the session is:', $session); // access it like this 
+
+  // // user info, including id, is stored in a user object in the session
+  // console.log('the session is:', $session);
+  // console.log('the user ID is:', $session.user.id);
+  // console.log('the user email is:', $session.user.email_address);
+
   export let recipeDetails;
   export let id;
   
   async function deleteRecipe() {
-    console.log('the id is: ', id)
+    console.log('the deleted recipe id is: ', id)
     // const { id } = page.params;
 
     try {
@@ -33,6 +42,44 @@
       console.error(error)
     }
   }  
+
+  let favState = false;
+
+  async function favouriteRecipe() {
+   console.log("fav recipe id is:", id)
+    try {
+      await fetch(`http://localhost:5001/users/${$session.user.id}/favourites/`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+        recipe_id: id
+        }),
+      });
+      favState = true
+      // goto('/') //redirect to user's recipes (once built)
+    }
+    catch (error) {
+      console.error(error)
+    }
+  };
+
+  async function unfavouriteRecipe() {
+   console.log("the unfav id is:", id)
+    try {
+      await fetch(`http://localhost:5001/users/${$session.user.id}/favourites/${id}`,
+      {
+        method: "DELETE",
+  
+      });
+      favState = false
+      // goto('/') //redirect to user's recipes (once built)
+    }
+    catch (error) {
+      console.error(error)
+    }
+  };
+
 </script>
 
 <svelte:head>
@@ -45,6 +92,12 @@
   <div>{emoji}x{count}</div>
 {/each}
 <img style="width: 30%" src="{recipeDetails.recipe[0].image_url}" alt="recipe">
+
+{#if favState === false}
+<Button on:click={() => favouriteRecipe()}>Favourite Recipe</Button>
+{:else}
+<Button on:click={() => unfavouriteRecipe()}>Unfavourite Recipe</Button>
+{/if}
 
 <p>Difficulty: {recipeDetails.recipe[0].difficulty}</p>
 <p>Favs: {recipeDetails.recipe[0].favourite_count}</p>
@@ -69,3 +122,4 @@
   {/each}
 </ul>
 <Button on:click={() => deleteRecipe()}>Delete a Recipe</Button>
+

@@ -5,11 +5,12 @@ const getUserEmojiReactionsForRecipe = async (fastify, user_id, recipe_id) => {
   const { rows } = await client.query(
     `SELECT e.id,
     CASE 
-      WHEN u.id IS NULL THEN 'false'
-      ELSE 'true'
+      WHEN u.id IS NULL THEN 0
+      ELSE 1
     END AS selected
     FROM emojis e
-    LEFT JOIN user_emoji_reactions u ON e.id = u.emoji_id AND u.user_id = $1 AND u.recipe_id = $2;`, [user_id, recipe_id]
+    LEFT JOIN user_emoji_reactions u ON e.id = u.emoji_id AND u.user_id = $1 AND u.recipe_id = $2
+    ORDER BY e.id;`, [user_id, recipe_id]
   )
   client.release()
   return rows;
@@ -21,7 +22,8 @@ const getUserEmojiReactions = async (fastify, recipe_id) => {
     `SELECT e.*, count(u.*) AS count FROM emojis e
     LEFT JOIN user_emoji_reactions u ON e.id = u.emoji_id
       AND u.recipe_id = $1
-    GROUP BY e.id;`, [recipe_id]
+    GROUP BY e.id
+    ORDER BY e.id;`, [recipe_id]
   )
   client.release()
   return rows;
@@ -105,12 +107,18 @@ const getRecipeDetails = async (fastify, recipe_id, user_id) => {
     // recipeDetails.userFavourite = await getUserFavouriteForRecipe(fastify, user_id, recipe_id);
     // console.log(recipeDetails.userFavourite);
 
-    recipeDetails.userEmojiReactions = await getUserEmojiReactionsForRecipe(fastify, user_id, recipe_id);
-    console.log(recipeDetails.userEmojiReactions);
+    const userEmojiReactions = await getUserEmojiReactionsForRecipe(fastify, user_id, recipe_id);
+    // console.log('userEmojiReactions:', userEmojiReactions);
+
+    // map the user-specific emoji reaction data onto the recipe-specific reaction object
+    recipeDetails.emojiReactions.map((emojiReaction, index) => {
+      emojiReaction.selected = userEmojiReactions[index].selected;
+      return emojiReaction;
+    })
+    // console.log(recipeDetails.emojiReactions);
   }
 
   return recipeDetails;
-  // return {recipe, instructions, ingredients, emojiReactions, userEmojiReactions};
 };
 
 

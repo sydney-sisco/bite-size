@@ -1,12 +1,12 @@
 const { getUserFavourites, addUserFavourite, deleteUserFavourite } = require("../../src/db/favourites_queries")
 
 const favouritesRoutes = async (fastify) => {
-  fastify.get('/users/:user_id/favourites/', async (req, reply) => {
+  fastify.get('/users/:user_id/favourites', async (req, reply) => {
     const rows = await getUserFavourites(fastify, req.params.user_id);
-    reply.send(rows);
+    reply.send({favourites: rows});
   })
 
-  fastify.post('/users/:user_id/favourites/', async (req, reply) => {
+  fastify.post('/users/:user_id/favourites', async (req, reply) => {
     const { body } = req
     console.log('post body', body)
     await addUserFavourite(fastify, req.params.user_id, body.recipe_id)

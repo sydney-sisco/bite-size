@@ -7,6 +7,7 @@ const addEmojiReaction = async (fastify, emoji_id, recipe_id, user_id) => {
     `INSERT INTO user_emoji_reactions (emoji_id, recipe_id, user_id) VALUES ($1, $2, $3)
       RETURNING *;`, [emoji_id, recipe_id, user_id]
   )
+  client.release();
   return rows;
 };
 

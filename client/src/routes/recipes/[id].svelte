@@ -25,13 +25,6 @@
 
   export let recipeDetails;
   export let id;
-
-  const {
-    recipe: [{ title, description, image_url, difficulty, favourite_count, duration, servings }],
-    emojiReactions,
-    ingredients,
-    instructions
- } = recipeDetails
   
   async function deleteRecipe() {
     console.log('the deleted recipe id is: ', id)
@@ -93,14 +86,12 @@
 	<title>Bite Size</title>
 </svelte:head>
 
-<h3>{title}</h3>
-<p>{description}</p>
-{#each emojiReactions as {name, emoji, count}}
+<h3>{recipeDetails.recipe[0].title}</h3>
+<p>{recipeDetails.recipe[0].description}</p>
+{#each recipeDetails.emojiReactions as {name, emoji, count}}
   <div>{emoji}x{count}</div>
 {/each}
-{#if image_url}
-  <img style="width: 30%" src="{image_url}" alt="recipe">
-{/if}
+<img style="width: 30%" src="{recipeDetails.recipe[0].image_url}" alt="recipe">
 
 {#if favState === false}
 <Button on:click={() => favouriteRecipe()}>Favourite Recipe</Button>
@@ -108,14 +99,14 @@
 <Button on:click={() => unfavouriteRecipe()}>Unfavourite Recipe</Button>
 {/if}
 
-<p>Difficulty: {difficulty}</p>
-<p>Favs: {favourite_count}</p>
-<p>Duration: {duration} minutes</p>
-<p>Servings: {servings}</p>
+<p>Difficulty: {recipeDetails.recipe[0].difficulty}</p>
+<p>Favs: {recipeDetails.recipe[0].favourite_count}</p>
+<p>Duration: {recipeDetails.recipe[0].duration} minutes</p>
+<p>Servings: {recipeDetails.recipe[0].servings}</p>
 
 <h3>Ingredients:</h3>
 <ul>
-  {#each ingredients as { name, unit, quantity }, id}
+  {#each recipeDetails.ingredients as { name, unit, quantity }, id}
     <li>
       {quantity} x {unit} of {name} 
     </li>
@@ -124,7 +115,7 @@
 
 <h3>Instructions:</h3>
 <ul>
-  {#each instructions as { instruction }}
+  {#each recipeDetails.instructions as { instruction }}
     <li>
       {instruction}
     </li>

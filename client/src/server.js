@@ -12,7 +12,6 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const { PORT, NODE_ENV, API_PORT } = process.env;
 const dev = NODE_ENV === 'development';
 
-
 polka()
 	.use(
     json(),

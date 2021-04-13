@@ -37,6 +37,8 @@
   export let recipeDetails;
   export let id;
 
+  console.log('recipe details:', recipeDetails);
+
   async function deleteRecipe() {
     console.log('the deleted recipe id is: ', id)
     // const { id } = page.params;
@@ -54,8 +56,6 @@
     }
   }  
 
-  let favState = false;
-
   async function favouriteRecipe() {
    console.log("fav recipe id is:", id)
     try {
@@ -67,7 +67,8 @@
         recipe_id: id
         }),
       });
-      favState = true
+      recipeDetails.recipe[0].userFavourite = true
+      recipeDetails.recipe[0].favourite_count++;
       // goto('/') //redirect to user's recipes (once built)
     }
     catch (error) {
@@ -83,7 +84,8 @@
         method: "DELETE",
   
       });
-      favState = false
+      recipeDetails.recipe[0].userFavourite = false
+      recipeDetails.recipe[0].favourite_count--;
       // goto('/') //redirect to user's recipes (once built)
     }
     catch (error) {
@@ -106,10 +108,10 @@
 
 <img style="width: 30%" src="{recipeDetails.recipe[0].image_url}" alt="recipe">
 
-{#if favState === false}
-<Button on:click={() => favouriteRecipe()}>Favourite Recipe</Button>
+{#if recipeDetails.recipe[0].userFavourite}
+<Button  on:click={() => unfavouriteRecipe()} filled>Unfavourite Recipe</Button>
 {:else}
-<Button on:click={() => unfavouriteRecipe()}>Unfavourite Recipe</Button>
+<Button  on:click={() => favouriteRecipe()} outline>Favourite Recipe</Button>
 {/if}
 
 <p>Difficulty: {recipeDetails.recipe[0].difficulty}</p>

@@ -2,7 +2,7 @@ const { getRecipeDetails, getRecipes , postNewRecipe , deleteSpecificRecipe } = 
 
 
 const recipesRoutes = async (fastify) => {
-  const { dbQuery } = fastify
+  const { recipeQuery } = fastify
 
   fastify.get('/recipes', async (req, reply) => {
     const rows = await getRecipes(fastify);
@@ -18,8 +18,9 @@ const recipesRoutes = async (fastify) => {
 
   fastify.post('/recipes', async (req, reply) => {
     const { body } = req
-    await postNewRecipe(fastify, body)
-    reply.code(204)
+    const newRecipe = await recipeQuery.postNewRecipe(body)
+    console.log(newRecipe);
+    reply.send(newRecipe)
   })
                
   fastify.delete('/recipes/:id', async (req, reply) => {

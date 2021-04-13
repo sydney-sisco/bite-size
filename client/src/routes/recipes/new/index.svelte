@@ -11,11 +11,11 @@
     FileDropzone,
   } from "attractions";
 
-  let hours;
-  let minutes;
+  let hours = 0;
+  let minutes = 0;
   let title = null;
   let difficulty = 2;
-  let duration = null;
+  let duration = 0;
   let image_url = null;
   let servings = null;
   let description = null;
@@ -29,22 +29,19 @@
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
 
   const handleSubmit = async () => {
-   
-    // console.log(
-    //   title,
-    //   difficulty,
-    //   duration,
-    //   image_url,
-    //   servings,
-    //   description,
-    //   instructionSteps
-    // );
-    duration = (hours * 60) + minutes;
-    
+    if (hours && minutes) {
+      duration = (hours * 60) + minutes
+    } else if (!minutes && hours) {
+      duration = hours * 60
+    } else if (!hours && minutes) {
+      duration = minutes
+    } else {
+      duration
+    }
     //Create an if statement to make sure we have everything to make a recipe...
     loadingState = true
       try {
-        await fetch("http://localhost:5001/recipes", {
+        const res = await fetch("http://localhost:5001/recipes", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -61,7 +58,9 @@
           }),
         });
         loadingState = false
-        goto('/recipes') //redirect to user's recipes (once built)
+        const { recipe: { id } } = await res.json()
+
+        goto(`/recipes/${id}`)
       }
       catch (error) {
         console.error(error)

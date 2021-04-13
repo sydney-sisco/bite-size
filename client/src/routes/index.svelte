@@ -1,9 +1,9 @@
 <script>
-	import successkid from 'images/successkid.jpg';
+
 </script>
 
 <style>
-	h1, figure, p {
+	h1, p {
 		text-align: center;
 		margin: 0 auto;
 	}
@@ -13,16 +13,6 @@
 		text-transform: uppercase;
 		font-weight: 700;
 		margin: 0 0 0.5em 0;
-	}
-
-	figure {
-		margin: 0 0 1em 0;
-	}
-
-	img {
-		width: 100%;
-		max-width: 400px;
-		margin: 0 0 1em 0;
 	}
 
 	p {
@@ -40,11 +30,6 @@
 	<title>Bite Size</title>
 </svelte:head>
 
-<h1>Great success!</h1>
+<h1>Bite Size</h1>
 
-<figure>
-	<img alt="Success Kid" src="{successkid}">
-	<figcaption>Have fun with Sapper!</figcaption>
-</figure>
-
-<p><strong>Try  this file (src/routes/index.svelte) TESTINGZ</strong></p>
+<p><strong>What do you want to eat?</strong></p>

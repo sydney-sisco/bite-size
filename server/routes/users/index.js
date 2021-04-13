@@ -45,8 +45,8 @@ const usersRoute = async (fastify) => {
     const auth = request.headers.authorization;
     const token = auth.split(' ')[1]
 
-    console.log('auth:', auth);
-    console.log('token', token);
+    // console.log('auth:', auth);
+    // console.log('token', token);
 
     const decoded = fastify.jwt.verify(token);
     console.log('decoded token:', decoded);

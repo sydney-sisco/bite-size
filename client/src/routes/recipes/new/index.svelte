@@ -1,7 +1,16 @@
+<!-- <script context="module">
+  export async function preload(page, session) {
+   const { user, token, key, site } = session;
+   return session;
+  }
+</script> -->
+
 <script>
-  import { afterUpdate } from "svelte";
+  // export let key;
+  // export let site;
+  // import { afterUpdate } from "svelte";
   import fetch from "cross-fetch";
-  import { goto } from '@sapper/app';
+  import { goto, stores } from '@sapper/app';
   import {
     CheckboxChipGroup,
     Headline,
@@ -81,6 +90,7 @@
         body: data,
       }
     );
+
     const { secure_url } = await res.json();
     image_url = secure_url;
   };

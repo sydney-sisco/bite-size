@@ -14,7 +14,7 @@ const recipesRoutes = async (fastify) => {
 
     const auth = request.headers.authorization;
     let decoded;
-    if (auth !== 'null') {
+    if (auth && auth !== 'null') {
       const token = auth.split(' ')[1]
       decoded = fastify.jwt.verify(token);
       // console.log('decoded token:', decoded);

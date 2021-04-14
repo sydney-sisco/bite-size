@@ -1,10 +1,9 @@
-
-<!-- <script context="module">
+<script context="module">
   export async function preload(page, session) {
    const { user, token, key, site } = session;
    return session;
   }
-</script> -->
+</script>
 
 <script>
   // export let token;
@@ -15,6 +14,7 @@
 
   import fetch from "cross-fetch";
   import { goto, stores } from '@sapper/app';
+  const { session } = stores(); // session data is stored here
   import {
     CheckboxChipGroup,
     Headline,
@@ -29,18 +29,19 @@
   let title = null;
   let difficulty = 2;
   let duration = 0;
-  let image_url = null;
+  let imageUrl = null;
   let servings = null;
   let description = null;
   let instructionSteps = ["", "", ""];
   let ingredientList = [""];
-  let unit_of_measure = 1;
-  let quantity = 0;
+  let unitOfMeasure = 1;
+  let quantity = 1;
 
   let loadingState = false
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
 
   const handleSubmit = async () => {
+    console.log('the user ID is:', $session.user.id);
 
     if (hours && minutes) {
       duration = (hours * 60) + minutes
@@ -59,15 +60,16 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            userId: $session.user.id,
             title,
             difficulty,
             duration,
-            image_url,
+            imageUrl,
             servings,
             description,
             instructionSteps,
             ingredientList,
-            unit_of_measure,
+            unitOfMeasure,
             quantity
           }),
         });
@@ -95,11 +97,11 @@
       }
       );
       const { secure_url } = await res.json();
-      image_url = secure_url;
+      imageUrl = secure_url;
     };
     
     const changePhoto = () => {
-      image_url = null;
+      imageUrl = null;
     };
     
     const addStep = () => {
@@ -201,12 +203,12 @@
   <Button on:click={addIngredient}>Add Ingredient</Button>
   <Button on:click={removeIngredient}>Remove</Button>
 
-  {#if !image_url}
+  {#if !imageUrl}
     <FileDropzone accept="image/*" max={1} on:change={uploadImage}>
       <span slot='empty-layer'>Choose an Image</span>
     </FileDropzone>
   {:else}
-    <img src={image_url} alt="recipe" />
+    <img src={imageUrl} alt="recipe" />
     <Button on:click={changePhoto}>Pick a different photo</Button>
   {/if}
 

@@ -8,8 +8,14 @@
 <style>
 	nav {
 		/* border-bottom: 1px solid rgba(255,62,0,0.1); */
+		border-bottom: 1px solid #000;
 		font-weight: 400;
 		padding: 0 1em;
+		position: fixed; /* Set the navbar to fixed position */
+		top: 0; /* Position the navbar at the top of the page */
+		width: 100%; /* Full width */
+    background-color: #FFF0E5;
+		z-index: 999;
 	}
 
 	ul {

@@ -31,7 +31,7 @@ async function searchQueries (fastify) {
 }
 
 module.exports = fastifyPlugin(searchQueries, {
-  name: 'database-queries',
+  name: 'search-queries',
   decorators: {
     fastify: ['pg']
   },

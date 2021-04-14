@@ -6,12 +6,12 @@
       return this.redirect(302, "login");
     }
 
-    const response = await this.fetch(`http://localhost:5001/users/${user.id}/recipes`, {
+    const response = await this.fetch(`http://localhost:5001/users/${user.id}/favourites`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     });
 
@@ -21,7 +21,7 @@
       return this.error(response.status, parsed.error);
     }
 
-    return { recipes: parsed.recipes };
+    return { recipes: parsed.favourites };
   }
 </script>
 
@@ -31,7 +31,6 @@
   import RecipeCard from "../../components/RecipecCard.svelte";
   
   const { session } = stores();
-  console.log($session);
   export let recipes = [];
 </script>
 

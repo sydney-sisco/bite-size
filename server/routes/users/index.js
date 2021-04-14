@@ -42,22 +42,22 @@ const usersRoute = async (fastify) => {
 
   fastify.get('/users/:id/recipes', async (request, reply) => {
     
-    const auth = request.headers.authorization;
-    const token = auth.split(' ')[1]
+    // const auth = request.headers.authorization;
+    // const token = auth.split(' ')[1]
 
-    // console.log('auth:', auth);
-    // console.log('token', token);
+    // // console.log('auth:', auth);
+    // // console.log('token', token);
 
-    const decoded = fastify.jwt.verify(token);
-    console.log('decoded token:', decoded);
+    // const decoded = fastify.jwt.verify(token);
+    // console.log('decoded token:', decoded);
 
-    if (request.params.id !== decoded.id) {
-      // TODO: handle unathorized requests
-      console.log('redirect to login?');
-    }
+    // if (request.params.id !== decoded.id) {
+    //   // TODO: handle unathorized requests
+    //   console.log('redirect to login?');
+    // }
 
-    console.log('req param:', request.params.id)
-    console.log('from token:', decoded.id)
+    // console.log('req param:', request.params.id)
+    // console.log('from token:', decoded.id)
 
     const rows = await getRecipesForUser(fastify, request.params.id);
   

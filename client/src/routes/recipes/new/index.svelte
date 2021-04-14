@@ -44,7 +44,7 @@
   let quantity = 0;
 
   let loadingState = false
-  console.log(key)
+ 
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
 
   const handleSubmit = async () => {

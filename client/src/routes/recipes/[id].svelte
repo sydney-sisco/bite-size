@@ -1,3 +1,11 @@
+<style>
+    h3 {
+    font-size: 36px;
+    /* margin: 0; */
+  }
+
+</style>
+
 <script context="module">
   export async function preload(page, session) {
     const { id } = page.params;

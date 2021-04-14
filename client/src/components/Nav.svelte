@@ -1,5 +1,8 @@
 <script>
-	export let segment;
+	// export let segment;
+	import { stores } from '@sapper/app';
+  const { page } = stores();
+  $: console.log($page.path);
 </script>
 
 <style>
@@ -50,13 +53,13 @@
 
 <nav>
 	<ul>
-		<li><a aria-current="{segment === undefined ? 'page' : undefined}" href=".">Home</a></li>
+		<li><a aria-current="{$page.path === '/' ? 'page' : undefined}" href=".">Home</a></li>
 		
 		<!-- for the blog link, we're using rel=prefetch so that Sapper prefetches
 			the blog data when we hover over the link or tap it on a touchscreen -->
-			<li><a rel=prefetch aria-current="{segment === 'browse' ? 'page' : undefined}" href="recipes">Browse Recipes</a></li>
-			<li><a rel=prefetch aria-current="{segment === 'my-recipes' ? 'page' : undefined}" href="my-recipes">My Recipes</a></li>
-			<li><a rel=prefetch aria-current="{segment === 'favourites' ? 'page' : undefined}" href="favourites">My Favourites</a></li>
-			<li><a rel=prefetch aria-current="{segment === 'new recipe' ? 'page' : undefined}" href="recipes/new">New Recipe</a></li>
+			<li><a rel=prefetch aria-current="{$page.path === '/recipes' ? 'page' : undefined}" href="recipes">Browse Recipes</a></li>
+			<li><a rel=prefetch aria-current="{$page.path === '/my-recipes' ? 'page' : undefined}" href="my-recipes">My Recipes</a></li>
+			<li><a rel=prefetch aria-current="{$page.path === '/favourites' ? 'page' : undefined}" href="favourites">My Favourites</a></li>
+			<li><a rel=prefetch aria-current="{$page.path === '/recipes/new' ? 'page' : undefined}" href="recipes/new">New Recipe</a></li>
 	</ul>
 </nav>

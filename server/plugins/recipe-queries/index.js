@@ -97,7 +97,7 @@ async function recipeQueries (fastify) {
 }
 
 module.exports = fastifyPlugin(recipeQueries, {
-  name: 'database-queries',
+  name: 'recipe-queries',
   decorators: {
     fastify: ['pg']
   },

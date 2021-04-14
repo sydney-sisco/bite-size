@@ -14,6 +14,7 @@
   }
 </style>
 
+
 <script>
 
   export let recipe;
@@ -22,7 +23,8 @@
 
 <div class="recipe-card">
   <a href="/recipes/{recipe.id}"><h3>{recipe.title}</h3></a>
-  <p>created by: {recipe.username}</p>
+  <a href="/users/{recipe.user_id}">created by: {recipe.username}</a>
+  <!-- <p>created by: {recipe.username}</p> -->
   <img style="width: 100%" src="{recipe.image_url}" alt="recipe">
   <p>favs: {recipe.favourites}</p>
   <p>{recipe.description}</p>

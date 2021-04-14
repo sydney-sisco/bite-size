@@ -1,7 +1,35 @@
+<script context="module">
+
+  import RecipeCard from "../components/RecipecCard.svelte";
+
+  export async function preload(page, session) {
+		const { id } = page.params;
+
+		const res = await this.fetch(`http://localhost:5001/recipes`);
+		const recipeList = await res.json();
+
+		return { recipeList };
+	}
+
+</script>
+
 <script>
 
 import { Button } from 'attractions';
 
+export let recipeList;
+
+const difficultId = parseInt(recipeList.difficult_id)
+
+let featuredRecipes = false;
+
+const showFeatured = async () => {
+	if (featuredRecipes === true) {
+		featuredRecipes = false;
+	} else {
+		featuredRecipes = true;
+	}
+}
 </script>
 
 <style>
@@ -38,5 +66,21 @@ import { Button } from 'attractions';
 
 <Button outline> Search Recipes</Button>
 <a href="recipes"><Button outline>Browse Recipes</Button></a>
+
+<Button outline on:click={showFeatured}>Featured Recipes</Button>
+
+{console.log('recipelist: ', recipeList)}
+
+{#if featuredRecipes}
+	<div class='featured-recipes'>
+		{#each recipeList as recipe, id}
+			{#if recipe[0].difficulty_id >= 2}
+				<RecipeCard recipe={recipe} />
+			{/if}
+		{/each}
+	</div>
+{/if}
+
+
 
 

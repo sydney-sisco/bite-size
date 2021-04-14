@@ -1,10 +1,9 @@
 <style>
 	.recipe-card {
-		width: 300px;
+    width: 45%;
 		border: 1px solid #000;
 		padding: 0em 1em 1em 1em;
-		margin: 0 0 1em 0;
-    width: 35%;
+		margin: 1em 0 1em 0;
     font-weight: 400;
 
     transition: transform .1s, box-shadow .1s;
@@ -58,6 +57,7 @@
   img {
     margin-top: 1em;
     border: 1px solid #000;
+    /* height: auto; */
   }
 
   .difficulty-tag {

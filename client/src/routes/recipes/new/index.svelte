@@ -1,19 +1,15 @@
 
 <!-- <script context="module">
-
   export async function preload(page, session) {
    const { user, token, key, site } = session;
    return session;
   }
-
 </script> -->
-
 
 <script>
   // export let token;
   // export let user;
   // export let site;
-
   // export let key;
   // import { afterUpdate } from "svelte";
 
@@ -28,10 +24,8 @@
     FileDropzone,
   } from "attractions";
 
-
   let hours = 0;
   let minutes = 0;
-
   let title = null;
   let difficulty = 2;
   let duration = 0;
@@ -44,11 +38,9 @@
   let quantity = 0;
 
   let loadingState = false
-  // console.log(key)
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
 
   const handleSubmit = async () => {
-
 
     if (hours && minutes) {
       duration = (hours * 60) + minutes
@@ -59,7 +51,6 @@
     } else {
       duration
     }
-
 
     //Create an if statement to make sure we have everything to make a recipe...
     loadingState = true
@@ -94,7 +85,6 @@
     const uploadedImage = e.detail.files[0];
     const data = new FormData();
     data.append("file", uploadedImage);
-
     data.append("upload_preset", 'nau31oag');
     const res = await fetch(
       'https://api.cloudinary.com/v1_1/bitesizerecipes/upload',

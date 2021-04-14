@@ -134,6 +134,22 @@ const hasUserFavourited = async (fastify, user_id, recipe_id) => {
   return rows.length !== 0;
 }
 
+const favsForFeatured = async (fastify) => {
+  const client = await fastify.pg.connect()
+    
+  const { rows } = await client.query(
+    `SELECT count(f.*) AS favourites, r.* FROM recipes r
+    LEFT JOIN favourites f ON f.recipe_id = r.id
+    GROUP by r.id
+    ORDER BY favourites DESC
+    LIMIT 3; 
+    `
+  )
+  client.release()
+
+  return rows;
+}
+
 const postNewRecipe = async (fastify, body) => {
   const {
     title,
@@ -232,4 +248,5 @@ module.exports = {
   deleteSpecificRecipe,
   getRecipesForUser,
   postNewRecipe,
+  favsForFeatured
 }

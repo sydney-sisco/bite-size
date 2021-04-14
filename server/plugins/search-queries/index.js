@@ -7,8 +7,7 @@ async function searchQueries (fastify) {
     allRecipes: async () => {
       const { rows } = await pg.query(`
         SELECT *
-        FROM recipes
-        RETURNING *;
+        FROM recipes;
       `)
       // const { id, title, description } = rows
       // return { id, title, description }
@@ -17,16 +16,14 @@ async function searchQueries (fastify) {
     allIngredients: async () => {
       const { rows } = await pg.query(`
         SELECT *
-        FROM ingredients
-        RETURNING *;
+        FROM ingredients;
       `)
       return rows
     },
     allTags: async () => {
       const { rows } = await pg.query(`
         SELECT *
-        FROM tags
-        RETURNING *;
+        FROM tags;
       `)
       return rows
     },

@@ -3,6 +3,8 @@
 	import { stores } from '@sapper/app';
   const { page } = stores();
   // $: console.log($page.path);
+
+	import logo from 'images/logo.png';
 </script>
 
 <style>
@@ -33,6 +35,12 @@
 	li {
 		display: block;
 		float: left;
+		margin-top: 1em;
+	}
+
+	li.logo {
+		margin-top: 0em;
+		padding: 0;
 	}
 
 	[aria-current] {
@@ -55,11 +63,20 @@
 		padding: 1em 0.5em;
 		display: block;
 	}
+
+	a.logo {
+		padding: .5em 0.5em;
+	}
+
+	img {
+		width: 7em;
+	}
 </style>
 
 <nav>
 	<ul>
-		<li><a aria-current="{$page.path === '/' ? 'page' : undefined}" href=".">Home</a></li>
+		<!-- <li></li> -->
+		<li class="logo" ><a class="logo" aria-current="{$page.path === '/' ? 'page' : undefined}" href="/"><img src="{logo}" alt="logo"></a></li>
 		
 		<!-- for the blog link, we're using rel=prefetch so that Sapper prefetches
 			the blog data when we hover over the link or tap it on a touchscreen -->

@@ -1,8 +1,18 @@
 <script context="module">
   export async function preload(page, session) {
     const { id } = page.params;
+    const { token, user } = session;
     
-		const res = await this.fetch(`http://localhost:5001/recipes/${id}`);
+		const res = await this.fetch(
+      `http://localhost:5001/recipes/${id}`, 
+      {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: token? `Bearer ${token}` : null,
+        }
+      });
 		const recipeDetails = await res.json();
     
 		return { recipeDetails, id };
@@ -13,6 +23,7 @@
   import { Button } from 'attractions';
   import { goto, stores } from '@sapper/app';
   import fetch from "cross-fetch";
+  import Emoji from '../../components/Emoji.svelte';
 
   const { session } = stores(); // session data is stored here
 
@@ -25,7 +36,9 @@
 
   export let recipeDetails;
   export let id;
-  
+
+  console.log('recipe details:', recipeDetails);
+
   async function deleteRecipe() {
     console.log('the deleted recipe id is: ', id)
     // const { id } = page.params;
@@ -43,12 +56,10 @@
     }
   }  
 
-  let favState = false;
-
   async function favouriteRecipe() {
    console.log("fav recipe id is:", id)
     try {
-      await fetch(`http://localhost:5001/users/${$session.user.id}/favourites/`,
+      await fetch(`http://localhost:5001/users/${$session.user.id}/favourites`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -56,7 +67,8 @@
         recipe_id: id
         }),
       });
-      favState = true
+      recipeDetails.recipe[0].userFavourite = true
+      recipeDetails.recipe[0].favourite_count++;
       // goto('/') //redirect to user's recipes (once built)
     }
     catch (error) {
@@ -72,7 +84,8 @@
         method: "DELETE",
   
       });
-      favState = false
+      recipeDetails.recipe[0].userFavourite = false
+      recipeDetails.recipe[0].favourite_count--;
       // goto('/') //redirect to user's recipes (once built)
     }
     catch (error) {
@@ -88,15 +101,17 @@
 
 <h3>{recipeDetails.recipe[0].title}</h3>
 <p>{recipeDetails.recipe[0].description}</p>
-{#each recipeDetails.emojiReactions as {name, emoji, count}}
-  <div>{emoji}x{count}</div>
+
+{#each recipeDetails.emojiReactions as emojiReaction }
+  <Emoji recipeID={id} {emojiReaction} />
 {/each}
+
 <img style="width: 30%" src="{recipeDetails.recipe[0].image_url}" alt="recipe">
 
-{#if favState === false}
-<Button on:click={() => favouriteRecipe()}>Favourite Recipe</Button>
+{#if recipeDetails.recipe[0].userFavourite}
+<Button  on:click={() => unfavouriteRecipe()} filled>Unfavourite Recipe</Button>
 {:else}
-<Button on:click={() => unfavouriteRecipe()}>Unfavourite Recipe</Button>
+<Button  on:click={() => favouriteRecipe()} outline>Favourite Recipe</Button>
 {/if}
 
 <p>Difficulty: {recipeDetails.recipe[0].difficulty}</p>

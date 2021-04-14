@@ -30,7 +30,7 @@
   export let recipeDetails;
   export let id;
 
-  const {
+  let {
     recipe: [{
       title,
       description,

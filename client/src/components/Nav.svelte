@@ -2,7 +2,7 @@
 	// export let segment;
 	import { stores } from '@sapper/app';
   const { page } = stores();
-  $: console.log($page.path);
+  // $: console.log($page.path);
 </script>
 
 <style>

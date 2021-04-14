@@ -1,16 +1,22 @@
-<script context="module">
+
+<!-- <script context="module">
+
   export async function preload(page, session) {
    const { user, token, key, site } = session;
    return session;
   }
-</script>
+
+</script> -->
+
 
 <script>
   // export let token;
   // export let user;
   // export let site;
-  export let key;
-  import { afterUpdate } from "svelte";
+
+  // export let key;
+  // import { afterUpdate } from "svelte";
+
   import fetch from "cross-fetch";
   import { goto, stores } from '@sapper/app';
   import {
@@ -22,41 +28,43 @@
     FileDropzone,
   } from "attractions";
 
-  
-  let hours;
-  let minutes;
+
+  let hours = 0;
+  let minutes = 0;
+
   let title = null;
   let difficulty = 2;
-  let duration = null;
+  let duration = 0;
   let image_url = null;
   let servings = null;
   let description = null;
   let instructionSteps = ["", "", ""];
   let ingredientList = [""];
   let unit_of_measure = 1;
-  let quantity = 10;
+  let quantity = 0;
 
   let loadingState = false
   console.log(key)
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
 
   const handleSubmit = async () => {
-   
-    // console.log(
-    //   title,
-    //   difficulty,
-    //   duration,
-    //   image_url,
-    //   servings,
-    //   description,
-    //   instructionSteps
-    // );
-    console.log('KEY', key, "PAGE", page)
-    duration = (hours * 60) + minutes;
+
+
+    if (hours && minutes) {
+      duration = (hours * 60) + minutes
+    } else if (!minutes && hours) {
+      duration = hours * 60
+    } else if (!hours && minutes) {
+      duration = minutes
+    } else {
+      duration
+    }
+
+
     //Create an if statement to make sure we have everything to make a recipe...
     loadingState = true
       try {
-        await fetch("http://localhost:5001/recipes", {
+        const res = await fetch("http://localhost:5001/recipes", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -73,7 +81,9 @@
           }),
         });
         loadingState = false
-        goto('/recipes') //redirect to user's recipes (once built)
+        const { recipe: { id } } = await res.json()
+
+        goto(`/recipes/${id}`)
       }
       catch (error) {
         console.error(error)
@@ -84,9 +94,11 @@
     const uploadedImage = e.detail.files[0];
     const data = new FormData();
     data.append("file", uploadedImage);
-    data.append("upload_preset", `'${key}`);
+
+    data.append("upload_preset", 'nau31oag');
     const res = await fetch(
-      `'${site}'`,
+      'https://api.cloudinary.com/v1_1/bitesizerecipes/upload',
+
       {
         method: "POST",
         body: data,

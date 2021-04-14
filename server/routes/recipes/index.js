@@ -1,4 +1,4 @@
-const { getRecipeDetails, getRecipes , postNewRecipe , deleteSpecificRecipe } = require('../../src/db/recipe_queries');
+const { getRecipeDetails, getRecipes , deleteSpecificRecipe } = require('../../src/db/recipe_queries');
 const   { addEmojiReaction, removeEmojiReaction } = require('../../src/db/emoji_queries');
 
 
@@ -28,6 +28,8 @@ const recipesRoutes = async (fastify) => {
 
   fastify.post('/recipes', async (req, reply) => {
     const { body } = req
+    console.log("Body:",body)
+    console.log("RQ:", recipeQuery);
     const newRecipe = await recipeQuery.postNewRecipe(body)
     console.log(newRecipe);
     reply.send(newRecipe)

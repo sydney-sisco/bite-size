@@ -23,24 +23,25 @@ async function recipeQueries (fastify) {
     },
     postNewRecipe: async (newRecipe) => {
       const {
+        userId,
         title,
         difficulty,
         duration,
-        image_url,
+        imageUrl,
         servings,
         description,
         instructionSteps,
         ingredientList,
-        unit_of_measure,
+        unitOfMeasure,
         quantity
       } = newRecipe
     
       const { rows: recipe } = await pg.transact(async client => {
         return client.query(`
-            INSERT INTO recipes (title, difficulty_id, duration, image_url, servings, description)
-            VALUES ($1, $2, $3, $4, $5, $6)
+            INSERT INTO recipes (user_id, title, difficulty_id, duration, image_url, servings, description)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
             RETURNING *;
-          `, [title, difficulty, duration, image_url, servings, description]
+          `, [userId, title, difficulty, duration, imageUrl, servings, description]
         )
       })
       console.log(recipe[0]);
@@ -78,13 +79,13 @@ async function recipeQueries (fastify) {
               INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_of_measure_id) 
               VALUES ($1, $2, $3, $4)
               RETURNING *;
-            `, [recipeId, ingredientId, quantity, unit_of_measure])
+            `, [recipeId, ingredientId, quantity, unitOfMeasure])
 
             newIngredients.push({
               ingredient: rows[0],
               quantityId: newQuantity[0].id,
               quantity: newQuantity.quantity,
-              unitOfMeasureId: newQuantity.unit_of_measure_id
+              unitOfMeasureId: newQuantity.unitOfMeasure_id
             })
           }
         }

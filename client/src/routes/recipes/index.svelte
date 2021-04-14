@@ -27,7 +27,7 @@
   .recipe-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     flex-wrap: wrap;
 
     background-color: #FFF0E5;

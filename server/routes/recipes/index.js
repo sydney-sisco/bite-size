@@ -1,4 +1,4 @@
-const { getRecipeDetails, getRecipes , postNewRecipe , deleteSpecificRecipe } = require('../../src/db/recipe_queries');
+const { getRecipeDetails, getRecipes , deleteSpecificRecipe } = require('../../src/db/recipe_queries');
 const   { addEmojiReaction, removeEmojiReaction } = require('../../src/db/emoji_queries');
 
 

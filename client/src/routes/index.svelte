@@ -19,6 +19,7 @@
 <script>
 
 import { Button } from 'attractions';
+import SearchBar from '../components/searchBar.svelte';
 
 export let recipeList;
 
@@ -67,6 +68,7 @@ const showFeatured = async () => {
 <p><strong>What do you want to eat?</strong></p>
 
 <Button outline> Search Recipes</Button>
+<SearchBar />
 <a href="recipes"><Button outline>Browse Recipes</Button></a>
 
 <Button outline on:click={showFeatured}>Featured Recipes</Button>

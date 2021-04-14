@@ -27,18 +27,20 @@
 
   const { session } = stores(); // session data is stored here
 
-  // console.log('the session is:', $session); // access it like this 
-
-  // // user info, including id, is stored in a user object in the session
-  // console.log('the session is:', $session);
-  // console.log('the user ID is:', $session.user.id);
-  // console.log('the user email is:', $session.user.email_address);
-
   export let recipeDetails;
   export let id;
 
   const {
-    recipe: [{ title, description, image_url, difficulty, favourite_count, duration, servings }],
+    recipe: [{
+      title,
+      description,
+      image_url,
+      difficulty,
+      userFavourite,
+      favourite_count,
+      duration,
+      servings
+    }],
     emojiReactions,
     ingredients,
     instructions
@@ -72,8 +74,8 @@
         recipe_id: id
         }),
       });
-      recipeDetails.recipe[0].userFavourite = true
-      recipeDetails.recipe[0].favourite_count++;
+      userFavourite = true
+      favourite_count++;
       // goto('/') //redirect to user's recipes (once built)
     }
     catch (error) {
@@ -89,8 +91,8 @@
         method: "DELETE",
   
       });
-      recipeDetails.recipe[0].userFavourite = false
-      recipeDetails.recipe[0].favourite_count--;
+      userFavourite = false
+      favourite_count--;
       // goto('/') //redirect to user's recipes (once built)
     }
     catch (error) {
@@ -106,14 +108,14 @@
 
 <h3>{title}</h3>
 <p>{description}</p>
-{#each emojiReactions as {name, emoji, count}}
-  <div>{emoji}x{count}</div>
-{/each}
-{#if image_url}
-  <img style="width: 30%" src="{image_url}" alt="recipe">
-{/if}
 
-{#if recipeDetails.recipe[0].userFavourite}
+{#each emojiReactions as emojiReaction }
+  <Emoji recipeID={id} {emojiReaction} />
+{/each}
+
+<img style="width: 30%" src="{image_url}" alt="recipe">
+
+{#if userFavourite}
 <Button  on:click={() => unfavouriteRecipe()} filled>Unfavourite Recipe</Button>
 {:else}
 <Button  on:click={() => favouriteRecipe()} outline>Favourite Recipe</Button>
@@ -142,4 +144,3 @@
   {/each}
 </ul>
 <Button on:click={() => deleteRecipe()}>Delete a Recipe</Button>
-

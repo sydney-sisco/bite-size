@@ -3,13 +3,21 @@
 	import { stores } from '@sapper/app';
   const { page } = stores();
   // $: console.log($page.path);
+
+	import logo from 'images/logo.png';
 </script>
 
 <style>
 	nav {
-		border-bottom: 1px solid rgba(255,62,0,0.1);
-		font-weight: 300;
+		/* border-bottom: 1px solid rgba(255,62,0,0.1); */
+		border-bottom: 1px solid #000;
+		font-weight: 400;
 		padding: 0 1em;
+		position: fixed; /* Set the navbar to fixed position */
+		top: 0; /* Position the navbar at the top of the page */
+		width: 100%; /* Full width */
+    background-color: #FFF0E5;
+		z-index: 999;
 	}
 
 	ul {
@@ -27,6 +35,12 @@
 	li {
 		display: block;
 		float: left;
+		margin-top: 1em;
+	}
+
+	li.logo {
+		margin-top: 0em;
+		padding: 0;
 	}
 
 	[aria-current] {
@@ -39,7 +53,7 @@
 		content: '';
 		width: calc(100% - 1em);
 		height: 2px;
-		background-color: rgb(255,62,0);
+		background-color: #000;
 		display: block;
 		bottom: -1px;
 	}
@@ -49,11 +63,20 @@
 		padding: 1em 0.5em;
 		display: block;
 	}
+
+	a.logo {
+		padding: .5em 0.5em;
+	}
+
+	img {
+		width: 7em;
+	}
 </style>
 
 <nav>
 	<ul>
-		<li><a aria-current="{$page.path === '/' ? 'page' : undefined}" href=".">Home</a></li>
+		<!-- <li></li> -->
+		<li class="logo" ><a class="logo" aria-current="{$page.path === '/' ? 'page' : undefined}" href="/"><img src="{logo}" alt="logo"></a></li>
 		
 		<!-- for the blog link, we're using rel=prefetch so that Sapper prefetches
 			the blog data when we hover over the link or tap it on a touchscreen -->

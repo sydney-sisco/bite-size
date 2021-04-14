@@ -138,9 +138,10 @@ const favsForFeatured = async (fastify) => {
   const client = await fastify.pg.connect()
     
   const { rows } = await client.query(
-    `SELECT count(f.*) AS favourites, r.* FROM recipes r
+    `SELECT u.username, count(f.*) AS favourites, r.* FROM recipes r
+    JOIN users u ON u.id = r.user_id
     LEFT JOIN favourites f ON f.recipe_id = r.id
-    GROUP by r.id
+    GROUP by r.id, u.username
     ORDER BY favourites DESC
     LIMIT 3; 
     `

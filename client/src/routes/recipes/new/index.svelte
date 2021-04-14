@@ -1,16 +1,18 @@
-<script context="module">
+
+<!-- <script context="module">
   export async function preload(page, session) {
    const { user, token, key, site } = session;
    return session;
   }
-</script>
+</script> -->
 
 <script>
   // export let token;
   // export let user;
   // export let site;
-  export let key;
-  import { afterUpdate } from "svelte";
+  // export let key;
+  // import { afterUpdate } from "svelte";
+
   import fetch from "cross-fetch";
   import { goto, stores } from '@sapper/app';
   import {
@@ -33,13 +35,13 @@
   let instructionSteps = ["", "", ""];
   let ingredientList = [""];
   let unit_of_measure = 1;
-  let quantity = 10;
+  let quantity = 0;
 
   let loadingState = false
-  console.log(key)
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
 
   const handleSubmit = async () => {
+
     if (hours && minutes) {
       duration = (hours * 60) + minutes
     } else if (!minutes && hours) {
@@ -49,6 +51,7 @@
     } else {
       duration
     }
+
     //Create an if statement to make sure we have everything to make a recipe...
     loadingState = true
       try {
@@ -82,9 +85,10 @@
     const uploadedImage = e.detail.files[0];
     const data = new FormData();
     data.append("file", uploadedImage);
-    data.append("upload_preset", `'${key}`);
+    data.append("upload_preset", 'nau31oag');
     const res = await fetch(
-      `'${site}'`,
+      'https://api.cloudinary.com/v1_1/bitesizerecipes/upload',
+
       {
         method: "POST",
         body: data,

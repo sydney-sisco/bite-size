@@ -1,5 +1,7 @@
 <script>
 
+import { Button } from 'attractions';
+
 </script>
 
 <style>
@@ -33,3 +35,8 @@
 <h1>Bite Size</h1>
 
 <p><strong>What do you want to eat?</strong></p>
+
+<Button outline> Search Recipes</Button>
+<a href="recipes"><Button outline>Browse Recipes</Button></a>
+
+

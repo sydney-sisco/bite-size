@@ -18,18 +18,40 @@
 
   const { session } = stores(); // session data is stored here
   
-  let hours = 0;
-  let minutes = 0;
-  export let title = null;
-  let difficulty = 2;
-  let duration = 0;
-  let imageUrl = null;
-  let servings = null;
-  let description = null;
-  let instructionSteps = ["", "", ""];
-  let ingredientList = [""];
-  let unitOfMeasure = 1;
-  let quantity = 1;
+  // export let recipeObj = {};
+  // console.log('recipeObj', recipeObj)
+
+  console.log('props??', $$props);
+
+  export let recipe;
+  console.log('recipe obj', recipe);
+  
+  let { 
+    difficulty_id = 2,
+    description = null,
+    title = null,
+    hours = 0,
+    minutes = 0,
+    duration = 0,
+    image_url = null,
+    servings = null,
+    instructionSteps = ["", "", ""],
+    ingredientList = [""],
+    unitOfMeasure = 1,
+    quantity = 1,
+  } = recipe[0];
+  
+  
+  console.log('diff', difficulty_id);
+  console.log('desc', description);
+  
+  console.log('image_url:', image_url);
+
+
+
+
+
+  
 
   let loadingState = false
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
@@ -94,11 +116,11 @@
       }
       );
       const { secure_url } = await res.json();
-      imageUrl = secure_url;
+      image_url = secure_url;
     };
     
     const changePhoto = () => {
-      imageUrl = null;
+      image_url = null;
     };
     
     const addStep = () => {
@@ -183,11 +205,11 @@
       type="range"
       min="1"
       max="3"
-      bind:value={difficulty}
+      bind:value={difficulty_id}
       class="slider"
       name="difficulty-slider"
     />
-    <output for="difficulty-slider">{difficultyNames[difficulty - 1]}</output>
+    <output for="difficulty-slider">{difficultyNames[difficulty_id - 1]}</output>
   </FormField>
 
   <!-- {#each ingredientList as ingredient, index} -->
@@ -202,12 +224,12 @@
   <!-- <Button on:click={addIngredient}>Add Ingredient</Button> -->
   <!-- <Button on:click={removeIngredient}>Remove</Button> -->
 
-  {#if !imageUrl}
+  {#if !image_url}
     <FileDropzone accept="image/*" max={1} on:change={uploadImage}>
       <span slot='empty-layer'>Choose an Image</span>
     </FileDropzone>
   {:else}
-    <img src={imageUrl} alt="recipe" />
+    <img src={image_url} alt="recipe" />
     <Button on:click={changePhoto}>Pick a different photo</Button>
   {/if}
 
@@ -226,11 +248,11 @@
   <Button filled class="btn" on:click={() => handleSubmit({
     userId: $session.user.id,
     title,
-    difficulty,
+    difficulty_id,
     // duration,
     hours,
     minutes,
-    imageUrl,
+    image_url,
     servings,
     description,
     instructionSteps,

@@ -20,7 +20,7 @@
   
   let hours = 0;
   let minutes = 0;
-  let title = null;
+  export let title = null;
   let difficulty = 2;
   let duration = 0;
   let imageUrl = null;

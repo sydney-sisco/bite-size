@@ -111,11 +111,16 @@
   import { goto, stores } from '@sapper/app';
   import fetch from "cross-fetch";
   import Emoji from '../../components/Emoji.svelte';
+  import RecipeForm from "../../components/RecipeForm.svelte"
 
   const { session } = stores(); // session data is stored here
 
   export let recipeDetails;
   export let id;
+
+  const EDIT = "EDIT";
+  const VIEW = "VIEW";
+  let mode = VIEW;
 
   let {
     recipe: [{
@@ -132,6 +137,14 @@
     ingredients,
     instructions
  } = recipeDetails
+
+
+ async function editRecipe() {
+   mode = EDIT;
+    console.log('the editRecipe recipe id is: ', id)
+    // const { id } = page.params;
+
+  }  
   
   async function deleteRecipe() {
     console.log('the deleted recipe id is: ', id)
@@ -193,6 +206,7 @@
 	<title>Bite Size</title>
 </svelte:head>
 
+{#if mode === VIEW}
 <main>
   <div class="left">
     <h3>{title}</h3>
@@ -231,7 +245,11 @@
       {:else}
         <Button  on:click={() => favouriteRecipe()} outline>Favourite Recipe</Button>
       {/if}
-      <Button on:click={() => deleteRecipe()}>Delete a Recipe</Button>
+      <Button on:click={() => editRecipe()}>Edit Recipe</Button>
+      <Button on:click={() => deleteRecipe()}>Delete Recipe</Button>
     </div>
   </div>
 </main>
+{:else if mode === EDIT}
+  <RecipeForm {title}/>
+{/if}

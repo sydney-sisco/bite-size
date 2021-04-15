@@ -251,5 +251,5 @@
   </div>
 </main>
 {:else if mode === EDIT}
-  <RecipeForm {title}/>
+  <RecipeForm {...recipeDetails}/>
 {/if}

@@ -107,6 +107,7 @@
 </script>
 
 <script>
+  import { afterUpdate } from 'svelte'
   import { Button } from 'attractions';
   import { goto, stores } from '@sapper/app';
   import fetch from "cross-fetch";
@@ -137,6 +138,8 @@
     ingredients,
     instructions
  } = recipeDetails
+
+ console.log('recipe deets:', recipeDetails);
 
 
  async function editRecipe() {
@@ -204,9 +207,13 @@
           }),
         });
         loadingState = false
-        // const { recipe: { id } } = await res.json()
-        recipeDetails = await res.json()
-        console.log('recipe details from server after patch:', recipeDetails);
+
+        const recipeDetailsFromServer = await res.json()
+        console.log('recipe details from server after patch:', recipeDetailsFromServer);
+        
+        recipeDetails = recipeDetailsFromServer;
+        
+
         mode = VIEW; // hide the edit form and show the recipe
       }
       catch (error) {
@@ -278,8 +285,8 @@
 {#if mode === VIEW}
 <main>
   <div class="left">
-    <h3>{title}</h3>
-    <p>{description}</p>
+    <h3>{recipeDetails.recipe[0].title}</h3>
+    <p>{recipeDetails.recipe[0].description}</p>
     <h3>Ingredients</h3>
     <ul>
       {#each ingredients as { name, unit, quantity }, id}
@@ -300,15 +307,15 @@
 
   <div class="right">
     <h2>Recipe Info</h2>
-    <img src="{image_url}" alt="recipe">
+    <img src="{recipeDetails.recipe[0].image_url}" alt="recipe">
     <div class="info">
-      <p>Difficulty: {difficulty}</p>
-      <p>&#9734;{favourite_count}</p>
+      <p>Difficulty: {recipeDetails.recipe[0].difficulty}</p>
+      <p>&#9734;{recipeDetails.recipe[0].favourite_count}</p>
       {#each emojiReactions as emojiReaction }
         <Emoji recipeID={id} {emojiReaction} />
       {/each}
-      <p>Duration: {duration} minutes</p>
-      <p>Servings: {servings}</p>
+      <p>Duration: {recipeDetails.recipe[0].duration} minutes</p>
+      <p>Servings: {recipeDetails.recipe[0].servings}</p>
       {#if userFavourite}
         <Button  on:click={() => unfavouriteRecipe()} filled>Unfavourite Recipe</Button>
       {:else}

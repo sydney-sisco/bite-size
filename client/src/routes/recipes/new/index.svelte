@@ -186,15 +186,17 @@
     <output for="difficulty-slider">{difficultyNames[difficulty - 1]}</output>
   </FormField>
 
-  {#each ingredientList as ingredient, index}
+  <!-- {#each ingredientList as ingredient, index} -->
     <FormField name="Ingredients" required>
-      <TextField bind:value={ingredientList[index]} />
+      <!-- <TextField bind:value={ingredientList[index]} /> -->
+
+      <textarea rows="8" cols="50" name="Ingredients" bind:value={ingredientList} placeholder="Put each ingredient on its own line."></textarea>
 
     </FormField>
-  {/each}
+  <!-- {/each} -->
 
-  <Button on:click={addIngredient}>Add Ingredient</Button>
-  <Button on:click={removeIngredient}>Remove</Button>
+  <!-- <Button on:click={addIngredient}>Add Ingredient</Button> -->
+  <!-- <Button on:click={removeIngredient}>Remove</Button> -->
 
   {#if !imageUrl}
     <FileDropzone accept="image/*" max={1} on:change={uploadImage}>

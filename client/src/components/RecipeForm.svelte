@@ -54,6 +54,7 @@
 
   // the new stuff goes here
   export let handleSubmit;
+  export let handleCancel;
 
   const uploadImage = async (e) => {
     const uploadedImage = e.detail.files[0];
@@ -198,6 +199,7 @@
   {#if ingredientList.length > 0}
   <Button on:click={removeStep}>Remove Step</Button>
   {/if}
+  <Button on:click={() => handleCancel()}>Cancel</Button>
   <Button filled class="btn" on:click={() => handleSubmit({
     userId: $session.user.id,
     title,
@@ -211,4 +213,4 @@
     ingredientList,
     unitOfMeasure,
     quantity
-  })}>{!loadingState ? 'Submit Recipe' : 'Loading...'}</Button>
+  }, recipe[0].id)}>{!loadingState ? 'Submit Recipe' : 'Loading...'}</Button>

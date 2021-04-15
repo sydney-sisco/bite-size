@@ -17,9 +17,7 @@
   } from "attractions";
 
   const { session } = stores(); // session data is stored here
-  
-  // export let recipeObj = {};
-  // console.log('recipeObj', recipeObj)
+
 
   console.log('props??', $$props);
 
@@ -30,77 +28,32 @@
     difficulty_id = 2,
     description = null,
     title = null,
-    hours = 0,
-    minutes = 0,
     duration = 0,
     image_url = null,
     servings = null,
     instructionSteps = ["", "", ""],
-    ingredientList = [""],
     unitOfMeasure = 1,
     quantity = 1,
   } = recipe[0];
-  
-  
-  console.log('diff', difficulty_id);
-  console.log('desc', description);
-  
-  console.log('image_url:', image_url);
 
+  // format ingredient list for the textarea
+  export let ingredients;
+  let ingredientList = '';
 
+  for (let {quantity, unit, name} of ingredients) {
+    ingredientList += `${quantity} ${unit} of ${name}\n`
+  }
 
+  // format duration into hours and minutes
+  let hours = Math.floor(duration / 60);
+  let minutes = duration % 60;
 
-
-  
 
   let loadingState = false
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
 
   // the new stuff goes here
   export let handleSubmit;
-
-
-  // const handleSubmit = async () => {
-  //   //Create an if statement to make sure we have everything to make a recipe...
-
-  //   if (hours && minutes) {
-  //     duration = (hours * 60) + minutes
-  //   } else if (!minutes && hours) {
-  //     duration = hours * 60
-  //   } else if (!hours && minutes) {
-  //     duration = minutes
-  //   } else {
-  //     duration
-  //   }
-
-  //   loadingState = true
-  //     try {
-  //       const res = await fetch(`${$session.server}/recipes`, {
-  //         method: "POST",
-  //         headers: { "Content-Type": "application/json" },
-  //         body: JSON.stringify({
-  //           userId: $session.user.id,
-  //           title,
-  //           difficulty,
-  //           duration,
-  //           imageUrl,
-  //           servings,
-  //           description,
-  //           instructionSteps,
-  //           ingredientList,
-  //           unitOfMeasure,
-  //           quantity
-  //         }),
-  //       });
-  //       loadingState = false
-  //       const { recipe: { id } } = await res.json()
-
-  //       goto(`/recipes/${id}`)
-  //     }
-  //     catch (error) {
-  //       console.error(error)
-  //     }
-  //   };
 
   const uploadImage = async (e) => {
     const uploadedImage = e.detail.files[0];
@@ -249,7 +202,6 @@
     userId: $session.user.id,
     title,
     difficulty_id,
-    // duration,
     hours,
     minutes,
     image_url,

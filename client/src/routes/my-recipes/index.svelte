@@ -1,12 +1,12 @@
 <script context="module">
   export async function preload(page, session) {
-    const { token, user } = session;
+    const { token, user, server } = session;
 
     if (!token) {
       return this.redirect(302, "login");
     }
 
-    const response = await this.fetch(`http://localhost:5001/users/${user.id}/recipes`, {
+    const response = await this.fetch(`${server}/users/${user.id}/recipes`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

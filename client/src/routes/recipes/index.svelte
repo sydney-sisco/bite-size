@@ -41,7 +41,7 @@
   export async function preload(page, session) {
 		const { id } = page.params;
 
-		const res = await this.fetch(`http://localhost:5001/recipes`);
+		const res = await this.fetch(`${session.server}/recipes`);
 		const recipeList = await res.json();
 
 		return { recipeList };

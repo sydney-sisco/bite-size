@@ -25,7 +25,7 @@
   h3 {
     font-size: 36px;
   }
-
+d
   ul {
     background-color: #fff;
   }
@@ -107,15 +107,21 @@
 </script>
 
 <script>
+  import { afterUpdate } from 'svelte'
   import { Button } from 'attractions';
   import { goto, stores } from '@sapper/app';
   import fetch from "cross-fetch";
   import Emoji from '../../components/Emoji.svelte';
+  import RecipeForm from "../../components/RecipeForm.svelte"
 
   const { session } = stores(); // session data is stored here
 
   export let recipeDetails;
   export let id;
+
+  const EDIT = "EDIT";
+  const VIEW = "VIEW";
+  let mode = VIEW;
 
   let {
     recipe: [{
@@ -132,6 +138,89 @@
     ingredients,
     instructions
  } = recipeDetails
+
+ console.log('recipe deets:', recipeDetails);
+
+
+ async function editRecipe() {
+   mode = EDIT;
+    console.log('the editRecipe recipe id is: ', id)
+    // const { id } = page.params;
+
+  }  
+
+  const handleCancel = () => {
+    mode = VIEW;
+  } 
+
+  let loadingState = false;
+  
+  const handleSubmit = async (recipeObject, recipeID) => {
+    //Create an if statement to make sure we have everything to make a recipe...
+    console.log('recipe object from edit form:', recipeObject);
+
+    let {
+      user_id,
+      title,
+      difficulty_id,
+      // duration,
+      hours,
+      minutes,
+      image_url,
+      servings,
+      description,
+      instructionSteps,
+      ingredientList,
+      unitOfMeasure,
+      quantity
+    } = recipeObject;
+
+    let duration;
+
+    if (hours && minutes) {
+      duration = (hours * 60) + minutes
+    } else if (!minutes && hours) {
+      duration = hours * 60
+    } else if (!hours && minutes) {
+      duration = minutes
+    } else {
+      duration
+    }
+
+    loadingState = true
+      try {
+        const res = await fetch(`${$session.server}/recipes/${recipeID}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: $session.user.id,
+            title,
+            difficulty_id,
+            duration,
+            image_url,
+            servings,
+            description,
+            instructionSteps,
+            ingredientList,
+            unitOfMeasure,
+            quantity
+          }),
+        });
+        loadingState = false
+
+        const recipeDetailsFromServer = await res.json()
+        console.log('recipe details from server after patch:', recipeDetailsFromServer);
+        
+        recipeDetails = recipeDetailsFromServer;
+        
+
+        mode = VIEW; // hide the edit form and show the recipe
+      }
+      catch (error) {
+        console.error(error)
+      }
+    };
+
   
   async function deleteRecipe() {
     console.log('the deleted recipe id is: ', id)
@@ -193,13 +282,14 @@
 	<title>Bite Size</title>
 </svelte:head>
 
+{#if mode === VIEW}
 <main>
   <div class="left">
-    <h3>{title}</h3>
-    <p>{description}</p>
+    <h3>{recipeDetails.recipe[0].title}</h3>
+    <p>{recipeDetails.recipe[0].description}</p>
     <h3>Ingredients</h3>
     <ul>
-      {#each ingredients as { name, unit, quantity }, id}
+      {#each recipeDetails.ingredients as { name, unit, quantity }, id}
         <li>
         {quantity} x {unit} of {name} 
         </li>
@@ -207,7 +297,7 @@
     </ul>
     <h3>Instructions</h3>
     <ul class="instructions">
-      {#each instructions as { instruction }}
+      {#each recipeDetails.instructions as { instruction }}
         <li>
           {instruction}
         </li>
@@ -217,21 +307,25 @@
 
   <div class="right">
     <h2>Recipe Info</h2>
-    <img src="{image_url}" alt="recipe">
+    <img src="{recipeDetails.recipe[0].image_url}" alt="recipe">
     <div class="info">
-      <p>Difficulty: {difficulty}</p>
-      <p>&#9734;{favourite_count}</p>
+      <p>Difficulty: {recipeDetails.recipe[0].difficulty}</p>
+      <p>&#9734;{recipeDetails.recipe[0].favourite_count}</p>
       {#each emojiReactions as emojiReaction }
         <Emoji recipeID={id} {emojiReaction} />
       {/each}
-      <p>Duration: {duration} minutes</p>
-      <p>Servings: {servings}</p>
+      <p>Duration: {recipeDetails.recipe[0].duration} minutes</p>
+      <p>Servings: {recipeDetails.recipe[0].servings}</p>
       {#if userFavourite}
         <Button  on:click={() => unfavouriteRecipe()} filled>Unfavourite Recipe</Button>
       {:else}
         <Button  on:click={() => favouriteRecipe()} outline>Favourite Recipe</Button>
       {/if}
-      <Button on:click={() => deleteRecipe()}>Delete a Recipe</Button>
+      <Button on:click={() => editRecipe()}>Edit Recipe</Button>
+      <Button on:click={() => deleteRecipe()}>Delete Recipe</Button>
     </div>
   </div>
 </main>
+{:else if mode === EDIT}
+  <RecipeForm {...recipeDetails} {handleCancel} {handleSubmit}/>
+{/if}

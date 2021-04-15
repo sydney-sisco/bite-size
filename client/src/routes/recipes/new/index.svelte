@@ -16,26 +16,48 @@
     FileDropzone,
   } from "attractions";
 
+  // import RecipeForm from '/client/src/components/RecipeForm.svelte'
+  import RecipeForm from "../../../components/RecipeForm.svelte"
+
   const { session } = stores(); // session data is stored here
   
-  let hours = 0;
-  let minutes = 0;
-  let title = null;
-  let difficulty = 2;
-  let duration = 0;
-  let imageUrl = null;
-  let servings = null;
-  let description = null;
-  let instructionSteps = ["", "", ""];
-  let ingredientList = [""];
-  let unitOfMeasure = 1;
-  let quantity = 1;
+  // let hours = 0;
+  // let minutes = 0;
+  // let title = null;
+  // let difficulty = 2;
+  // let duration = 0;
+  // let imageUrl = null;
+  // let servings = null;
+  // let description = null;
+  // let instructionSteps = ["", "", ""];
+  // let ingredientList = [""];
+  // let unitOfMeasure = 1;
+  // let quantity = 1;
 
   let loadingState = false
-  const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
+  // const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
 
-  const handleSubmit = async () => {
+  const handleSubmit = async recipeObject => {
     //Create an if statement to make sure we have everything to make a recipe...
+    console.log('recipe??', recipeObject);
+
+    let {
+      user_id,
+      title,
+      difficulty_id,
+      // duration,
+      hours,
+      minutes,
+      image_url,
+      servings,
+      description,
+      instructionSteps,
+      ingredientList,
+      unitOfMeasure,
+      quantity
+    } = recipeObject;
+
+    let duration;
 
     if (hours && minutes) {
       duration = (hours * 60) + minutes
@@ -55,9 +77,9 @@
           body: JSON.stringify({
             userId: $session.user.id,
             title,
-            difficulty,
+            difficulty_id,
             duration,
-            imageUrl,
+            image_url,
             servings,
             description,
             instructionSteps,
@@ -137,86 +159,4 @@
   ];
 </script>
 
-<Headline>Create a New Recipe</Headline>
-  <FormField name="Recipe Title" required>
-    <TextField bind:value={title} />
-  </FormField>
-  <FormField name="Description">
-    <TextField bind:value={description} />
-  </FormField>
-  <FormField name="Total Duration">
-    Hours: <input
-      type="number"
-      bind:value={hours}
-      id="hours"
-      name="hours"
-      min="0"
-      max="72"
-    />
-    Minutes:
-    <input
-      type="number"
-      bind:value={minutes}
-      id="minutes"
-      name="minutes"
-      min="0"
-      max="59"
-    />
-  </FormField>
-  <FormField name="Servings">
-    <input
-      type="number"
-      bind:value={servings}
-      id="servings"
-      name="servings"
-      min="1"
-      max="50"
-    />
-  </FormField>
-
-  <FormField name="Difficulty">
-    <input
-      type="range"
-      min="1"
-      max="3"
-      bind:value={difficulty}
-      class="slider"
-      name="difficulty-slider"
-    />
-    <output for="difficulty-slider">{difficultyNames[difficulty - 1]}</output>
-  </FormField>
-
-  <!-- {#each ingredientList as ingredient, index} -->
-    <FormField name="Ingredients" required>
-      <!-- <TextField bind:value={ingredientList[index]} /> -->
-
-      <textarea rows="8" cols="50" name="Ingredients" bind:value={ingredientList} placeholder="Put each ingredient on its own line."></textarea>
-
-    </FormField>
-  <!-- {/each} -->
-
-  <!-- <Button on:click={addIngredient}>Add Ingredient</Button> -->
-  <!-- <Button on:click={removeIngredient}>Remove</Button> -->
-
-  {#if !imageUrl}
-    <FileDropzone accept="image/*" max={1} on:change={uploadImage}>
-      <span slot='empty-layer'>Choose an Image</span>
-    </FileDropzone>
-  {:else}
-    <img src={imageUrl} alt="recipe" />
-    <Button on:click={changePhoto}>Pick a different photo</Button>
-  {/if}
-
-  <CheckboxChipGroup {items} name="tags" outline />
-
-  {#each instructionSteps as step, index}
-    <FormField name="Instructions" required>
-      <TextField bind:value={instructionSteps[index]} />
-    </FormField>
-  {/each}
-
-  <Button on:click={addStep}>Add Another Step</Button>
-  {#if ingredientList.length > 0}
-  <Button on:click={removeStep}>Remove Step</Button>
-  {/if}
-  <Button filled class="btn" on:click={handleSubmit}>{!loadingState ? 'Submit Recipe' : 'Loading...'}</Button>
+<RecipeForm {handleSubmit}/> 

@@ -22,12 +22,12 @@ async function recipeQueries (fastify) {
       `) 
     },
     postNewRecipe: async (newRecipe) => {
-      const {
-        userId,
+      let {
+        user_id,
         title,
-        difficulty,
+        difficulty_id,
         duration,
-        imageUrl,
+        image_url,
         servings,
         description,
         instructionSteps,
@@ -41,15 +41,16 @@ async function recipeQueries (fastify) {
             INSERT INTO recipes (user_id, title, difficulty_id, duration, image_url, servings, description)
             VALUES ($1, $2, $3, $4, $5, $6, $7)
             RETURNING *;
-          `, [userId, title, difficulty, duration, imageUrl, servings, description]
+          `, [user_id, title, difficulty_id, duration, image_url, servings, description]
         )
       })
-      console.log(recipe[0]);
       const recipeId = recipe[0].id;
+
+      instructionSteps = instructionSteps.split('\n').map((e, i) => [i, e]);
 
       const instructions = await pg.transact(async client => {
         const newInstructions = []
-        for (const [index, step] of instructionSteps.entries()) {
+        for (const [index, step] of instructionSteps) {
           if (step) {
             const { rows } = await client.query(`
               INSERT INTO instructions (instruction, step, recipe_id)
@@ -66,7 +67,6 @@ async function recipeQueries (fastify) {
     
        const ingredients = await pg.transact(async client => {
         const newIngredients = []
-        // for (const ingredient of ingredientList) {
         for (const ingredient of processedIngredients) {
           if (ingredient) {
             const { rows } = await client.query(`
@@ -94,9 +94,108 @@ async function recipeQueries (fastify) {
         return newIngredients
       })
       return { recipe: recipe[0], instructions, ingredients }
+    },
+
+    editRecipe: async (editRecipe, recipeID) => {
+      let {
+        userId,
+        title,
+        difficulty_id,
+        duration,
+        image_url,
+        servings,
+        description,
+        instructionSteps,
+        ingredientList,
+        unitOfMeasure,
+        quantity
+      } = editRecipe
+    
+      const { rows: recipe } = await pg.transact(async client => {
+        return client.query(`
+            UPDATE recipes 
+            SET user_id = $1, title = $2, difficulty_id = $3, duration = $4, image_url = $5, servings = $6, description = $7
+            WHERE id = $8
+            RETURNING *;
+          `, [userId, title, difficulty_id, duration, image_url, servings, description, recipeID]
+        )
+      })
+
+      // delete any existing instructions for recipe
+      await pg.transact(async client => {
+        return client.query(`
+          DELETE FROM instructions 
+          WHERE recipe_id = $1;
+        `, [recipeID]
+        );
+      });
+
+      instructionSteps = instructionSteps.split('\n').map((e, i) => [i, e]);
+      
+      const instructions = await pg.transact(async client => {
+        const newInstructions = []
+        for (const [index, step] of instructionSteps) {
+          if (step) {
+            const { rows } = await client.query(`
+              INSERT INTO instructions (instruction, step, recipe_id)
+              VALUES ($1, $2, $3)
+              RETURNING *;
+            `, [step, (index + 1), recipeID]
+            )
+            newInstructions.push(rows[0])
+          }
+        }
+        return newInstructions
+      })
+
+      // delete any recipe_ingredients for recipe
+      // ingredients will cascade
+      await pg.transact(async client => {
+        return client.query(`
+          DELETE FROM recipe_ingredients 
+          WHERE recipe_id = $1;
+        `, [recipeID]
+        );
+      });
+      
+      const processedIngredients = processIngredients(ingredientList);
+    
+      const ingredients = await pg.transact(async client => {
+        const newIngredients = []
+        for (const ingredient of processedIngredients) {
+          if (ingredient) {
+            const { rows } = await client.query(`
+              INSERT INTO ingredients (name) 
+              VALUES ($1)
+              RETURNING *;
+            `, [ingredient.ingredient])
+    
+            const ingredientId = rows[0].id
+    
+            const { rows: newQuantity } = await client.query(`
+              INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_of_measure_id) 
+              VALUES ($1, $2, $3, $4)
+              RETURNING *;
+            `, [recipeID, ingredientId, ingredient.quantity, ingredient.unitOfMeasure])
+
+            newIngredients.push({
+              ingredient: rows[0],
+              quantityId: newQuantity[0].id,
+              quantity: newQuantity.quantity,
+              unitOfMeasureId: newQuantity.unitOfMeasure_id
+            })
+          }
+        }
+        return newIngredients
+      })
+      // return { recipe: recipe[0], instructions, ingredients }
+      return { recipe: recipe[0] }
     }
+    
   })
 }
+
+
 
 // hopefully converts a unit of measure: "cups" into an index value
 // this index value should match the cooresponding id in the

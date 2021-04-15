@@ -114,7 +114,7 @@ const findUnitOfMeasureID = unit => {
     'pint',
     'pound',
     'quart',
-    'tablespoonw',
+    'tablespoon',
     'teaspoon'
   ];
 

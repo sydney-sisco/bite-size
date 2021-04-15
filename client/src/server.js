@@ -10,7 +10,7 @@ const FileStore = new sessionFileStore(session);
 
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-const { PORT, NODE_ENV, CLOUDINARY, CLOUDKEY } = process.env;
+const { PORT, NODE_ENV, SERVER_HOST, CLOUDINARY, CLOUDKEY, SESSION_STRING } = process.env;
 const dev = NODE_ENV === 'development';
 
 
@@ -18,7 +18,7 @@ polka()
 	.use(
     json(),
     session({
-      secret: 'SomeSecretStringThatIsNotInGithub', //TODO: this should also pull from .env
+      secret: `'${SESSION_STRING}'`,
       resave: true,
       saveUninitialized: true,
       cookie: {
@@ -31,7 +31,7 @@ polka()
     createProxyMiddleware('/api', {
       changeOrigin: true,
       logLevel: 'debug',
-      target: `http://localhost:${5001}`, // TODO: This should pull from .env
+      target: SERVER_HOST,
       pathRewrite: {
         '^/api': ''
       }
@@ -47,7 +47,9 @@ polka()
           token: req.session.token,
           user: req.session.user,
           site: CLOUDINARY,
-          key: CLOUDKEY
+          key: CLOUDKEY,
+          server: SERVER_HOST,
+          port: PORT
         })
       }
     })

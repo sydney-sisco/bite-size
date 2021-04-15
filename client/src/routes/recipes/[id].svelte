@@ -88,10 +88,10 @@
 <script context="module">
   export async function preload(page, session) {
     const { id } = page.params;
-    const { token, user } = session;
+    const { token, user, server } = session;
     
 		const res = await this.fetch(
-      `http://localhost:5001/recipes/${id}`, 
+      `${server}/recipes/${id}`, 
       {
         method: 'GET',
         headers: {
@@ -139,7 +139,7 @@
 
     try {
       const res = await fetch(
-        `http://localhost:5001/recipes/${id}`,
+        `${server}/recipes/${id}`,
         {
           method: 'DELETE',
         }
@@ -153,7 +153,7 @@
   async function favouriteRecipe() {
    console.log("fav recipe id is:", id)
     try {
-      await fetch(`http://localhost:5001/users/${$session.user.id}/favourites`,
+      await fetch(`${$session.server}/users/${$session.user.id}/favourites`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -173,7 +173,7 @@
   async function unfavouriteRecipe() {
    console.log("the unfav id is:", id)
     try {
-      await fetch(`http://localhost:5001/users/${$session.user.id}/favourites/${id}`,
+      await fetch(`${$session.server}/users/${$session.user.id}/favourites/${id}`,
       {
         method: "DELETE",
   

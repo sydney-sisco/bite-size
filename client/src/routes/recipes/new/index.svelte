@@ -1,20 +1,12 @@
 <script context="module">
   export async function preload(page, session) {
-   const { user, token, key, site } = session;
    return session;
   }
 </script>
 
 <script>
-  // export let token;
-  // export let user;
-  // export let site;
-  // export let key;
-  // import { afterUpdate } from "svelte";
-
   import fetch from "cross-fetch";
   import { goto, stores } from '@sapper/app';
-  const { session } = stores(); // session data is stored here
   import {
     CheckboxChipGroup,
     Headline,
@@ -24,6 +16,8 @@
     FileDropzone,
   } from "attractions";
 
+  const { session } = stores(); // session data is stored here
+  
   let hours = 0;
   let minutes = 0;
   let title = null;
@@ -41,7 +35,7 @@
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
 
   const handleSubmit = async () => {
-    console.log('the user ID is:', $session.user.id);
+    //Create an if statement to make sure we have everything to make a recipe...
 
     if (hours && minutes) {
       duration = (hours * 60) + minutes
@@ -53,10 +47,9 @@
       duration
     }
 
-    //Create an if statement to make sure we have everything to make a recipe...
     loadingState = true
       try {
-        const res = await fetch("http://localhost:5001/recipes", {
+        const res = await fetch(`${$session.server}/recipes`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -87,9 +80,9 @@
     const uploadedImage = e.detail.files[0];
     const data = new FormData();
     data.append("file", uploadedImage);
-    data.append("upload_preset", 'nau31oag');
+    data.append("upload_preset", $session.key);
     const res = await fetch(
-      'https://api.cloudinary.com/v1_1/bitesizerecipes/upload',
+      $session.site,
 
       {
         method: "POST",

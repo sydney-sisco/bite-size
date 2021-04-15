@@ -6,19 +6,16 @@
 
   import { stores } from "@sapper/app";
   const { session } = stores();
-  console.log('session:', $session);
 
   import { Button } from 'attractions';
 
   export let recipeID;
   export let emojiReaction;
 
-  console.log('data from button:', emojiReaction);
-
   const removeReaction = async emoji_id => {
     try {
       const res = await fetch(
-        `http://localhost:5001/recipes/${recipeID}/emojis/${emoji_id}`,
+        `http://${$session.server}recipes/${recipeID}/emojis/${emoji_id}`,
         {
           method: 'DELETE',
           headers: {
@@ -34,7 +31,7 @@
   const addReaction = async emoji_id => {
     try {
       const res = await fetch(
-        `http://localhost:5001/recipes/${recipeID}/emojis`,
+        `http://${$session.server}/recipes/${recipeID}/emojis`,
         {
           method: 'POST',
           body: JSON.stringify({

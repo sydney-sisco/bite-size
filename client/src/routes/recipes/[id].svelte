@@ -154,16 +154,16 @@
   
   const handleSubmit = async (recipeObject, recipeID) => {
     //Create an if statement to make sure we have everything to make a recipe...
-    console.log('recipe??', recipeObject);
+    console.log('recipe object from edit form:', recipeObject);
 
     let {
-      userId,
+      user_id,
       title,
-      difficulty,
+      difficulty_id,
       // duration,
       hours,
       minutes,
-      imageUrl,
+      image_url,
       servings,
       description,
       instructionSteps,
@@ -192,9 +192,9 @@
           body: JSON.stringify({
             userId: $session.user.id,
             title,
-            difficulty,
+            difficulty_id,
             duration,
-            imageUrl,
+            image_url,
             servings,
             description,
             instructionSteps,
@@ -204,9 +204,10 @@
           }),
         });
         loadingState = false
-        const { recipe: { id } } = await res.json()
-
-        goto(`/recipes/${id}`)
+        // const { recipe: { id } } = await res.json()
+        recipeDetails = await res.json()
+        console.log('recipe details from server after patch:', recipeDetails);
+        mode = VIEW; // hide the edit form and show the recipe
       }
       catch (error) {
         console.error(error)

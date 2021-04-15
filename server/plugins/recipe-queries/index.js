@@ -23,11 +23,11 @@ async function recipeQueries (fastify) {
     },
     postNewRecipe: async (newRecipe) => {
       const {
-        userId,
+        user_id,
         title,
-        difficulty,
+        difficulty_id,
         duration,
-        imageUrl,
+        image_url,
         servings,
         description,
         instructionSteps,
@@ -41,7 +41,7 @@ async function recipeQueries (fastify) {
             INSERT INTO recipes (user_id, title, difficulty_id, duration, image_url, servings, description)
             VALUES ($1, $2, $3, $4, $5, $6, $7)
             RETURNING *;
-          `, [userId, title, difficulty, duration, imageUrl, servings, description]
+          `, [user_id, title, difficulty_id, duration, image_url, servings, description]
         )
       })
       console.log(recipe[0]);
@@ -100,9 +100,9 @@ async function recipeQueries (fastify) {
       const {
         userId,
         title,
-        difficulty,
+        difficulty_id,
         duration,
-        imageUrl,
+        image_url,
         servings,
         description,
         instructionSteps,
@@ -115,8 +115,9 @@ async function recipeQueries (fastify) {
         return client.query(`
             UPDATE recipes 
             SET user_id = $1, title = $2, difficulty_id = $3, duration = $4, image_url = $5, servings = $6, description = $7
-            WHERE id = $8;
-          `, [userId, title, difficulty, duration, imageUrl, servings, description, recipeID]
+            WHERE id = $8
+            RETURNING *;
+          `, [userId, title, difficulty_id, duration, image_url, servings, description, recipeID]
         )
       })
       // console.log(recipe[0]);

@@ -42,13 +42,13 @@
     console.log('recipe??', recipeObject);
 
     let {
-      userId,
+      user_id,
       title,
-      difficulty,
+      difficulty_id,
       // duration,
       hours,
       minutes,
-      imageUrl,
+      image_url,
       servings,
       description,
       instructionSteps,
@@ -159,7 +159,4 @@
   ];
 </script>
 
-
-
 <RecipeForm {handleSubmit}/> 
-

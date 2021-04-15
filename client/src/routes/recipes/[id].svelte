@@ -289,7 +289,7 @@
     <p>{recipeDetails.recipe[0].description}</p>
     <h3>Ingredients</h3>
     <ul>
-      {#each ingredients as { name, unit, quantity }, id}
+      {#each recipeDetails.ingredients as { name, unit, quantity }, id}
         <li>
         {quantity} x {unit} of {name} 
         </li>

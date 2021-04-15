@@ -140,37 +140,61 @@ async function recipeQueries (fastify) {
       //   }
       //   return newInstructions
       // })
-      // const processedIngredients = processIngredients(ingredientList);
-    
-      //  const ingredients = await pg.transact(async client => {
-      //   const newIngredients = []
-      //   // for (const ingredient of ingredientList) {
-      //   for (const ingredient of processedIngredients) {
-      //     if (ingredient) {
-      //       const { rows } = await client.query(`
-      //         INSERT INTO ingredients (name) 
-      //         VALUES ($1)
-      //         RETURNING *;
-      //       `, [ingredient.ingredient])
-    
-      //       const ingredientId = rows[0].id
-    
-      //       const { rows: newQuantity } = await client.query(`
-      //         INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_of_measure_id) 
-      //         VALUES ($1, $2, $3, $4)
-      //         RETURNING *;
-      //       `, [recipeId, ingredientId, ingredient.quantity, ingredient.unitOfMeasure])
 
-      //       newIngredients.push({
-      //         ingredient: rows[0],
-      //         quantityId: newQuantity[0].id,
-      //         quantity: newQuantity.quantity,
-      //         unitOfMeasureId: newQuantity.unitOfMeasure_id
-      //       })
-      //     }
-      //   }
-      //   return newIngredients
-      // })
+      // delete any recipe_ingredients for recipe
+      // ingredients will cascade
+      await pg.transact(async client => {
+        return client.query(`
+          DELETE FROM recipe_ingredients 
+          WHERE recipe_id = $1;
+        `, [recipeID]
+        );
+      });
+
+      // const deleteSpecificRecipe = async (fastify, id) => {
+      //   
+          
+      //   await client.query(
+      //     `DELETE FROM recipes
+      //     WHERE id=$1`, [id]
+      //   )
+      //   
+      
+      //   return rows;
+      // }
+      
+      
+      const processedIngredients = processIngredients(ingredientList);
+    
+      const ingredients = await pg.transact(async client => {
+        const newIngredients = []
+        // for (const ingredient of ingredientList) {
+        for (const ingredient of processedIngredients) {
+          if (ingredient) {
+            const { rows } = await client.query(`
+              INSERT INTO ingredients (name) 
+              VALUES ($1)
+              RETURNING *;
+            `, [ingredient.ingredient])
+    
+            const ingredientId = rows[0].id
+    
+            const { rows: newQuantity } = await client.query(`
+              INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_of_measure_id) 
+              VALUES ($1, $2, $3, $4)
+              RETURNING *;
+            `, [recipeID, ingredientId, ingredient.quantity, ingredient.unitOfMeasure])
+
+            newIngredients.push({
+              ingredient: rows[0],
+              quantityId: newQuantity[0].id,
+              quantity: newQuantity.quantity,
+              unitOfMeasureId: newQuantity.unitOfMeasure_id
+            })
+          }
+        }
+        return newIngredients
+      })
       // return { recipe: recipe[0], instructions, ingredients }
       return { recipe: recipe[0] }
     }

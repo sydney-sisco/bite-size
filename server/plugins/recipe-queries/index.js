@@ -22,7 +22,7 @@ async function recipeQueries (fastify) {
       `) 
     },
     postNewRecipe: async (newRecipe) => {
-      const {
+      let {
         user_id,
         title,
         difficulty_id,
@@ -44,12 +44,13 @@ async function recipeQueries (fastify) {
           `, [user_id, title, difficulty_id, duration, image_url, servings, description]
         )
       })
-      console.log(recipe[0]);
       const recipeId = recipe[0].id;
+
+      instructionSteps = instructionSteps.split('\n').map((e, i) => [i, e]);
 
       const instructions = await pg.transact(async client => {
         const newInstructions = []
-        for (const [index, step] of instructionSteps.entries()) {
+        for (const [index, step] of instructionSteps) {
           if (step) {
             const { rows } = await client.query(`
               INSERT INTO instructions (instruction, step, recipe_id)
@@ -66,7 +67,6 @@ async function recipeQueries (fastify) {
     
        const ingredients = await pg.transact(async client => {
         const newIngredients = []
-        // for (const ingredient of ingredientList) {
         for (const ingredient of processedIngredients) {
           if (ingredient) {
             const { rows } = await client.query(`

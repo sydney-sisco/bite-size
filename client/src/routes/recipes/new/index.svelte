@@ -77,9 +77,9 @@
           body: JSON.stringify({
             userId: $session.user.id,
             title,
-            difficulty,
+            difficulty_id,
             duration,
-            imageUrl,
+            image_url,
             servings,
             description,
             instructionSteps,

@@ -25,7 +25,7 @@
   h3 {
     font-size: 36px;
   }
-
+d
   ul {
     background-color: #fff;
   }
@@ -297,7 +297,7 @@
     </ul>
     <h3>Instructions</h3>
     <ul class="instructions">
-      {#each instructions as { instruction }}
+      {#each recipeDetails.instructions as { instruction }}
         <li>
           {instruction}
         </li>

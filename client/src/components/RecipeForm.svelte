@@ -21,10 +21,14 @@
 
   console.log('props??', $$props);
 
-  export let recipe;
+  export let recipe = [{}];
   console.log('recipe obj', recipe);
 
+  // from edit:
+  // <RecipeForm {...recipeDetails} {handleCancel} {handleSubmit}/>
 
+  // from create:
+  // <RecipeForm {handleSubmit}/> 
   
   let { 
     difficulty_id = 2,
@@ -39,7 +43,7 @@
   } = recipe[0];
 
   // format instructions for the textarea
-  export let instructions;
+  export let instructions = [];
   let instructionSteps = ''
 
   for (let {instruction} of instructions) {
@@ -48,7 +52,7 @@
 
 
   // format ingredient list for the textarea
-  export let ingredients;
+  export let ingredients = [];
   let ingredientList = '';
 
   for (let {quantity, unit, name} of ingredients) {

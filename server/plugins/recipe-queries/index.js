@@ -97,7 +97,7 @@ async function recipeQueries (fastify) {
     },
 
     editRecipe: async (editRecipe, recipeID) => {
-      const {
+      let {
         userId,
         title,
         difficulty_id,
@@ -120,26 +120,33 @@ async function recipeQueries (fastify) {
           `, [userId, title, difficulty_id, duration, image_url, servings, description, recipeID]
         )
       })
-      // console.log(recipe[0]);
-      // const recipeId = recipe[0].id;
-      // const id = recipe[0].id;
-      // console.log("id",recipe[0].id);
 
-      // const instructions = await pg.transact(async client => {
-      //   const newInstructions = []
-      //   for (const [index, step] of instructionSteps.entries()) {
-      //     if (step) {
-      //       const { rows } = await client.query(`
-      //         INSERT INTO instructions (instruction, step, recipe_id)
-      //         VALUES ($1, $2, $3)
-      //         RETURNING *;
-      //       `, [step, (index + 1), recipeId]
-      //       )
-      //       newInstructions.push(rows[0])
-      //     }
-      //   }
-      //   return newInstructions
-      // })
+      // delete any existing instructions for recipe
+      await pg.transact(async client => {
+        return client.query(`
+          DELETE FROM instructions 
+          WHERE recipe_id = $1;
+        `, [recipeID]
+        );
+      });
+
+      instructionSteps = instructionSteps.split('\n').map((e, i) => [i, e]);
+      
+      const instructions = await pg.transact(async client => {
+        const newInstructions = []
+        for (const [index, step] of instructionSteps) {
+          if (step) {
+            const { rows } = await client.query(`
+              INSERT INTO instructions (instruction, step, recipe_id)
+              VALUES ($1, $2, $3)
+              RETURNING *;
+            `, [step, (index + 1), recipeID]
+            )
+            newInstructions.push(rows[0])
+          }
+        }
+        return newInstructions
+      })
 
       // delete any recipe_ingredients for recipe
       // ingredients will cascade
@@ -150,25 +157,11 @@ async function recipeQueries (fastify) {
         `, [recipeID]
         );
       });
-
-      // const deleteSpecificRecipe = async (fastify, id) => {
-      //   
-          
-      //   await client.query(
-      //     `DELETE FROM recipes
-      //     WHERE id=$1`, [id]
-      //   )
-      //   
-      
-      //   return rows;
-      // }
-      
       
       const processedIngredients = processIngredients(ingredientList);
     
       const ingredients = await pg.transact(async client => {
         const newIngredients = []
-        // for (const ingredient of ingredientList) {
         for (const ingredient of processedIngredients) {
           if (ingredient) {
             const { rows } = await client.query(`
@@ -198,9 +191,6 @@ async function recipeQueries (fastify) {
       // return { recipe: recipe[0], instructions, ingredients }
       return { recipe: recipe[0] }
     }
-
-
-
     
   })
 }

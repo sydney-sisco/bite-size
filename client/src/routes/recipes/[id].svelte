@@ -139,7 +139,7 @@
 
     try {
       const res = await fetch(
-        `${server}/recipes/${id}`,
+        `${$session.server}/recipes/${id}`,
         {
           method: 'DELETE',
         }

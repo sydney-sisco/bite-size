@@ -145,6 +145,74 @@
     // const { id } = page.params;
 
   }  
+
+  const handleCancel = () => {
+    mode = VIEW;
+  } 
+
+  let loadingState = false;
+  
+  const handleSubmit = async (recipeObject, recipeID) => {
+    //Create an if statement to make sure we have everything to make a recipe...
+    console.log('recipe??', recipeObject);
+
+    let {
+      userId,
+      title,
+      difficulty,
+      // duration,
+      hours,
+      minutes,
+      imageUrl,
+      servings,
+      description,
+      instructionSteps,
+      ingredientList,
+      unitOfMeasure,
+      quantity
+    } = recipeObject;
+
+    let duration;
+
+    if (hours && minutes) {
+      duration = (hours * 60) + minutes
+    } else if (!minutes && hours) {
+      duration = hours * 60
+    } else if (!hours && minutes) {
+      duration = minutes
+    } else {
+      duration
+    }
+
+    loadingState = true
+      try {
+        const res = await fetch(`${$session.server}/recipes/${recipeID}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: $session.user.id,
+            title,
+            difficulty,
+            duration,
+            imageUrl,
+            servings,
+            description,
+            instructionSteps,
+            ingredientList,
+            unitOfMeasure,
+            quantity
+          }),
+        });
+        loadingState = false
+        const { recipe: { id } } = await res.json()
+
+        goto(`/recipes/${id}`)
+      }
+      catch (error) {
+        console.error(error)
+      }
+    };
+
   
   async function deleteRecipe() {
     console.log('the deleted recipe id is: ', id)
@@ -251,5 +319,5 @@
   </div>
 </main>
 {:else if mode === EDIT}
-  <RecipeForm {...recipeDetails}/>
+  <RecipeForm {...recipeDetails} {handleCancel} {handleSubmit}/>
 {/if}

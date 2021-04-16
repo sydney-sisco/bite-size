@@ -7,6 +7,7 @@
 <script>
   import fetch from "cross-fetch";
   import { goto, stores } from '@sapper/app';
+  import { onMount } from 'svelte';
   import {
     CheckboxChipGroup,
     Headline,
@@ -19,12 +20,18 @@
 
   const { session } = stores(); // session data is stored here
 
-
+  
   console.log('props??', $$props);
-
+  
   export let recipe = [{}];
   console.log('recipe obj', recipe);
-
+  
+  //grabs tags on mount, map through to convert tags from DB to checkbox params'
+  onMount(async () => {
+    const res = await fetch(`http://localhost:5001/preload/search`);
+    const { tags } = await res.json();
+    items = tags.map(({ id, name }) => ({ value: id, label: name, checked: false })) 
+  })
   // from edit:
   // <RecipeForm {...recipeDetails} {handleCancel} {handleSubmit}/>
 
@@ -36,12 +43,23 @@
     description = null,
     title = null,
     duration = 0,
+    items = [],
     image_url = null,
     servings = null,
     // instructionSteps = ["", "", ""],
     unitOfMeasure = 1,
     quantity = 1,
   } = recipe[0];
+
+  
+  //built in checkbox callback - for each item in the checkbox list, updates state of checkbox to be passed to handleSubmit.
+  function onCheckTag (e) {
+    for (const item of items) {
+      if (item.value === e.detail.value) {
+        item.checked = e.detail.checked
+      }
+    }
+  }
 
   // format instructions for the textarea
   export let instructions = [];
@@ -94,22 +112,7 @@
       image_url = null;
     };
 
-  const items = [
-    { value: 1, label: "Vegetarian" },
-    { value: 2, label: "Vegan" },
-    { value: 3, label: "Poultry" },
-    { value: 4, label: "Seafood" },
-    { value: 5, label: "Pork" },
-    { value: 6, label: "Beef" },
-    { value: 7, label: "Gluten-Free" },
-    { value: 8, label: "Lactose-Free" },
-    { value: 9, label: "Halal" },
-    { value: 10, label: "Breakfast" },
-    { value: 11, label: "Brunch" },
-    { value: 12, label: "Lunch" },
-    { value: 13, label: "Dinner" },
-    { value: 14, label: "Dessert" }
-  ];
+  
 </script>
 
 <main>
@@ -186,7 +189,9 @@
       <Button on:click={changePhoto}>Pick a different photo</Button>
     {/if}
 
-    <CheckboxChipGroup {items} name="tags" outline />
+    {#if items}
+    <CheckboxChipGroup {items} on:change={onCheckTag} name="group1" />
+    {/if}
 
     <FormField name="Instructions" required>
       <textarea 
@@ -208,6 +213,7 @@
       image_url,
       servings,
       description,
+      items,
       instructionSteps,
       ingredientList,
       unitOfMeasure,

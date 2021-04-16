@@ -276,21 +276,18 @@
     }
   };
 
-  // {#each recipeDetails.ingredients as { name, unit, quantity }, id}
-  const formatIngredients = (name, unit, quantity) => {       
-        // if (quantity === 1 && unit === 'each') {
-        //   return `${quantity} ${name}` 
-        // }
-        if (unit === 'each') {
-          return `${quantity} ${name}`
-        }
-        
-        if (quantity === 1) {
-          return `${quantity} ${unit} of ${name}` 
-        }
-                  
-        return `${quantity} ${unit}s of ${name}`
-  }
+  import formatIngredients from '../../helpers/helpers';
+  // const formatIngredients = (name, unit, quantity) => {       
+  //   if (unit === 'each') {
+  //     return `${quantity} ${name}`
+  //   }
+    
+  //   if (quantity === 1) {
+  //     return `${quantity} ${unit} of ${name}` 
+  //   }
+              
+  //   return `${quantity} ${unit}s of ${name}`
+  // }
 
 </script>
 

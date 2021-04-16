@@ -27,6 +27,8 @@
 	featuredRecipes ? featuredRecipes = false : featuredRecipes = true; {
 	  }	
   }
+
+	let searchResults = [];
 </script>
 
 <style>
@@ -64,7 +66,6 @@
 	}
 </style>
 
-
 <svelte:head>
 	<title>Bite Size</title>
 </svelte:head>
@@ -74,7 +75,7 @@
 
 <p><strong>What do you want to eat?</strong></p>
 
-<SearchBar />
+<SearchBar bind:searchResults={searchResults}/>
 
 <div class="home-buttons">
   <Button outline> Search Recipes</Button>
@@ -89,4 +90,7 @@
     {/if}
 </div>
 
-
+<h3>Search Results:</h3>
+{#each searchResults as recipe}
+	<RecipeCard recipe={recipe.item} />
+{/each}

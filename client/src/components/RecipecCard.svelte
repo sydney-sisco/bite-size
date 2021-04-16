@@ -95,7 +95,11 @@
           {/if}
         </div>
       </div>
+      {#if recipe.image_url}
       <img style="width: 50%" src="{recipe.image_url}" alt="recipe">
+      {:else}
+      <img style="width: 50%" src="https://res.cloudinary.com/bitesizerecipes/image/upload/v1618603057/Bite-Size-Images/qo70e0mj3vobsoznw9yn.jpg" alt="Bite Size logo">
+      {/if}
     </div>
   </main>
 </div>

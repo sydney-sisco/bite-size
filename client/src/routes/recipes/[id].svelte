@@ -302,7 +302,11 @@
 
   <div class="right">
     <h2>Recipe Info</h2>
+    {#if recipeDetails.recipe[0].image_url}
     <img src="{recipeDetails.recipe[0].image_url}" alt="recipe">
+    {:else}
+    <img src="https://res.cloudinary.com/bitesizerecipes/image/upload/v1618603057/Bite-Size-Images/qo70e0mj3vobsoznw9yn.jpg" alt="Bite Size logo">
+    {/if}
     <div class="info">
       <p>Difficulty: {recipeDetails.recipe[0].difficulty}</p>
       <p>&#9734;{recipeDetails.recipe[0].favourite_count}</p>

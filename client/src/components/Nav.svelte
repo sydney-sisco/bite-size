@@ -1,10 +1,6 @@
 <script>
-	// export let segment;
 	import { stores } from '@sapper/app';
   const { session, page } = stores();
-  // $: console.log($page.path);
-	console.log('session', $session.user.username)
-
 
 	import logo from 'images/logo.png';
 </script>

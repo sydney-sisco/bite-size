@@ -1,6 +1,13 @@
 <script context="module">
   export async function preload(page, session) {
+    const { token, user, server } = session;
+
+    if (!token) {
+      return this.redirect(302, "login");
+    }
+
    return session;
+
   }
 </script>
 

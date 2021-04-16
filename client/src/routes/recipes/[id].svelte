@@ -25,10 +25,10 @@
   h3 {
     font-size: 36px;
   }
-d
+/* d
   ul {
     background-color: #fff;
-  }
+  } */
   
   ul.instructions {
     list-style-type: none;
@@ -251,7 +251,7 @@ d
         }),
       });
       userFavourite = true
-      favourite_count++;
+      recipeDetails.recipe[0].favourite_count++;
       // goto('/') //redirect to user's recipes (once built)
     }
     catch (error) {
@@ -268,7 +268,7 @@ d
   
       });
       userFavourite = false
-      favourite_count--;
+      recipeDetails.recipe[0].favourite_count--;
       // goto('/') //redirect to user's recipes (once built)
     }
     catch (error) {

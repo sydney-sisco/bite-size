@@ -60,11 +60,8 @@
     ingredientList += `${formatIngredients(name, unit, quantity)}\n`
     // ingredientList += `${quantity} ${unit} of ${name}\n`
   }
-  console.log('ingredientsList before for slice', ingredientList , '.')
   // removes new line at end 
   ingredientList = ingredientList.slice(0, -1) 
-  console.log('ingredientsList after for slice', ingredientList, '.')
-
 
   // format duration into hours and minutes
   let hours = Math.floor(duration / 60);

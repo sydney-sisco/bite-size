@@ -276,6 +276,8 @@
     }
   };
 
+  import formatIngredients from '../../helpers/helpers';
+
 </script>
 
 <svelte:head>
@@ -291,7 +293,7 @@
     <ul>
       {#each recipeDetails.ingredients as { name, unit, quantity }, id}
         <li>
-        {quantity} x {unit} of {name} 
+          {formatIngredients(name, unit, quantity)}
         </li>
       {/each}
     </ul>

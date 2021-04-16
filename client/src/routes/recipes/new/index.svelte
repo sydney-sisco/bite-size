@@ -126,27 +126,6 @@
       imageUrl = null;
     };
     
-    const addStep = () => {
-      instructionSteps.push("");
-      instructionSteps = instructionSteps;
-      console.log(instructionSteps);
-    };
-    
-    const removeStep = () => {
-      instructionSteps.pop("");
-      instructionSteps = instructionSteps;
-    };
-    
-    const addIngredient = () => {
-      ingredientList.push("");
-      ingredientList = ingredientList;
-      console.log(ingredientList);
-    };
-
-  const removeIngredient = () => {
-    ingredientList.pop("");
-    ingredientList = ingredientList;
-  };
 
   const items = [
     { value: 1, label: "Vegetarian" },

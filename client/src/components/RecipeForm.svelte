@@ -15,6 +15,7 @@
     FormField,
     FileDropzone,
   } from "attractions";
+  import formatIngredients from '../helpers/helpers';
 
   const { session } = stores(); // session data is stored here
 
@@ -50,12 +51,13 @@
     instructionSteps += `${instruction}\n`;
   }
 
-
+  
   // format ingredient list for the textarea
   export let ingredients = [];
   let ingredientList = '';
 
   for (let {quantity, unit, name} of ingredients) {
+    // ingredientList += `${formatIngredients(name, unit, quantity)}\n`
     ingredientList += `${quantity} ${unit} of ${name}\n`
   }
 

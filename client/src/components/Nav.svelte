@@ -1,8 +1,10 @@
 <script>
 	// export let segment;
 	import { stores } from '@sapper/app';
-  const { page } = stores();
+  const { session, page } = stores();
   // $: console.log($page.path);
+	console.log('session', $session.user.username)
+
 
 	import logo from 'images/logo.png';
 </script>
@@ -84,6 +86,10 @@
 			<li><a rel=prefetch aria-current="{$page.path === '/my-recipes' ? 'page' : undefined}" href="my-recipes">My Recipes</a></li>
 			<li><a rel=prefetch aria-current="{$page.path === '/favourites' ? 'page' : undefined}" href="favourites">My Favourites</a></li>
 			<li><a rel=prefetch aria-current="{$page.path === '/recipes/new' ? 'page' : undefined}" href="recipes/new">New Recipe</a></li>
+			{#if $session.user.username}
+			<li><a>Logged in as {$session.user.username}</a></li>
+			{:else}
 			<li><a rel=prefetch aria-current="{$page.path === '/login' ? 'page' : undefined}" href="login">Login</a></li>
+			{/if}
 	</ul>
 </nav>

@@ -321,7 +321,9 @@
       {:else}
         <Button  on:click={() => favouriteRecipe()} outline>Favourite Recipe</Button>
       {/if}
+      {#if recipeDetails.recipe[0].user_id === $session.user.id}
       <Button on:click={() => editRecipe()}>Edit Recipe</Button>
+      {/if}
       <Button on:click={() => deleteRecipe()}>Delete Recipe</Button>
     </div>
   </div>

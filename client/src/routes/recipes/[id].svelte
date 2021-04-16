@@ -276,6 +276,22 @@
     }
   };
 
+  // {#each recipeDetails.ingredients as { name, unit, quantity }, id}
+  const formatIngredients = (name, unit, quantity) => {       
+        // if (quantity === 1 && unit === 'each') {
+        //   return `${quantity} ${name}` 
+        // }
+        if (unit === 'each') {
+          return `${quantity} ${name}`
+        }
+        
+        if (quantity === 1) {
+          return `${quantity} ${unit} of ${name}` 
+        }
+                  
+        return `${quantity} ${unit}s of ${name}`
+  }
+
 </script>
 
 <svelte:head>
@@ -291,7 +307,7 @@
     <ul>
       {#each recipeDetails.ingredients as { name, unit, quantity }, id}
         <li>
-        {quantity} x {unit} of {name} 
+          {formatIngredients(name, unit, quantity)}
         </li>
       {/each}
     </ul>

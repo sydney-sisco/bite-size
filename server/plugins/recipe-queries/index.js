@@ -214,7 +214,21 @@ const findUnitOfMeasureID = unit => {
     'pound',
     'quart',
     'tablespoon',
-    'teaspoon'
+    'teaspoon',
+    'deciliter',
+    'dL',
+    'fluid ounce',
+    'gal',
+    'g',
+    'kg',
+    'L',
+    'mL',
+    'oz',
+    'pt',
+    'lb',
+    'qt',
+    'tbsp',
+    'tsp'
   ];
 
   console.log('unit:', unit);

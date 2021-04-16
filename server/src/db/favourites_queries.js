@@ -3,7 +3,7 @@ const getUserFavourites = async (fastify, user_id) => {
   const { rows } = await client.query(
     `SELECT r.*, u.username, totfav.tf AS favourites FROM recipes r
     JOIN users u ON u.id = r.user_id
-    LEFT JOIN favourites f ON f.user_id = u.id
+    LEFT JOIN favourites f ON r.id = f.recipe_id
     JOIN (select recipe_id, count(user_id) tf from favourites group by recipe_id) totfav ON r.id = totfav.recipe_id
     WHERE f.user_id = $1
     GROUP BY r.id, u.username, totfav.tf

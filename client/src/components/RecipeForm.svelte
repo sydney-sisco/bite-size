@@ -57,9 +57,11 @@
   let ingredientList = '';
 
   for (let {quantity, unit, name} of ingredients) {
-    // ingredientList += `${formatIngredients(name, unit, quantity)}\n`
-    ingredientList += `${quantity} ${unit} of ${name}\n`
+    ingredientList += `${formatIngredients(name, unit, quantity)}\n`
+    // ingredientList += `${quantity} ${unit} of ${name}\n`
   }
+  // removes new line at end 
+  ingredientList = ingredientList.slice(0, -1) 
 
   // format duration into hours and minutes
   let hours = Math.floor(duration / 60);

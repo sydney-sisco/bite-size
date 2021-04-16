@@ -113,7 +113,12 @@
 </script>
 
 <main>
-  <Headline>Create a New Recipe</Headline>
+  {#if recipe[0].id}
+    <Headline>Edit Recipe</Headline>
+  {:else}
+    <Headline>Create a New Recipe</Headline>
+  {/if}
+
     <FormField name="Recipe Title" required>
       <TextField bind:value={title} />
     </FormField>

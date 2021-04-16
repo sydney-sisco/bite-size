@@ -75,7 +75,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            userId: $session.user.id,
+            user_id: $session.user.id,
             title,
             difficulty_id,
             duration,

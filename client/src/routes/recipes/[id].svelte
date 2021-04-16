@@ -25,10 +25,10 @@
   h3 {
     font-size: 36px;
   }
-/* d
+
   ul {
     background-color: #fff;
-  } */
+  }
   
   ul.instructions {
     list-style-type: none;
@@ -55,7 +55,7 @@
   }
 
   /* Start the line further down on the first list item */
-  ul.instructions li:first-child:before { top: 15px;  }
+  ul.instructions li:first-child:before { top: 10px; }
 
   /* Stop the line short on the final list item */
   ul.instructions li:last-child:before { height: 6px; }

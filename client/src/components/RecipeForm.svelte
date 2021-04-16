@@ -116,108 +116,110 @@
 
 <main>
   {#if recipe[0].id}
-    <Headline>Edit Recipe</Headline>
+  <Headline>Edit Recipe</Headline>
   {:else}
-    <Headline>Create a New Recipe</Headline>
+  <Headline>Create a New Recipe</Headline>
   {/if}
 
-    <FormField name="Recipe Title" required>
-      <TextField bind:value={title} />
-    </FormField>
+  <FormField name="Recipe Title" required>
+    <TextField bind:value={title} />
+  </FormField>
 
-    <FormField name="Description">
-      <TextField bind:value={description} />
-    </FormField>
+  <FormField name="Description">
+    <TextField bind:value={description} />
+  </FormField>
 
-    <FormField name="Total Duration">
-      Hours: 
-        <input
-          type="number"
-          bind:value={hours}
-          id="hours"
-          name="hours"
-          min="0"
-          max="72"
-        />
-      Minutes: 
-        <input
-          type="number"
-          bind:value={minutes}
-          id="minutes"
-          name="minutes"
-          min="0"
-          max="59"
-        />
-    </FormField>
-
-    <FormField name="Servings">
+  <FormField name="Total Duration">
+    Hours: 
       <input
         type="number"
-        bind:value={servings}
-        id="servings"
-        name="servings"
-        min="1"
-        max="50"
+        bind:value={hours}
+        id="hours"
+        name="hours"
+        min="0"
+        max="72"
       />
-    </FormField>
-
-    <FormField name="Difficulty">
+    Minutes: 
       <input
-        type="range"
-        min="1"
-        max="3"
-        bind:value={difficulty_id}
-        class="slider"
-        name="difficulty-slider"
+        type="number"
+        bind:value={minutes}
+        id="minutes"
+        name="minutes"
+        min="0"
+        max="59"
       />
-      <output for="difficulty-slider">
-        {difficultyNames[difficulty_id - 1]}
-      </output>
-    </FormField>
+  </FormField>
 
-    <FormField name="Ingredients" required>
-        <textarea 
-          rows="8" 
-          cols="50" 
-          name="Ingredients" 
-          bind:value={ingredientList} 
-          placeholder="Put each ingredient on its own line."></textarea>
-    </FormField>
+  <FormField name="Servings">
+    <input
+      type="number"
+      bind:value={servings}
+      id="servings"
+      name="servings"
+      min="1"
+      max="50"
+    />
+  </FormField>
 
-    {#if !image_url}
-      <FileDropzone accept="image/*" max={1} on:change={uploadImage}>
-        <span slot='empty-layer'>Choose an Image</span>
-      </FileDropzone>
-    {:else}
-      <img src={image_url} alt="recipe" />
-      <Button on:click={changePhoto}>Pick a different photo</Button>
-    {/if}
+  <FormField name="Difficulty">
+    <input
+      type="range"
+      min="1"
+      max="3"
+      bind:value={difficulty_id}
+      class="slider"
+      name="difficulty-slider"
+    />
+    <output for="difficulty-slider">
+      {difficultyNames[difficulty_id - 1]}
+    </output>
+  </FormField>
 
-    <CheckboxChipGroup {items} name="tags" outline />
-
-    <FormField name="Instructions" required>
+  <FormField name="Ingredients" required>
       <textarea 
         rows="8" 
         cols="50" 
-        name="Instructions" 
-        bind:value={instructionSteps} 
-        placeholder="Put each instruction on its own line."></textarea>
-    </FormField>
+        name="Ingredients" 
+        bind:value={ingredientList} 
+        placeholder="Put each ingredient on its own line."></textarea>
+  </FormField>
 
-    <Button on:click={() => handleCancel()}>Cancel</Button>
-    
-    <Button filled class="btn" on:click={() => handleSubmit({
-      userId: $session.user.id,
-      title,
-      difficulty_id,
-      hours,
-      minutes,
-      image_url,
-      servings,
-      description,
-      instructionSteps,
-      ingredientList,
-      unitOfMeasure,
-      quantity
-    }, recipe[0].id)}>{!loadingState ? 'Submit Recipe' : 'Loading...'}</Button>
+  {#if !image_url}
+    <FileDropzone accept="image/*" max={1} on:change={uploadImage}>
+      <span slot='empty-layer'>Choose an Image</span>
+    </FileDropzone>
+  {:else}
+    <img src={image_url} alt="recipe" />
+    <Button on:click={changePhoto}>Pick a different photo</Button>
+  {/if}
+
+  <CheckboxChipGroup {items} name="tags" outline />
+
+  <FormField name="Instructions" required>
+    <textarea 
+      rows="8" 
+      cols="50" 
+      name="Instructions" 
+      bind:value={instructionSteps} 
+      placeholder="Put each instruction on its own line."></textarea>
+  </FormField>
+
+  <!-- {#if recipe[0].id} -->
+  <Button on:click={() => handleCancel()}>Cancel</Button>
+  <!-- {/if} -->
+  
+  <Button filled class="btn" on:click={() => handleSubmit({
+    userId: $session.user.id,
+    title,
+    difficulty_id,
+    hours,
+    minutes,
+    image_url,
+    servings,
+    description,
+    instructionSteps,
+    ingredientList,
+    unitOfMeasure,
+    quantity
+  }, recipe[0].id)}>{!loadingState ? 'Submit Recipe' : 'Loading...'}</Button>
 </main>

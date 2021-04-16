@@ -105,6 +105,11 @@
       }
     };
 
+  const handleCancel = () => {
+      goto('/recipes')
+      //redirect to my recipes
+  } 
+
   const uploadImage = async (e) => {
     const uploadedImage = e.detail.files[0];
     const data = new FormData();
@@ -145,4 +150,4 @@
   ];
 </script>
 
-<RecipeForm {handleSubmit}/> 
+<RecipeForm {handleSubmit} {handleCancel}/> 

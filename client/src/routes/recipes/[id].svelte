@@ -139,14 +139,10 @@
     instructions
  } = recipeDetails
 
- console.log('recipe deets:', recipeDetails);
+//  console.log('recipe deets:', recipeDetails);
 
-
- async function editRecipe() {
+  async function editRecipe() {
    mode = EDIT;
-    console.log('the editRecipe recipe id is: ', id)
-    // const { id } = page.params;
-
   }  
 
   const handleCancel = () => {
@@ -158,12 +154,11 @@
   const handleSubmit = async (recipeObject, recipeID) => {
     //Create an if statement to make sure we have everything to make a recipe...
     console.log('recipe object from edit form:', recipeObject);
-
+    
     let {
       user_id,
       title,
       difficulty_id,
-      // duration,
       hours,
       minutes,
       image_url,
@@ -223,8 +218,6 @@
 
   
   async function deleteRecipe() {
-    console.log('the deleted recipe id is: ', id)
-    // const { id } = page.params;
 
     try {
       const res = await fetch(

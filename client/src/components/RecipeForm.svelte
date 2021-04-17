@@ -114,7 +114,7 @@
   ];
 </script>
 
-<main>
+<main class="recipe-form">
   {#if recipe[0].id}
   <Headline>Edit Recipe</Headline>
   {:else}

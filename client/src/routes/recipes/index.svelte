@@ -16,6 +16,7 @@
     margin-top: 3em;
     max-width: 336px;
     height: 0%;
+    text-align: center;
   }
 
   .right h2 {
@@ -50,7 +51,22 @@
 </script>
 
 <script>
+  import { stores, goto } from '@sapper/app';
+  const { page } = stores();
+  console.log('page:', $page);
+  console.log('page:', $page.query.search);
+
+
 	export let recipeList;
+
+  import SearchBar from '../../components/searchBar.svelte';
+  
+  let searchTerm = '';
+  if ($page.query.search) {
+     searchTerm = $page.query.search;
+  }
+  let searchResults = recipeList;
+  
 </script>
 
 <svelte:head>
@@ -62,17 +78,13 @@
     <h1>Recipes</h1>
 
     <div class="recipe-container">
-      {#each recipeList as recipe, id}
+      {#each searchResults as recipe, id}
         <RecipeCard recipe={recipe} />
       {/each}
     </div>
   </div>
   <div class="right">
     <h2>Filters</h2>
-    <ul>
-      {#each [...Array(10).keys()] as i}
-        <li>placeholder</li>
-      {/each}
-    </ul>  
+    Search: <SearchBar bind:searchResults={searchResults} bind:searchTerm={searchTerm}/>
   </div>
 </main>

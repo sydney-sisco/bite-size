@@ -17,7 +17,11 @@
   const { session } = stores(); // session data is stored here
 
   let loadingState = false;
-
+  
+  const handleCancel = () => {
+      goto('/recipes')
+      //redirect to my recipes
+  } 
   const handleSubmit = async (recipeObject) => {
     //Create an if statement to make sure we have everything to make a recipe...
     loadingState = true;
@@ -86,4 +90,4 @@
   };
 </script>
 
-<RecipeForm {handleSubmit} />
+<RecipeForm {handleSubmit} {handleCancel}/> 

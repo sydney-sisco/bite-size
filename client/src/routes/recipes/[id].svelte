@@ -25,10 +25,10 @@
   h3 {
     font-size: 36px;
   }
-/* d
+
   ul {
     background-color: #fff;
-  } */
+  }
   
   ul.instructions {
     list-style-type: none;
@@ -55,7 +55,7 @@
   }
 
   /* Start the line further down on the first list item */
-  ul.instructions li:first-child:before { top: 15px;  }
+  ul.instructions li:first-child:before { top: 10px; }
 
   /* Stop the line short on the final list item */
   ul.instructions li:last-child:before { height: 6px; }
@@ -138,14 +138,10 @@
     instructions
  } = recipeDetails
 
- console.log('recipe deets:', recipeDetails);
+//  console.log('recipe deets:', recipeDetails);
 
-
- async function editRecipe() {
+  async function editRecipe() {
    mode = EDIT;
-    console.log('the editRecipe recipe id is: ', id)
-    // const { id } = page.params;
-
   }  
 
   const handleCancel = () => {
@@ -226,8 +222,6 @@
 
   
   async function deleteRecipe() {
-    console.log('the deleted recipe id is: ', id)
-    // const { id } = page.params;
 
     try {
       const res = await fetch(
@@ -312,7 +306,11 @@
 
   <div class="right">
     <h2>Recipe Info</h2>
+    {#if recipeDetails.recipe[0].image_url}
     <img src="{recipeDetails.recipe[0].image_url}" alt="recipe">
+    {:else}
+    <img src="https://res.cloudinary.com/bitesizerecipes/image/upload/v1618603057/Bite-Size-Images/qo70e0mj3vobsoznw9yn.jpg" alt="Bite Size logo">
+    {/if}
     <div class="info">
       <p>Difficulty: {recipeDetails.recipe[0].difficulty}</p>
       <p>&#9734;{recipeDetails.recipe[0].favourite_count}</p>

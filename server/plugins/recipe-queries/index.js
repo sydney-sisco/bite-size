@@ -283,7 +283,8 @@ const processIngredients = ingredients => {
   // console.log(str);
 
   // split the string into an array based on new-line character
-  const ingArr = ingredients.split('\n');
+  let ingArr = ingredients.split('\n');
+  ingArr = ingArr.filter(word => word.length > 0);
 
   const details = ingArr.map(e => {
     return e.trim().split(' '); // split each line into an array of words
@@ -336,7 +337,6 @@ const processIngredients = ingredients => {
 
       obj.unitOfMeasure = findUnitOfMeasureID(obj.unitOfMeasure);
       // obj.unitOfMeasure = 1; // hack it in for now
-      console.log(obj);
       return obj;
     }
     console.log('returning e???', e);

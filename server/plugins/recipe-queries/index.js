@@ -33,8 +33,6 @@ async function recipeQueries (fastify) {
         description,
         instructionSteps,
         ingredientList,
-        unitOfMeasure,
-        quantity
       } = newRecipe
 
       
@@ -116,13 +114,12 @@ async function recipeQueries (fastify) {
         title,
         difficulty_id,
         duration,
+        tags,
         image_url,
         servings,
         description,
         instructionSteps,
         ingredientList,
-        unitOfMeasure,
-        quantity
       } = editRecipe
     
       const { rows: recipe } = await pg.transact(async client => {
@@ -202,14 +199,34 @@ async function recipeQueries (fastify) {
         }
         return newIngredients
       })
+
+      await pg.transact(async client => {
+        return client.query(`
+          DELETE FROM recipe_tags
+          WHERE recipe_id = $1;
+        `, [recipeID]
+        );
+      });
+
+      const recipeTags = await pg.transact(async client => {
+        for (const tag of tags) {         
+          if (tag) {
+            await client.query(`
+            INSERT INTO recipe_tags (recipe_id, tag)
+            VALUES ($1, $2)
+            RETURNING *;
+            `, [recipeID, tag.id])
+          }
+        }
+      })
+
       // return { recipe: recipe[0], instructions, ingredients }
-      return { recipe: recipe[0] }
+      return { recipe: recipe[0]}
     }
+
     
   })
 }
-
-
 
 // hopefully converts a unit of measure: "cups" into an index value
 // this index value should match the cooresponding id in the

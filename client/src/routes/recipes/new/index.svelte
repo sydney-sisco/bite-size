@@ -1,58 +1,35 @@
 <script context="module">
+  //page preload with login redirect if no token present.
   export async function preload(page, session) {
     const { token, user, server } = session;
-
     if (!token) {
       return this.redirect(302, "login");
     }
-
-   return session;
-
+    return session;
   }
 </script>
 
 <script>
   import fetch from "cross-fetch";
-  import { goto, stores } from '@sapper/app';
-  import {
-    CheckboxChipGroup,
-    Headline,
-    Button,
-    TextField,
-    FormField,
-    FileDropzone,
-  } from "attractions";
-
-  // import RecipeForm from '/client/src/components/RecipeForm.svelte'
-  import RecipeForm from "../../../components/RecipeForm.svelte"
+  import { goto, stores } from "@sapper/app";
+  import RecipeForm from "../../../components/RecipeForm.svelte";
 
   const { session } = stores(); // session data is stored here
+
+  let loadingState = false;
   
-  // let hours = 0;
-  // let minutes = 0;
-  // let title = null;
-  // let difficulty = 2;
-  // let duration = 0;
-  // let imageUrl = null;
-  // let servings = null;
-  // let description = null;
-  // let instructionSteps = ["", "", ""];
-  // let ingredientList = [""];
-  // let unitOfMeasure = 1;
-  // let quantity = 1;
-
-  let loadingState = false
-  // const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
-
-  const handleSubmit = async recipeObject => {
+  const handleCancel = () => {
+      goto('/recipes')
+      //redirect to my recipes
+  } 
+  const handleSubmit = async (recipeObject) => {
     //Create an if statement to make sure we have everything to make a recipe...
-    console.log('recipe??', recipeObject);
+    loadingState = true;
 
     let {
-      user_id,
       title,
       difficulty_id,
-      // duration,
+      items,
       hours,
       minutes,
       image_url,
@@ -60,94 +37,57 @@
       description,
       instructionSteps,
       ingredientList,
-      unitOfMeasure,
-      quantity
     } = recipeObject;
+
+    //variables we will be altering after form submit (duration, user_id, and tags)
 
     let duration;
 
     if (hours && minutes) {
-      duration = (hours * 60) + minutes
+      duration = hours * 60 + minutes;
     } else if (!minutes && hours) {
-      duration = hours * 60
+      duration = hours * 60;
     } else if (!hours && minutes) {
-      duration = minutes
+      duration = minutes;
     } else {
-      duration
+      duration;
     }
 
-    loadingState = true
-      try {
-        const res = await fetch(`${$session.server}/recipes`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user_id: $session.user.id,
-            title,
-            difficulty_id,
-            duration,
-            image_url,
-            servings,
-            description,
-            instructionSteps,
-            ingredientList,
-            unitOfMeasure,
-            quantity
-          }),
-        });
-        loadingState = false
-        const { recipe: { id } } = await res.json()
+    let user_id = $session.user.id;
 
-        goto(`/recipes/${id}`)
-      }
-      catch (error) {
-        console.error(error)
-      }
-    };
+    let tags = items
+      .filter(({ checked }) => checked)
+      .map(({ value, label }) => ({ id: value, name: label }));
 
-  const handleCancel = () => {
-      goto('/recipes')
-      //redirect to my recipes
-  } 
 
-  const uploadImage = async (e) => {
-    const uploadedImage = e.detail.files[0];
-    const data = new FormData();
-    data.append("file", uploadedImage);
-    data.append("upload_preset", $session.key);
-    const res = await fetch(
-      $session.site,
-
-      {
+    //after all is updated, 
+    try {
+      const res = await fetch(`${$session.server}/recipes`, {
         method: "POST",
-        body: data,
-      }
-      );
-      const { secure_url } = await res.json();
-      imageUrl = secure_url;
-    };
-    
-    const changePhoto = () => {
-      imageUrl = null;
-    };
-    
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id,
+          title,
+          difficulty_id,
+          duration,
+          tags,
+          image_url,
+          servings,
+          description,
+          instructionSteps,
+          ingredientList,
+        }),
+      });
+      loadingState = false;
+      const {
+        recipe: { id },
+      } = await res.json();
 
-  const items = [
-    { value: 1, label: "Vegetarian" },
-    { value: 2, label: "Vegan" },
-    { value: 3, label: "Poultry" },
-    { value: 4, label: "Seafood" },
-    { value: 5, label: "Pork" },
-    { value: 6, label: "Beef" },
-    { value: 7, label: "Gluten-Free" },
-    { value: 8, label: "Lactose-Free" },
-    { value: 9, label: "Halal" },
-    { value: 10, label: "Breakfast" },
-    { value: 11, label: "Brunch" },
-    { value: 12, label: "Lunch" },
-    { value: 13, label: "Dinner" },
-    { value: 14, label: "Dessert" }
-  ];
+      goto(`/recipes/${id}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 </script>
 
 <RecipeForm {handleSubmit} {handleCancel}/> 

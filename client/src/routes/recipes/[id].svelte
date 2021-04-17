@@ -107,7 +107,6 @@
 </script>
 
 <script>
-  import { afterUpdate } from 'svelte'
   import { Button } from 'attractions';
   import { goto, stores } from '@sapper/app';
   import fetch from "cross-fetch";
@@ -155,10 +154,12 @@
     //Create an if statement to make sure we have everything to make a recipe...
     console.log('recipe object from edit form:', recipeObject);
     
+    loadingState = true
+
     let {
-      user_id,
       title,
       difficulty_id,
+      items,
       hours,
       minutes,
       image_url,
@@ -166,10 +167,9 @@
       description,
       instructionSteps,
       ingredientList,
-      unitOfMeasure,
-      quantity
     } = recipeObject;
 
+  
     let duration;
 
     if (hours && minutes) {
@@ -182,7 +182,12 @@
       duration
     }
 
-    loadingState = true
+    let user_id = $session.user.id;
+
+    let tags = items
+      .filter(({ checked }) => checked)
+      .map(({ value, label }) => ({ id: value, name: label }));
+
       try {
         const res = await fetch(`${$session.server}/recipes/${recipeID}`, {
           method: "PATCH",
@@ -192,13 +197,12 @@
             title,
             difficulty_id,
             duration,
+            tags,
             image_url,
             servings,
             description,
             instructionSteps,
-            ingredientList,
-            unitOfMeasure,
-            quantity
+            ingredientList
           }),
         });
         loadingState = false
@@ -310,6 +314,9 @@
     <div class="info">
       <p>Difficulty: {recipeDetails.recipe[0].difficulty}</p>
       <p>&#9734;{recipeDetails.recipe[0].favourite_count}</p>
+      {#each recipeDetails.tags as { name }}
+        <li>{name}</li>
+      {/each}
       {#each emojiReactions as emojiReaction }
         <Emoji recipeID={id} {emojiReaction} />
       {/each}

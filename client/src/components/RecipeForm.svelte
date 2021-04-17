@@ -7,7 +7,7 @@
 <script>
   import fetch from "cross-fetch";
   import { goto, stores } from '@sapper/app';
-  import { onMount } from 'svelte';
+  import { onMount, afterUpdate } from 'svelte';
   import {
     CheckboxChipGroup,
     Headline,
@@ -21,16 +21,23 @@
   const { session } = stores(); // session data is stored here
 
   
-  console.log('props??', $$props);
-  
   export let recipe = [{}];
-  console.log('recipe obj', recipe);
+  let tagProps = $$props.tags
+  // let items
   
   //grabs tags on mount, map through to convert tags from DB to checkbox params'
   onMount(async () => {
     const res = await fetch(`http://localhost:5001/preload/search`);
     const { tags } = await res.json();
-    items = tags.map(({ id, name }) => ({ value: id, label: name, checked: false })) 
+    items = tags.map(({ id, name }) => {
+      for (const tag of tagProps) {
+        if (name === tag.name) {
+          return ({ value: id, label: name, checked: true })
+        }
+      }
+      return ({ value: id, label: name, checked: false })
+    })
+    console.log("RESULTS", items);   
   })
   // from edit:
   // <RecipeForm {...recipeDetails} {handleCancel} {handleSubmit}/>

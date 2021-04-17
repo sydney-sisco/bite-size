@@ -61,6 +61,10 @@
     /* height: auto; */
   }
 
+  .user-link :hover {
+    text-decoration: underline;
+  }
+
   .difficulty-tag {
     background-color: #000;
     color: #FFF;
@@ -81,26 +85,27 @@
 </script>
 
 <div class="recipe-card">
-  <a href="/recipes/{recipe.id}"><h3>{recipe.title}</h3></a>
-  <main>
-    <div class="info-line">
-      <span>&#9734;{recipe.favourites}</span>
-    </div>
-    <div class="content">
-      <div class="text">
-        <p>{recipe.description}</p>
-        <div class="below">
-          <a class="user-link" href="/users/{recipe.user_id}"><span>@{recipe.username}</span></a>
-          {#if recipe.difficulty_id > 2}
-          <span class="difficulty-tag">{difficultyNames[recipe.difficulty_id - 1]}</span>
-          {/if}
-        </div>
+  <a href="/recipes/{recipe.id}"><h3>{recipe.title}</h3>
+    <main>
+      <div class="info-line">
+        <span>&#9734;{recipe.favourites}</span>
       </div>
-      {#if recipe.image_url}
-      <img style="width: 50%" src="{recipe.image_url}" alt="recipe">
-      {:else}
-      <img style="width: 50%" src="https://res.cloudinary.com/bitesizerecipes/image/upload/v1618603057/Bite-Size-Images/qo70e0mj3vobsoznw9yn.jpg" alt="Bite Size logo">
-      {/if}
-    </div>
-  </main>
+      <div class="content">
+        <div class="text">
+          <p>{recipe.description}</p>
+          <div class="below">
+            <a class="user-link" href="/users/{recipe.user_id}"><span>@{recipe.username}</span></a>
+            {#if recipe.difficulty_id > 2}
+            <span class="difficulty-tag">{difficultyNames[recipe.difficulty_id - 1]}</span>
+            {/if}
+          </div>
+        </div>
+        {#if recipe.image_url}
+        <img style="width: 50%" src="{recipe.image_url}" alt="recipe">
+        {:else}
+        <img style="width: 50%" src="https://res.cloudinary.com/bitesizerecipes/image/upload/v1618603057/Bite-Size-Images/qo70e0mj3vobsoznw9yn.jpg" alt="Bite Size logo">
+        {/if}
+      </div>
+    </main>
+  </a>
 </div>

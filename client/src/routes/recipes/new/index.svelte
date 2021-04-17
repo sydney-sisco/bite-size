@@ -20,6 +20,7 @@
 
   const handleSubmit = async (recipeObject) => {
     //Create an if statement to make sure we have everything to make a recipe...
+    loadingState = true;
 
     let {
       title,
@@ -32,13 +33,12 @@
       description,
       instructionSteps,
       ingredientList,
-      unitOfMeasure,
-      quantity,
     } = recipeObject;
 
-    //variables we will be altering after form submit
+    //variables we will be altering after form submit (duration, user_id, and tags)
 
     let duration;
+
     if (hours && minutes) {
       duration = hours * 60 + minutes;
     } else if (!minutes && hours) {
@@ -55,7 +55,8 @@
       .filter(({ checked }) => checked)
       .map(({ value, label }) => ({ id: value, name: label }));
 
-    loadingState = true;
+
+    //after all is updated, 
     try {
       const res = await fetch(`${$session.server}/recipes`, {
         method: "POST",
@@ -71,8 +72,6 @@
           description,
           instructionSteps,
           ingredientList,
-          unitOfMeasure,
-          quantity,
         }),
       });
       loadingState = false;

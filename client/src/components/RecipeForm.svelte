@@ -23,28 +23,6 @@
   
   export let recipe = [{}];
   let tagProps = $$props.tags
-  // let items
-  
-  //grabs tags on mount, map through to convert tags from DB to checkbox params'
-  onMount(async () => {
-    const res = await fetch(`http://localhost:5001/preload/search`);
-    const { tags } = await res.json();
-    items = tags.map(({ id, name }) => {
-      for (const tag of tagProps) {
-        if (name === tag.name) {
-          return ({ value: id, label: name, checked: true })
-        }
-      }
-      return ({ value: id, label: name, checked: false })
-    })
-    console.log("RESULTS", items);   
-  })
-  // from edit:
-  // <RecipeForm {...recipeDetails} {handleCancel} {handleSubmit}/>
-
-  // from create:
-  // <RecipeForm {handleSubmit}/> 
-  
   let { 
     difficulty_id = 2,
     description = null,
@@ -57,6 +35,30 @@
     unitOfMeasure = 1,
     quantity = 1,
   } = recipe[0];
+  
+  //grabs tags on mount, map through to convert tags from DB to checkbox params'
+  // from edit:
+  // <RecipeForm {...recipeDetails} {handleCancel} {handleSubmit}/>
+  
+  // from create:
+  // <RecipeForm {handleSubmit}/> 
+  onMount(async () => {
+    const res = await fetch(`http://localhost:5001/preload/search`);
+    const { tags } = await res.json();
+    items = tags.map(({ id, name }) => {
+      if (tagProps) {
+        for (const tag of tagProps) {
+          if (name === tag.name) {
+            return ({ value: id, label: name, checked: true })
+          }
+        }
+      }
+      return ({ value: id, label: name, checked: false })
+    })
+    console.log(items);
+  })
+  
+ 
 
   
   //built in checkbox callback - for each item in the checkbox list, updates state of checkbox to be passed to handleSubmit.

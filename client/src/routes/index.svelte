@@ -83,8 +83,8 @@
 	.fr-cards {
 		display: flex;
 		flex-direction: row;
-		flex-wrap: wrap;
-		justify-content: space-evenly;
+		/* flex-wrap: wrap; */
+		justify-content: space-between;
 	}
 
 	@media (min-width: 480px) {

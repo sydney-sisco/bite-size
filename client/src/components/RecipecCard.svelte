@@ -5,6 +5,7 @@
 		padding: 0em 1em 1em 1em;
 		margin: 1em 0 1em 0;
     font-weight: 400;
+    border-radius: 5%;
 
     transition: transform .1s, box-shadow .1s;
     transition-timing-function: ease-out;

@@ -122,9 +122,20 @@
     const changePhoto = () => {
       image_url = null;
     };
+    
+    
+  </script>
 
-  
-</script>
+<style>
+
+  img {
+    width: 50%;
+    /* width: 200px;
+    height: 300px; */
+    object-fit: contain;
+  }
+
+</style>
 
 <main class="recipe-form">
   {#if recipe[0].id}
@@ -235,6 +246,6 @@
     instructionSteps,
     ingredientList,
     unitOfMeasure,
-    quantity
+    quantity    
   }, recipe[0].id)}>{!loadingState ? 'Submit Recipe' : 'Loading...'}</Button>
 </main>

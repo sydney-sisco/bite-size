@@ -43,6 +43,7 @@
 		// ignoreFieldNorm: false,
 		keys: [
 			"title",
+			"ingredients"
 			// "author.firstName"
 		]
 	};

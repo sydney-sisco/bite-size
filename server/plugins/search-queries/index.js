@@ -5,10 +5,17 @@ async function searchQueries (fastify) {
 
   fastify.decorate('searchQuery', {
     allRecipes: async () => {
-      const { rows } = await pg.query(`
-        SELECT *
-        FROM recipes;
-      `)
+      const { rows } = await pg.query(
+      //   `SELECT *
+      //   FROM recipes;
+      // `
+      `select r.*, string_agg(i.name, ',') as ingredients, string_agg(t.name, ',') as tags from recipes r
+      join recipe_ingredients ri on ri.recipe_id = r.id
+      join ingredients i on i.id = ri.ingredient_id
+      join recipe_tags rt on rt.recipe_id = r.id
+      join tags t on rt.tag = t.id
+      group by r.id`
+      )
       // const { id, title, description } = rows
       // return { id, title, description }
       return rows

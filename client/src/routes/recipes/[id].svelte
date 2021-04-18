@@ -139,6 +139,7 @@
 <script>
   import { Button } from 'attractions';
   import { goto, stores } from '@sapper/app';
+  import { fly } from 'svelte/transition'
   import fetch from "cross-fetch";
   import Emoji from '../../components/Emoji.svelte';
   import RecipeForm from "../../components/RecipeForm.svelte"

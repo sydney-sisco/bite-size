@@ -16,6 +16,9 @@
     margin-top: 3em;
     max-width: 336px;
     height: 0%;
+    display: flex;
+    flex-direction: column;
+
   }
 
   .right h2 {
@@ -29,28 +32,74 @@
     flex-direction: row;
     justify-content: space-between;
     flex-wrap: wrap;
-
     background-color: #FFF0E5;
   }
+
 </style>
 
 <script context="module">
 
   import RecipeCard from "../../components/RecipecCard.svelte";
+  import { onMount, afterUpdate } from 'svelte';
+  import { CheckboxChipGroup, Button } from 'attractions';
+  import { fly } from 'svelte/transition';
 
   export async function preload(page, session) {
 		const { id } = page.params;
 
 		const res = await this.fetch(`${session.server}/recipes`);
 		const recipeList = await res.json();
-
 		return { recipeList };
 	}
-
 </script>
 
 <script>
-	export let recipeList;
+  export let recipeList;
+
+  //declare empty variables for functions to use below.
+  let items;
+  let filter = false;
+  let filteredRecipes = [];
+  
+  //fetch all of the tags and map them into the correct format for CheckboxChipGroup.
+  onMount(async () => {
+    const res = await fetch(`http://localhost:5001/preload/search`);
+    const { tags } = await res.json();
+    items = tags.map(({ id, name }) => {
+      return ({ value: id, label: name, checked: false })
+    })
+  })
+
+  //shows or hides the filters on the page.
+  const showFilters = () => {
+    filter ? filter = false : filter = true
+  }
+
+  //filters the recipes by checking if items have been checked. 
+  //if so, compares it to the tag of the recipes being shown, and shows that recipe.
+
+  const filterResults = (e) => {
+    filteredRecipes = []
+    const tempItems = items.map(item => {
+      if (item.checked) {
+        return item.value
+      }
+    })
+    
+    for (const recipe of recipeList) {
+      for (const tag of recipe.tag) {
+        if (tempItems.includes(tag.id)) {
+          filteredRecipes.push(recipe)
+        } else if (!tempItems.includes(tag.id) && filteredRecipes.includes(recipe)) {
+          filteredRecipes = filteredRecipes.filter(element => element === recipe)
+        }
+      }
+    }
+
+  //redeclare the value for auto-updating
+    filteredRecipes = filteredRecipes
+  }
+
 </script>
 
 <svelte:head>
@@ -60,19 +109,31 @@
 <main>
   <div class="left">
     <h1>Recipes</h1>
-
+      {#if filter === false}
+        <Button on:click={showFilters}>Show Filters</Button>
+      {:else}
+        <Button on:click={showFilters}>Hide Filters</Button>
+      {/if}
     <div class="recipe-container">
-      {#each recipeList as recipe, id}
-        <RecipeCard recipe={recipe} />
-      {/each}
+      {#if filteredRecipes.length > 0}
+      {#each filteredRecipes as recipe}
+          <RecipeCard recipe={recipe} />
+        {/each}
+      {:else}
+        {#each recipeList as recipe}
+          <RecipeCard recipe={recipe} />
+        {/each}
+      {/if}
     </div>
   </div>
-  <div class="right">
+  {#if filter }
+  <div class="right" transition:fly="{{ y: -300, duration: 500 }}">
     <h2>Filters</h2>
     <ul>
-      {#each [...Array(10).keys()] as i}
-        <li>placeholder</li>
-      {/each}
+     {#if items}
+      <CheckboxChipGroup {items} on:change={filterResults} name="group1"  />
+      {/if}
     </ul>  
   </div>
+  {/if}
 </main>

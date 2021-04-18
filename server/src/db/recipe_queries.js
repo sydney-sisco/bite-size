@@ -38,7 +38,6 @@ const getRecipes = async (fastify) => {
     ORDER BY r.id`
   )
   client.release()
-
   // const userEmojiReactions = getUserEmojiReactions(fastify)
 
   return rows;
@@ -261,5 +260,6 @@ module.exports = {
   getRecipeDetails,
   deleteSpecificRecipe,
   getRecipesForUser,
-  favsForFeatured
+  favsForFeatured,
+  getRecipeTags
 }

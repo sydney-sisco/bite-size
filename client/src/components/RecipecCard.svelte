@@ -79,6 +79,7 @@
 <script>
 
   export let recipe;
+  let tags = recipe.tag;
 
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
 
@@ -92,7 +93,17 @@
       </div>
       <div class="content">
         <div class="text">
-          <p>{recipe.description}</p>
+          {#if recipe.description}
+            <p>{recipe.description}</p>
+          {/if}
+
+          {#if tags}
+            <div class="tag-list">
+              {#each tags as tag}
+                <p>- {tag.name}</p>
+              {/each}
+            </div>
+          {/if}
           <div class="below">
             <a class="user-link" href="/users/{recipe.user_id}"><span>@{recipe.username}</span></a>
             {#if recipe.difficulty_id > 2}

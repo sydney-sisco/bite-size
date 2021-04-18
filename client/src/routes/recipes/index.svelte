@@ -55,10 +55,13 @@
 
 <script>
   export let recipeList;
+
+  //declare empty variables for functions to use below.
   let items;
   let filter = false;
   let filteredRecipes = [];
   
+  //fetch all of the tags and map them into the correct format for CheckboxChipGroup.
   onMount(async () => {
     const res = await fetch(`http://localhost:5001/preload/search`);
     const { tags } = await res.json();
@@ -67,9 +70,13 @@
     })
   })
 
+  //shows or hides the filters on the page.
   const showFilters = () => {
     filter ? filter = false : filter = true
   }
+
+  //filters the recipes by checking if items have been checked. 
+  //if so, compares it to the tag of the recipes being shown, and shows that recipe.
 
   const filterResults = (e) => {
     filteredRecipes = []
@@ -88,10 +95,10 @@
         }
       }
     }
+
+  //redeclare the value for auto-updating
     filteredRecipes = filteredRecipes
   }
-
-//
 
 </script>
 

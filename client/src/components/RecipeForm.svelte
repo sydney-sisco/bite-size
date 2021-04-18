@@ -128,124 +128,277 @@
 
 <style>
 
-  img {
+  
+  .rf-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    /* color: black; */
+  }
+
+  .form {
+    /* border: 3px solid black; */
+    display: flex;
+    flex-direction: row;
+    margin-top: 15px;
+  }
+  .text-fields {
+    /* border: 2px solid red; */
+    margin-right: 5px;
     width: 50%;
-    /* width: 200px;
-    height: 300px; */
+  }
+
+  .recipe-title {
+    margin: 15px;
+  }
+
+  .description {
+    margin: 15px;
+  }
+
+  .ingredients {
+    margin: 15px;
+  }
+
+  .instructions {
+    margin: 15px;
+  }
+
+  .difficulty {
+    margin: 15px;
+  }
+
+  .duration {
+    margin: 15px;
+  }
+
+  .servings {
+    margin: 15px;
+  }
+
+  .tags-photo {
+    /* border: 2px solid blue; */
+    margin-left: 5px;
+    width: 50%;
+  }
+
+
+  .tags {
+    /* border: 2px solid yellow; */
+    margin: 15px;
+  }
+
+  img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
     object-fit: contain;
   }
 
+  .photo {
+    margin-top: 23px;
+    padding-left: 120px;
+    padding-right: 120px;
+  }
+
+  .select-photo-button {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  
+  }
+
+  .change-photo-button {
+    display: block;
+    /* margin-left: auto;
+    margin-right: auto; */
+    width: 50%;
+    margin-top: 15px;
+    margin-left: 10px;
+  
+  
+  }
+
+  .rf-buttons {
+    /* border: 2px solid green; */
+    display: flex;
+    justify-content: center;
+    margin: 15px;
+  }
+
+  .cancel {
+    margin-right: 5px;
+  }
+
+  .submit {
+    margin-left: 5px;
+  }
+/* 
+  @media only screen and (max-width: 1230) {
+    
+    .form {
+      display: flex;
+      flex-direction: column;
+    }
+  } */
+  
 </style>
 
 <main class="recipe-form">
-  {#if recipe[0].id}
-  <Headline>Edit Recipe</Headline>
-  {:else}
-  <Headline>Create a New Recipe</Headline>
-  {/if}
+  <div class="rf-header">
+    {#if recipe[0].id}
+    <Headline>Edit Recipe</Headline>
+    {:else}
+    <Headline>Create a New Recipe</Headline>
+    {/if}
+  </div>
 
-  <FormField name="Recipe Title" required>
-    <TextField bind:value={title} />
-  </FormField>
+  <div class="form">
+    <div class="text-fields">
+      <div class="recipe-title">
+        <FormField name="Recipe Title" required>
+          <!-- <TextField bind:value={title} /> -->
+          <textarea 
+          rows="1" 
+          cols="50" 
+          name="Recipe Title" 
+          bind:value={title}></textarea> 
+        </FormField>
+      </div>
 
-  <FormField name="Description">
-    <TextField bind:value={description} />
-  </FormField>
+      <div class="description">
+        <FormField name="Description">
+          <!-- <TextField bind:value={description} /> -->
+          <textarea 
+          rows="2" 
+          cols="50" 
+          name="Description" 
+          bind:value={description}></textarea> 
+        </FormField>
+      </div>
 
-  <FormField name="Total Duration">
-    Hours: 
-      <input
-        type="number"
-        bind:value={hours}
-        id="hours"
-        name="hours"
-        min="0"
-        max="72"
-      />
-    Minutes: 
-      <input
-        type="number"
-        bind:value={minutes}
-        id="minutes"
-        name="minutes"
-        min="0"
-        max="59"
-      />
-  </FormField>
+      <div class="ingredients">
+        <FormField name="Ingredients" required>
+          <textarea 
+          rows="8" 
+          cols="50" 
+          name="Ingredients" 
+          bind:value={ingredientList} 
+          placeholder="Put each ingredient on its own line."></textarea>
+        </FormField>
+      </div>
 
-  <FormField name="Servings">
-    <input
-      type="number"
-      bind:value={servings}
-      id="servings"
-      name="servings"
-      min="1"
-      max="50"
-    />
-  </FormField>
+      <div class="instructions">
+        <FormField name="Instructions" required>
+          <textarea 
+          rows="8" 
+          cols="50" 
+          name="Instructions" 
+          bind:value={instructionSteps} 
+          placeholder="Put each instruction on its own line."></textarea>
+        </FormField>
+      </div>
+        
+    </div>
 
-  <FormField name="Difficulty">
-    <input
-      type="range"
-      min="1"
-      max="3"
-      bind:value={difficulty_id}
-      class="slider"
-      name="difficulty-slider"
-    />
-    <output for="difficulty-slider">
-      {difficultyNames[difficulty_id - 1]}
-    </output>
-  </FormField>
+    <div class="tags-photo">
+      <div class="difficulty">
+        <FormField name="Difficulty">
+          <input
+          type="range"
+          min="1"
+          max="3"
+          bind:value={difficulty_id}
+          class="slider"
+          name="difficulty-slider"
+          />
+          <output for="difficulty-slider">
+            {difficultyNames[difficulty_id - 1]}
+          </output>
+        </FormField>
+      </div>
 
-  <FormField name="Ingredients" required>
-      <textarea 
-        rows="8" 
-        cols="50" 
-        name="Ingredients" 
-        bind:value={ingredientList} 
-        placeholder="Put each ingredient on its own line."></textarea>
-  </FormField>
+      <div class="duration">
+        <FormField name="Total Duration">
+          Hours: 
+          <input
+          type="number"
+          bind:value={hours}
+          id="hours"
+          name="hours"
+          min="0"
+          max="72"
+          />
+          Minutes: 
+          <input
+          type="number"
+          bind:value={minutes}
+          id="minutes"
+          name="minutes"
+          min="0"
+          max="59"
+          />
+        </FormField>
+      </div>  
 
-  {#if !image_url}
-    <FileDropzone accept="image/*" max={1} on:change={uploadImage}>
-      <span slot='empty-layer'>Choose an Image</span>
-    </FileDropzone>
-  {:else}
-    <img src={image_url} alt="recipe" />
-    <Button on:click={changePhoto}>Pick a different photo</Button>
-  {/if}
-
-  {#if items}
-  <CheckboxChipGroup {items} on:change={onCheckTag} name="group1" />
-  {/if}
-
-  <FormField name="Instructions" required>
-    <textarea 
-      rows="8" 
-      cols="50" 
-      name="Instructions" 
-      bind:value={instructionSteps} 
-      placeholder="Put each instruction on its own line."></textarea>
-  </FormField>
-
-  <!-- {#if recipe[0].id} -->
-  <Button on:click={() => handleCancel()}>Cancel</Button>
-  <!-- {/if} -->
-  
-  <Button filled class="btn" on:click={() => handleSubmit({
-    userId: $session.user.id,
-    title,
-    difficulty_id,
-    hours,
-    minutes,
-    image_url,
-    servings,
-    description,
-    items,
-    instructionSteps,
-    ingredientList,
-    unitOfMeasure,
-    quantity    
-  }, recipe[0].id)}>{!loadingState ? 'Submit Recipe' : 'Loading...'}</Button>
+      <div class="servings">
+        <FormField name="Servings">
+          <input
+          type="number"
+          bind:value={servings}
+          id="servings"
+          name="servings"
+          min="1"
+          max="50"
+          />
+        </FormField>
+      </div>
+        
+        <div class="tags">  
+          {#if items}
+          <CheckboxChipGroup {items} on:change={onCheckTag} name="group1" />
+          {/if}
+        </div>
+      
+        <div class="photo">
+          {#if !image_url}
+          <div class="select-photo-button">
+            <FileDropzone accept="image/*" max={1} on:change={uploadImage}>
+              <span type=text slot='empty-layer'>Choose an Image</span>
+            </FileDropzone>
+          </div>
+          {:else}
+          <img src={image_url} alt="recipe" />
+          <div class="change-photo-button">
+            <Button outline on:click={changePhoto}>Pick a different photo</Button>
+          </div>
+            {/if}
+        </div>
+    
+      <div class="rf-buttons">
+        <div class="cancel">
+          <Button outline on:click={() => handleCancel()}>Cancel</Button>
+        </div>
+        <div class="submit"> 
+        <Button filled class="btn" on:click={() => handleSubmit({
+          userId: $session.user.id,
+          title,
+          difficulty_id,
+          hours,
+          minutes,
+          image_url,
+          servings,
+          description,
+          items,
+          instructionSteps,
+          ingredientList,
+          unitOfMeasure,
+          quantity    
+        }, recipe[0].id)}>{!loadingState ? 'Submit Recipe' : 'Loading...'}</Button>
+        </div>
+      </div>    
+    </div>
+  </div>
 </main>

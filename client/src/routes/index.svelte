@@ -17,7 +17,8 @@
 
 <script>
   import { Button } from 'attractions';
-  import SearchBar from '../components/searchBar.svelte';
+  // import SearchBar from '../components/searchBar.svelte';
+	import { goto } from '@sapper/app';
   
   export let recipeList;
 
@@ -29,6 +30,14 @@
   }
 
 	let searchResults = [];
+
+	let searchTerm = '';
+
+	const submitSearch = searchTerm => {
+		console.log('??', searchTerm);
+		goto(`/recipes?search=${searchTerm}`);
+	}
+
 </script>
 
 <style>
@@ -75,7 +84,8 @@
 
 <p><strong>What do you want to eat?</strong></p>
 
-<SearchBar bind:searchResults={searchResults}/>
+<!-- <SearchBar bind:searchResults={searchResults}/> -->
+<input type="text" name="search" autocomplete="off" on:submit="{() => submitSearch(searchTerm)}" bind:value={searchTerm}>
 
 <div class="home-buttons">
   <Button outline> Search Recipes</Button>

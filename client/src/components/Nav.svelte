@@ -82,10 +82,10 @@
 			<li><a rel=prefetch aria-current="{$page.path === '/my-recipes' ? 'page' : undefined}" href="my-recipes">My Recipes</a></li>
 			<li><a rel=prefetch aria-current="{$page.path === '/favourites' ? 'page' : undefined}" href="favourites">My Favourites</a></li>
 			<li><a rel=prefetch aria-current="{$page.path === '/recipes/new' ? 'page' : undefined}" href="recipes/new">New Recipe</a></li>
-			<!-- {#if $session.user.username} -->
-			<!-- <li><a>Logged in as {$session.user.username}</a></li> -->
-			<!-- {:else} -->
-			<li><a rel=prefetch aria-current="{$page.path === '/login' ? 'page' : undefined}" href="login">Login</a></li>
-			<!-- {/if} -->
+			{#if $session.user}
+				<li><a>Logged in as {$session.user.username}</a></li>
+			{:else}
+				<li><a rel=prefetch aria-current="{$page.path === '/login' ? 'page' : undefined}" href="login">Login</a></li>
+			{/if}
 	</ul>
 </nav>

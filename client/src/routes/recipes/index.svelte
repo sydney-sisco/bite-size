@@ -63,17 +63,19 @@
 	export let recipeList;
 
   import SearchBar from '../../components/searchBar.svelte';
-  
-  let searchTerm = '';
-  if ($page.query.search) {
-     searchTerm = $page.query.search;
-  }
-  let searchResults = recipeList;
 
   //declare empty variables for functions to use below.
   let items;
   let filter = false;
   let filteredRecipes = [];
+  
+  let searchTerm = '';
+  if ($page.query.search) {
+     searchTerm = $page.query.search;
+     filter = true;
+  }
+  let searchResults = recipeList;
+
   
   //fetch all of the tags and map them into the correct format for CheckboxChipGroup.
   onMount(async () => {

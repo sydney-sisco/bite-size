@@ -99,9 +99,11 @@
 
           {#if tags}
             <div class="tag-list">
-              {#each tags as tag}
-                <p>- {tag.name}</p>
-              {/each}
+              <body>
+                {#each tags as tag}
+                 {tag.name}<br>
+                {/each}
+              </body>
             </div>
           {/if}
           <div class="below">

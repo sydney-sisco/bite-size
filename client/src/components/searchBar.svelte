@@ -1,42 +1,51 @@
-<!-- <script context="module">
-  export async function preload(page, session) {
-		const res = await this.fetch(`http://localhost:5001/preload/search`);
-		const allResults = await res.json();
-		return { allResults };
-	}
-</script> -->
-
 <script>
   import { onMount } from 'svelte'
-  import { Autocomplete } from 'attractions'
-  let allResults;
+  import Fuse from 'fuse.js'
 
-  async function getAllResults() {
-		const res = await fetch(`http://localhost:5001/preload/search`);
-		const queryResults = await res.json();
-    allResults = queryResults
-	}
-  
-  async function* getOptions(text) {
-    // console.log(allResults.recipes);
-    // const recipeTitles = allResults.recipes.map(recipe => recipe.title);
-    // const ingredientNames = allResults.ingredients.map(ingredient => ingredient.name);
-    // allResults.tags.map(tag => tag.name);
-
-    // join arrays together
-
-    yield [
-      { name: text, details: 'Optional' },
-      { name: text, details: 'Optional' },
-      { name: 'recipe.title that matches', details: 'recipe details' },
-
-    ];
-  }
+	export let recipeList = [];
 
   onMount(async () => {
-    await getAllResults()
-    console.log(allResults);
+		if (searchTerm) {
+			search(searchTerm);	
+		}
   })
+
+	// https://fusejs.io/api/options.html for more information about these options
+	const options = {
+		// isCaseSensitive: false,
+		// includeScore: false,
+		// shouldSort: true,
+		// includeMatches: false,
+		// findAllMatches: false,
+		// minMatchCharLength: 1,
+		// location: 0,
+		threshold: 0.4,
+		// distance: 100,
+		// useExtendedSearch: false,
+		// ignoreLocation: false,
+		// ignoreFieldNorm: false,
+		keys: [
+			"title",
+			"ingredients"
+			// "author.firstName"
+		]
+	};
+	
+  export let searchResults = [];
+  export let searchTerm = '';
+
+  const search = searchTerm => {
+
+		if (!searchTerm) {
+			searchResults = recipeList;
+			return;
+		}
+  
+    const fuse = new Fuse(recipeList, options);
+
+    searchResults = fuse.search(searchTerm)
+		.map(recipe => recipe.item);
+  }
 </script>
 
-<Autocomplete {getOptions}/>
+<input type="text" name="search" autocomplete="off" bind:value={searchTerm} on:change="{() => search(searchTerm)}">

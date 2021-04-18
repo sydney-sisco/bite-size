@@ -17,7 +17,8 @@
 
 <script>
   import { Button } from 'attractions';
-  import SearchBar from '../components/searchBar.svelte';
+  // import SearchBar from '../components/searchBar.svelte';
+	import { goto } from '@sapper/app';
   
   export let recipeList;
 
@@ -27,6 +28,16 @@
 	featuredRecipes ? featuredRecipes = false : featuredRecipes = true; {
 	  }	
   }
+
+	let searchResults = [];
+
+	let searchTerm = '';
+
+	const submitSearch = searchTerm => {
+		console.log('??', searchTerm);
+		goto(`/recipes?search=${searchTerm}`);
+	}
+
 </script>
 
 <style>
@@ -94,7 +105,6 @@
 	}
 </style>
 
-
 <svelte:head>
 	<title>Bite Size</title>
 </svelte:head>
@@ -104,7 +114,8 @@
 
 <p><strong>What do you want to eat?</strong></p>
 
-<SearchBar />
+<!-- <SearchBar bind:searchResults={searchResults}/> -->
+<input type="text" name="search" autocomplete="off" on:submit="{() => submitSearch(searchTerm)}" bind:value={searchTerm}>
 
 <div class="home-buttons">
   <div class="search-browse">
@@ -128,5 +139,4 @@
 		{/if}
 	</div>
 </div>
-	
 

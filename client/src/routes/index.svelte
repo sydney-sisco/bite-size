@@ -63,10 +63,40 @@
   }
 
   .home-buttons {
-    flex: auto;
-    flex-direction: row;
+		display: flex;
+    flex: center;
+    flex-direction: column;
+	}
 
-  }
+	.search-browse {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		margin: 10px;
+	}
+		
+	.search-button {
+		margin-right: 5px;
+	}
+
+	.browse-button {
+		margin-right: 5px;
+	}
+
+
+	.fr-button {
+		display: flex;
+		flex: center;
+		flex-direction: column;
+		margin: 50px;
+	}
+
+	.fr-cards {
+		display: flex;
+		flex-direction: row;
+		/* flex-wrap: wrap; */
+		justify-content: space-between;
+	}
 
 	@media (min-width: 480px) {
 		h1 {
@@ -88,19 +118,25 @@
 <input type="text" name="search" autocomplete="off" on:submit="{() => submitSearch(searchTerm)}" bind:value={searchTerm}>
 
 <div class="home-buttons">
-  <Button outline> Search Recipes</Button>
-  <a href="recipes"><Button outline>Browse Recipes</Button></a>
-  <Button outline on:click={showFeatured}>Featured Recipes</Button>
-    {#if featuredRecipes}
-      <div class='featured-recipes'>
-        {#each recipeList as recipe}
-          <RecipeCard recipe={recipe}/>
-        {/each}
-      </div>
-    {/if}
+  <div class="search-browse">
+		<div class="search-button">
+			<Button outline> Search Recipes</Button>
+		</div>
+		<div class="browse-button">
+			<a href="recipes"><Button outline>Browse Recipes</Button></a>
+		</div>
+	</div>
+	<div class="featured-recipes">
+		<div class="fr-button">
+			<Button outline on:click={showFeatured}>Featured Recipes</Button>
+		</div>
+	</div>
+	<div class="fr-cards">
+		{#if featuredRecipes}
+			{#each recipeList as recipe}
+				<RecipeCard recipe={recipe}/>
+			{/each}
+		{/if}
+	</div>
 </div>
 
-<h3>Search Results:</h3>
-{#each searchResults as recipe}
-	<RecipeCard recipe={recipe.item} />
-{/each}

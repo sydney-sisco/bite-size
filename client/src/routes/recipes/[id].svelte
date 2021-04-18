@@ -28,6 +28,10 @@
 
   ul {
     background-color: #fff;
+    padding-top: 25px;
+    padding-right: 40px;
+    padding-bottom: 25px;
+    border-radius: 13%;
   }
   
   ul.instructions {
@@ -41,6 +45,7 @@
     margin: 0;
     padding-bottom: 1em;
     padding-left: 20px;
+    
   }
 
   /* The actual line being placed before each list item, tweak width and color as appropriate */
@@ -83,6 +88,31 @@
     padding-left: 1em;
     padding-right: 1em;
   }
+
+  .favourites {
+    /* border: 3px solid green; */
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  .emojis {
+    /* border: 3px solid red; */
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 15px;
+    margin-bottom: 15px;
+
+  }
+
+  .buttons {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    justify-content: space-evenly;
+  }
 </style>
 
 <script context="module">
@@ -107,7 +137,6 @@
 </script>
 
 <script>
-  import { afterUpdate } from 'svelte'
   import { Button } from 'attractions';
   import { goto, stores } from '@sapper/app';
   import fetch from "cross-fetch";
@@ -155,10 +184,12 @@
     //Create an if statement to make sure we have everything to make a recipe...
     console.log('recipe object from edit form:', recipeObject);
     
+    loadingState = true
+
     let {
-      user_id,
       title,
       difficulty_id,
+      items,
       hours,
       minutes,
       image_url,
@@ -166,10 +197,9 @@
       description,
       instructionSteps,
       ingredientList,
-      unitOfMeasure,
-      quantity
     } = recipeObject;
 
+  
     let duration;
 
     if (hours && minutes) {
@@ -182,7 +212,12 @@
       duration
     }
 
-    loadingState = true
+    let user_id = $session.user.id;
+
+    let tags = items
+      .filter(({ checked }) => checked)
+      .map(({ value, label }) => ({ id: value, name: label }));
+
       try {
         const res = await fetch(`${$session.server}/recipes/${recipeID}`, {
           method: "PATCH",
@@ -192,13 +227,12 @@
             title,
             difficulty_id,
             duration,
+            tags,
             image_url,
             servings,
             description,
             instructionSteps,
-            ingredientList,
-            unitOfMeasure,
-            quantity
+            ingredientList
           }),
         });
         loadingState = false
@@ -309,23 +343,32 @@
     {/if}
     <div class="info">
       <p>Difficulty: {recipeDetails.recipe[0].difficulty}</p>
-      <p>&#9734;{recipeDetails.recipe[0].favourite_count}</p>
-      {#each emojiReactions as emojiReaction }
-        <Emoji recipeID={id} {emojiReaction} />
-      {/each}
       <p>Duration: {recipeDetails.recipe[0].duration} minutes</p>
       <p>Servings: {recipeDetails.recipe[0].servings}</p>
-      {#if userFavourite}
-        <Button  on:click={() => unfavouriteRecipe()} filled>Unfavourite Recipe</Button>
-      {:else}
-        <Button  on:click={() => favouriteRecipe()} outline>Favourite Recipe</Button>
-      {/if}
-      {#if recipeDetails.recipe[0].user_id === $session.user.id}
-      <Button on:click={() => editRecipe()}>Edit Recipe</Button>
-      {/if}
-      {#if recipeDetails.recipe[0].user_id === $session.user.id}
-      <Button on:click={() => deleteRecipe()}>Delete Recipe</Button>
-      {/if}
+      {#each recipeDetails.tags as { name }}
+      <li>{name}</li>
+      {/each}
+      <div class="favourites">
+        <p>&#9734;{recipeDetails.recipe[0].favourite_count}</p>
+        {#if userFavourite}
+          <Button  on:click={() => unfavouriteRecipe()} filled>Unfavourite Recipe</Button>
+        {:else}
+          <Button  on:click={() => favouriteRecipe()} outline>Favourite Recipe</Button>
+        {/if}
+      </div>
+      <div class="emojis">
+        {#each emojiReactions as emojiReaction }
+        <Emoji recipeID={id} {emojiReaction} />
+        {/each}
+      </div>
+      <div class="buttons">
+        {#if recipeDetails.recipe[0].user_id === $session.user.id}
+        <Button outline on:click={() => editRecipe()}>Edit Recipe</Button>
+        {/if}
+        {#if recipeDetails.recipe[0].user_id === $session.user.id}
+        <Button outline on:click={() => deleteRecipe()}>Delete Recipe</Button>
+        {/if}
+      </div>
     </div>
   </div>
 </main>

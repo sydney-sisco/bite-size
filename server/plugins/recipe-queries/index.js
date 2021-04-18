@@ -28,20 +28,20 @@ async function recipeQueries (fastify) {
         difficulty_id,
         duration,
         image_url,
+        tags,
         servings,
         description,
         instructionSteps,
         ingredientList,
-        unitOfMeasure,
-        quantity
       } = newRecipe
-    
+
+      
       const { rows: recipe } = await pg.transact(async client => {
         return client.query(`
-            INSERT INTO recipes (user_id, title, difficulty_id, duration, image_url, servings, description)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
-            RETURNING *;
-          `, [user_id, title, difficulty_id, duration, image_url, servings, description]
+        INSERT INTO recipes (user_id, title, difficulty_id, duration, image_url, servings, description)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING *;
+        `, [user_id, title, difficulty_id, duration, image_url, servings, description]
         )
       })
       const recipeId = recipe[0].id;
@@ -93,7 +93,19 @@ async function recipeQueries (fastify) {
         }
         return newIngredients
       })
-      return { recipe: recipe[0], instructions, ingredients }
+
+      const recipeTags = await pg.transact(async client => {
+        for (const tag of tags) {         
+          if (tag) {
+            await client.query(`
+            INSERT INTO recipe_tags (recipe_id, tag)
+            VALUES ($1, $2)
+            RETURNING *;
+            `, [recipeId, tag.id])
+          }
+        }
+      })
+      return { recipe: recipe[0], instructions, ingredients, recipeTags }
     },
 
     editRecipe: async (editRecipe, recipeID) => {
@@ -102,13 +114,12 @@ async function recipeQueries (fastify) {
         title,
         difficulty_id,
         duration,
+        tags,
         image_url,
         servings,
         description,
         instructionSteps,
         ingredientList,
-        unitOfMeasure,
-        quantity
       } = editRecipe
     
       const { rows: recipe } = await pg.transact(async client => {
@@ -188,9 +199,31 @@ async function recipeQueries (fastify) {
         }
         return newIngredients
       })
+
+      await pg.transact(async client => {
+        return client.query(`
+          DELETE FROM recipe_tags
+          WHERE recipe_id = $1;
+        `, [recipeID]
+        );
+      });
+
+      const recipeTags = await pg.transact(async client => {
+        for (const tag of tags) {         
+          if (tag) {
+            await client.query(`
+            INSERT INTO recipe_tags (recipe_id, tag)
+            VALUES ($1, $2)
+            RETURNING *;
+            `, [recipeID, tag.id])
+          }
+        }
+      })
+
       // return { recipe: recipe[0], instructions, ingredients }
-      return { recipe: recipe[0] }
+      return { recipe: recipe[0]}
     }
+
     
   })
 }

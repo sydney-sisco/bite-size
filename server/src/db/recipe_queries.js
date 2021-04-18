@@ -38,7 +38,6 @@ const getRecipes = async (fastify) => {
     ORDER BY r.id`
   )
   client.release()
-
   // const userEmojiReactions = getUserEmojiReactions(fastify)
 
   return rows;
@@ -86,6 +85,19 @@ const getRecipeIngredients = async (fastify, id) => {
   return rows;
 }
 
+const getRecipeTags = async (fastify, id) => {
+  const client = await fastify.pg.connect()
+    
+  const { rows } = await client.query(
+    `SELECT * FROM recipe_tags rt
+    LEFT JOIN tags t ON t.id = rt.tag
+    WHERE rt.recipe_id = $1;`, [id]
+  )
+  client.release()
+
+  return rows;
+}
+
 const getRecipeDetails = async (fastify, recipe_id, user_id) => {
   
   const recipeDetails = {};
@@ -94,7 +106,7 @@ const getRecipeDetails = async (fastify, recipe_id, user_id) => {
   recipeDetails.instructions = await getRecipeInstructions(fastify, recipe_id);
   recipeDetails.ingredients = await getRecipeIngredients(fastify, recipe_id);
   recipeDetails.emojiReactions = await getUserEmojiReactions(fastify, recipe_id);
-
+  recipeDetails.tags = await getRecipeTags(fastify, recipe_id);
   // console.log(recipeDetails.emojiReactions);
 
   // if a user_id was passed in, get user-specific information about the recipe
@@ -151,68 +163,68 @@ const favsForFeatured = async (fastify) => {
   return rows;
 }
 
-const postNewRecipe = async (fastify, body) => {
-  const {
-    title,
-    difficulty,
-    duration,
-    image_url,
-    servings,
-    description,
-    instructionSteps,
-    ingredientList,
-    unit_of_measure,
-    quantity
-  } = body
+// const postNewRecipe = async (fastify, body) => {
+//   const {
+//     title,
+//     difficulty,
+//     duration,
+//     image_url,
+//     servings,
+//     description,
+//     instructionSteps,
+//     ingredientList,
+//     unit_of_measure,
+//     quantity
+//   } = body
 
-  const recipe = await fastify.pg.transact(async client => {
-    const { rows } = await client.query(`
-        INSERT INTO recipes (title, difficulty_id, duration, image_url, servings, description)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING *;
-      `, [title, difficulty, duration, image_url, servings, description]
-    )
-    return rows;
-  })
+//   const recipe = await fastify.pg.transact(async client => {
+//     const { rows } = await client.query(`
+//         INSERT INTO recipes (title, difficulty_id, duration, image_url, servings, description)
+//         VALUES ($1, $2, $3, $4, $5, $6)
+//         RETURNING *;
+//       `, [title, difficulty, duration, image_url, servings, description]
+//     )
+//     return rows;
+//   })
 
-  const recipeId = recipe[0].id
+//   const recipeId = recipe[0].id
 
-  await fastify.pg.transact(async client => {
-    const newInstructions = []
-    for (const [index, step] of instructionSteps.entries()) {
-      if (step) {
-        const { rows } = await client.query(`
-          INSERT INTO instructions (instruction, step, recipe_id)
-          VALUES ($1, $2, $3)
-          RETURNING *;
-        `, [step, (index + 1), recipeId]
-        )
-        newInstructions.push(rows[0])
-      }
-    }
-    return newInstructions
-  })
+//   await fastify.pg.transact(async client => {
+//     const newInstructions = []
+//     for (const [index, step] of instructionSteps.entries()) {
+//       if (step) {
+//         const { rows } = await client.query(`
+//           INSERT INTO instructions (instruction, step, recipe_id)
+//           VALUES ($1, $2, $3)
+//           RETURNING *;
+//         `, [step, (index + 1), recipeId]
+//         )
+//         newInstructions.push(rows[0])
+//       }
+//     }
+//     return newInstructions
+//   })
 
-  await fastify.pg.transact(async client => {
-    for (const ingredient of ingredientList) {
-      if (ingredient) {
-        const { rows } = await client.query(`
-          INSERT INTO ingredients (name) 
-          VALUES ($1)
-          RETURNING id;
-        `, [ingredient])
+//   await fastify.pg.transact(async client => {
+//     for (const ingredient of ingredientList) {
+//       if (ingredient) {
+//         const { rows } = await client.query(`
+//           INSERT INTO ingredients (name) 
+//           VALUES ($1)
+//           RETURNING id;
+//         `, [ingredient])
 
-        const ingredientId = rows[0].id
+//         const ingredientId = rows[0].id
 
-        await client.query(`
-          INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_of_measure_id) 
-          VALUES ($1, $2, $3, $4)
-          RETURNING *;
-        `, [recipeId, ingredientId, quantity, unit_of_measure])
-      }
-    }
-  })
-}
+//         await client.query(`
+//           INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_of_measure_id) 
+//           VALUES ($1, $2, $3, $4)
+//           RETURNING *;
+//         `, [recipeId, ingredientId, quantity, unit_of_measure])
+//       }
+//     }
+//   })
+// }
 
 const deleteSpecificRecipe = async (fastify, id) => {
   const client = await fastify.pg.connect()
@@ -248,6 +260,6 @@ module.exports = {
   getRecipeDetails,
   deleteSpecificRecipe,
   getRecipesForUser,
-  postNewRecipe,
-  favsForFeatured
+  favsForFeatured,
+  getRecipeTags
 }

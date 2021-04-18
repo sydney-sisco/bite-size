@@ -1,4 +1,4 @@
-const { getRecipeDetails, getRecipes, deleteSpecificRecipe } = require('../../src/db/recipe_queries');
+const { getRecipeDetails, getRecipes, deleteSpecificRecipe, getRecipeTags } = require('../../src/db/recipe_queries');
 const   { addEmojiReaction, removeEmojiReaction } = require('../../src/db/emoji_queries');
 
 
@@ -6,8 +6,13 @@ const recipesRoutes = async (fastify) => {
   const { recipeQuery } = fastify
 
   fastify.get('/recipes', async (req, reply) => {
-    const rows = await getRecipes(fastify);
-    reply.send(rows);
+    const allRecipes = await getRecipes(fastify);
+    const recipesWithTags = []
+    for (recipe of allRecipes) {
+      recipe.tag = await getRecipeTags(fastify, recipe.id)
+      recipesWithTags.push(recipe)
+    }
+    reply.send(recipesWithTags);
   })
 
   fastify.get('/recipes/:id', async (request, reply) => {

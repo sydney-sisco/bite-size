@@ -10,10 +10,10 @@ async function searchQueries (fastify) {
       //   FROM recipes;
       // `
       `select r.*, string_agg(i.name, ',') as ingredients, string_agg(t.name, ',') as tags from recipes r
-      join recipe_ingredients ri on ri.recipe_id = r.id
-      join ingredients i on i.id = ri.ingredient_id
-      join recipe_tags rt on rt.recipe_id = r.id
-      join tags t on rt.tag = t.id
+      left join recipe_ingredients ri on ri.recipe_id = r.id
+      left join ingredients i on i.id = ri.ingredient_id
+      left join recipe_tags rt on rt.recipe_id = r.id
+      left join tags t on rt.tag = t.id
       group by r.id`
       )
       // const { id, title, description } = rows

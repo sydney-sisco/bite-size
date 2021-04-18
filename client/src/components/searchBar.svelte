@@ -1,26 +1,13 @@
-<!-- <script context="module">
-  export async function preload(page, session) {
-		const res = await this.fetch(`http://localhost:5001/preload/search`);
-		const allResults = await res.json();
-		return { allResults };
-	}
-</script> -->
-
 <script>
   import { onMount } from 'svelte'
   import Fuse from 'fuse.js'
 
-  let allData;
-
-  async function getAllResults() {
-		const res = await fetch(`http://localhost:5001/preload/search`);
-		allData = await res.json();
-    // allData = queryResults
-	}
+	export let recipeList = [];
 
   onMount(async () => {
     await getAllResults()
-    console.log('all data from server', allData);
+    // console.log('all data from server', allData);
+    console.log('all recipe data', recipeList);
 		
 		if (searchTerm) {
 			search(searchTerm);	
@@ -57,11 +44,11 @@
 
 		if (!searchTerm) {
 			console.log('no search term, returning all');
-			searchResults = allData.recipes;
+			searchResults = recipeList;
 			return;
 		}
   
-    const fuse = new Fuse(allData.recipes, options);
+    const fuse = new Fuse(recipeList, options);
 
     searchResults = fuse.search(searchTerm)
 		.map(recipe => recipe.item);

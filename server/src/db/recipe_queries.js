@@ -31,9 +31,13 @@ const getUserEmojiReactions = async (fastify, recipe_id) => {
 const getRecipes = async (fastify) => {
   const client = await fastify.pg.connect()
   const { rows } = await client.query(
-    `SELECT r.*, u.username, count(f.*) AS favourites FROM recipes r
+    `SELECT r.*, u.username, count(f.*) AS favourites, string_agg(i.name, ',') AS ingredients, string_agg(t.name, ',') AS tags FROM recipes r
     JOIN users u ON u.id = r.user_id
     LEFT JOIN favourites f ON r.id = f.recipe_id
+    LEFT JOIN recipe_ingredients ri ON ri.recipe_id = r.id
+    LEFT JOIN ingredients i ON i.id = ri.ingredient_id
+    LEFT JOIN recipe_tags rt ON rt.recipe_id = r.id
+    LEFT JOIN tags t ON rt.tag = t.id
     GROUP BY r.id, u.username
     ORDER BY r.id`
   )

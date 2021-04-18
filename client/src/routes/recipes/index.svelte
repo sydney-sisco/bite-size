@@ -56,9 +56,6 @@
 <script>
   import { stores, goto } from '@sapper/app';
   const { page } = stores();
-  // console.log('page:', $page);
-  // console.log('page:', $page.query.search);
-
 
 	export let recipeList;
 
@@ -66,7 +63,7 @@
 
   //declare empty variables for functions to use below.
   let items;
-  let filter = false;
+  let filter = true;
   let filteredRecipes = [];
   
   let searchTerm = '';
@@ -75,8 +72,12 @@
      filter = true;
   }
   let searchResults = recipeList;
+  let filteredResults = searchResults;
 
-  
+  $: {
+    filteredResults = searchResults;
+  }
+
   //fetch all of the tags and map them into the correct format for CheckboxChipGroup.
   onMount(async () => {
     const res = await fetch(`http://localhost:5001/preload/search`);
@@ -93,16 +94,19 @@
 
   //filters the recipes by checking if items have been checked. 
   //if so, compares it to the tag of the recipes being shown, and shows that recipe.
-
   const filterResults = (e) => {
     filteredRecipes = []
-    const tempItems = items.map(item => {
-      if (item.checked) {
-        return item.value
-      }
-    })
+    const tempItems = items
+    .filter(item => item.checked)
+    .map(item => item.value)
+
+    // if no filters are selected, show all results
+    if (tempItems.length === 0) {
+      filteredResults = searchResults;
+      return;
+    }
     
-    for (const recipe of recipeList) {
+    for (const recipe of searchResults) {
       for (const tag of recipe.tag) {
         if (tempItems.includes(tag.id)) {
           filteredRecipes.push(recipe)
@@ -112,8 +116,8 @@
       }
     }
 
-  //redeclare the value for auto-updating
-    filteredRecipes = filteredRecipes
+    // display the filtered results
+    filteredResults = filteredRecipes;
   }
 
 </script>
@@ -131,15 +135,9 @@
         <Button on:click={showFilters}>Hide Filters</Button>
       {/if}
     <div class="recipe-container">
-      <!-- {#if filteredRecipes.length > 0} -->
-        {#each searchResults as recipe}
-          <RecipeCard recipe={recipe} />
-        {/each}
-      <!-- {:else} -->
-        <!-- {#each recipeList as recipe} -->
-          <!-- <RecipeCard recipe={recipe} /> -->
-        <!-- {/each} -->
-      <!-- {/if} -->
+      {#each filteredResults as recipe}
+        <RecipeCard recipe={recipe} />
+      {/each}
     </div>
   </div>
   {#if filter }

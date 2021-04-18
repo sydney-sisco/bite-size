@@ -5,10 +5,6 @@
 	export let recipeList = [];
 
   onMount(async () => {
-    await getAllResults()
-    // console.log('all data from server', allData);
-    console.log('all recipe data', recipeList);
-		
 		if (searchTerm) {
 			search(searchTerm);	
 		}
@@ -37,13 +33,10 @@
 	
   export let searchResults = [];
   export let searchTerm = '';
-	console.log('search term:', searchTerm)
 
   const search = searchTerm => {
-    console.log('searching for:', searchTerm, '??');
 
 		if (!searchTerm) {
-			console.log('no search term, returning all');
 			searchResults = recipeList;
 			return;
 		}
@@ -52,7 +45,6 @@
 
     searchResults = fuse.search(searchTerm)
 		.map(recipe => recipe.item);
-    console.log('search results:', searchResults);
   }
 </script>
 

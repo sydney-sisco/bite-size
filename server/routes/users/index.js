@@ -1,5 +1,5 @@
 const { getUsers, getUser, getUserByEmail } = require('../../src/db/user_queries');
-const { getRecipesForUser } = require('../../src/db/recipe_queries');
+const { getRecipesForUser , getRecipeTags } = require('../../src/db/recipe_queries');
 
 
 
@@ -60,8 +60,13 @@ const usersRoute = async (fastify) => {
     // console.log('from token:', decoded.id)
 
     const rows = await getRecipesForUser(fastify, request.params.id);
-  
-    reply.send({recipes: rows});
+    const recipesWithTags = []
+    for (recipe of rows) {
+      recipe.tag = await getRecipeTags(fastify, recipe.id)
+      recipesWithTags.push(recipe)
+    }
+
+    reply.send({recipes: recipesWithTags})
   })
 }
 

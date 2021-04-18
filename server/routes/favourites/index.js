@@ -1,9 +1,15 @@
 const { getUserFavourites, addUserFavourite, deleteUserFavourite } = require("../../src/db/favourites_queries")
+const { getRecipeTags } = require("../../src/db/recipe_queries")
 
 const favouritesRoutes = async (fastify) => {
   fastify.get('/users/:user_id/favourites', async (req, reply) => {
     const rows = await getUserFavourites(fastify, req.params.user_id);
-    reply.send({favourites: rows});
+    const recipesWithTags = []
+    for (recipe of rows) {
+      recipe.tag = await getRecipeTags(fastify, recipe.id)
+      recipesWithTags.push(recipe)
+    }
+    reply.send({favourites: recipesWithTags});
   })
 
   fastify.post('/users/:user_id/favourites', async (req, reply) => {

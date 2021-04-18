@@ -31,7 +31,7 @@
   import RecipeCard from "../../components/RecipecCard.svelte";
   
   const { session } = stores();
-  export let recipes = [];
+  export let recipes;
 </script>
 
 <style>

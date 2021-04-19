@@ -98,11 +98,11 @@
           {/if}
 
           {#if tags}
-            <div class="tag-list">
+            <ul class="tag-list">
               {#each tags as tag}
-                <p>- {tag.name}</p>
+                <li>{tag.name}</li>
               {/each}
-            </div>
+            </ul>
           {/if}
           <div class="below">
             <a class="user-link" href="/users/{recipe.user_id}"><span>@{recipe.username}</span></a>

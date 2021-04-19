@@ -2,6 +2,7 @@
   main {
     display: flex;
     width: 100%;
+    height: 100vh;
     justify-content: space-between
   }
 
@@ -127,7 +128,7 @@
 </svelte:head>
 
 <main>
-  <div class="left">
+  <div class="left" transition:fly="{{ x: -1000, duration: 800 }}">
     <h1>Recipes</h1>
       {#if filter === false}
         <Button on:click={showFilters}>Show Filters</Button>
@@ -141,7 +142,7 @@
     </div>
   </div>
   {#if filter }
-  <div class="right">
+  <div class="right" transition:fly="{{ x: 500, duration: 800 }}">
     <h2>Filters</h2>
     Search: <SearchBar {recipeList} bind:searchResults={searchResults} bind:searchTerm={searchTerm}/>
     <ul>

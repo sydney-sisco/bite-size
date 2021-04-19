@@ -34,6 +34,8 @@
 		display: block;
 		float: left;
 		margin-top: 1em;
+		margin-right: 5px;
+    margin-left: 5px;
 	}
 
 	li.logo {
@@ -69,7 +71,16 @@
 	img {
 		width: 7em;
 	}
-</style>
+
+	.nav-bar-tabs {
+		display: flex;
+    justify-content: space-between;
+	}
+
+	.nav-right {
+		margin-right: 25px;
+	}
+	</style>
 
 <nav>
 	<ul>
@@ -78,14 +89,20 @@
 		
 		<!-- for the blog link, we're using rel=prefetch so that Sapper prefetches
 			the blog data when we hover over the link or tap it on a touchscreen -->
-			<li><a rel=prefetch aria-current="{$page.path === '/recipes' ? 'page' : undefined}" href="recipes">Browse Recipes</a></li>
-			<li><a rel=prefetch aria-current="{$page.path === '/my-recipes' ? 'page' : undefined}" href="my-recipes">My Recipes</a></li>
-			<li><a rel=prefetch aria-current="{$page.path === '/favourites' ? 'page' : undefined}" href="favourites">My Favourites</a></li>
-			<li><a rel=prefetch aria-current="{$page.path === '/recipes/new' ? 'page' : undefined}" href="recipes/new">New Recipe</a></li>
-			{#if $session.user}
-				<li><a>Logged in as {$session.user.username}</a></li>
-			{:else}
-				<li><a rel=prefetch aria-current="{$page.path === '/login' ? 'page' : undefined}" href="login">Login</a></li>
-			{/if}
+			<div class="nav-bar-tabs">
+				<div class="nav-left">
+					<li><a rel=prefetch aria-current="{$page.path === '/recipes' ? 'page' : undefined}" href="recipes">Browse Recipes</a></li>
+					<li><a rel=prefetch aria-current="{$page.path === '/my-recipes' ? 'page' : undefined}" href="my-recipes">My Recipes</a></li>
+					<li><a rel=prefetch aria-current="{$page.path === '/favourites' ? 'page' : undefined}" href="favourites">My Favourites</a></li>
+					<li><a rel=prefetch aria-current="{$page.path === '/recipes/new' ? 'page' : undefined}" href="recipes/new">New Recipe</a></li>
+				</div>
+				<div class="nav-right">
+					{#if $session.user}
+					<li><a>Logged in as {$session.user.username}</a></li>
+					{:else}
+					<li><a rel=prefetch aria-current="{$page.path === '/login' ? 'page' : undefined}" href="login">Login</a></li>
+					{/if}
+				</div>
+			</div>
 	</ul>
 </nav>

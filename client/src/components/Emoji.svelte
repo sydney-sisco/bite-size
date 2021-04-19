@@ -63,7 +63,7 @@
 </script>
 
 {#if emojiReaction.selected}
-  <Button on:click={handleClick} filled>{emojiReaction.emoji} {emojiReaction.count}</Button>
+  <Button on:click={handleClick} filled>{emojiReaction.emoji} &nbsp; {emojiReaction.count}</Button>
 {:else}
-  <Button on:click={handleClick} outline>{emojiReaction.emoji} {emojiReaction.count}</Button>
+  <Button on:click={handleClick} outline>{emojiReaction.emoji} &nbsp; {emojiReaction.count}</Button>
 {/if}

@@ -95,6 +95,7 @@
 		flex-direction: row;
 		/* flex-wrap: wrap; */
 		justify-content: space-between;
+		width: 90vw;
 	}
 
 	@media (min-width: 480px) {

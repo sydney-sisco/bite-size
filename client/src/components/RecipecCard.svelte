@@ -1,6 +1,6 @@
 <style>
 	.recipe-card {
-    width: 45%;
+    width: 29%;
 		border: 1px solid #000;
 		padding: 0em 1em 1em 1em;
 		margin: 1em 0 1em 0;

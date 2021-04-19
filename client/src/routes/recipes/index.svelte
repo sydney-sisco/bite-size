@@ -141,7 +141,7 @@
     </div>
   </div>
   {#if filter }
-  <div class="right" transition:fly="{{ y: -300, duration: 500 }}">
+  <div class="right">
     <h2>Filters</h2>
     Search: <SearchBar {recipeList} bind:searchResults={searchResults} bind:searchTerm={searchTerm}/>
     <ul>

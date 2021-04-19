@@ -17,7 +17,6 @@
 
 <script>
   import { Button } from 'attractions';
-  // import SearchBar from '../components/searchBar.svelte';
 	import { goto } from '@sapper/app';
   
   export let recipeList;
@@ -114,13 +113,13 @@
 
 <p><strong>What do you want to eat?</strong></p>
 
-<!-- <SearchBar bind:searchResults={searchResults}/> -->
-<input type="text" name="search" autocomplete="off" on:submit="{() => submitSearch(searchTerm)}" bind:value={searchTerm}>
-
 <div class="home-buttons">
+	<form on:submit|preventDefault="{submitSearch(searchTerm)}">
+		<input type="text" name="search" autocomplete="off" bind:value={searchTerm}>
+	</form>
   <div class="search-browse">
 		<div class="search-button">
-			<Button outline> Search Recipes</Button>
+			<Button on:click="{submitSearch(searchTerm)}" outline> Search Recipes</Button>
 		</div>
 		<div class="browse-button">
 			<a href="recipes"><Button outline>Browse Recipes</Button></a>

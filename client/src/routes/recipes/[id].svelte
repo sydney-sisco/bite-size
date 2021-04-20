@@ -32,6 +32,7 @@
     padding-right: 40px;
     padding-bottom: 25px;
     border-radius: 13%;
+    font-size: 17px;
   }
   
   ul.instructions {
@@ -78,8 +79,8 @@
   }
 
   .right h2 {
-    background-color: #000;
-    color: #FF0;
+    background-color: #343A40;
+    color:  #FFF;
     padding-left: 1em;
     margin-bottom: 0;
   }
@@ -113,6 +114,16 @@
     margin-bottom: 10px;
     justify-content: space-evenly;
   }
+
+  .description {
+    font-size: 19px;
+  }
+
+  p, li {
+    font-size: 17px;
+  }
+
+
 </style>
 
 <script context="module">
@@ -316,7 +327,7 @@
 <main>
   <div class="left">
     <h3>{recipeDetails.recipe[0].title}</h3>
-    <p>{recipeDetails.recipe[0].description}</p>
+    <p class="description">{recipeDetails.recipe[0].description}</p>
     <h3>Ingredients</h3>
     <ul>
       {#each recipeDetails.ingredients as { name, unit, quantity }, id}

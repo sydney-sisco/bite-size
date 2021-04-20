@@ -11,12 +11,13 @@
 		border-bottom: 1px solid #000;
 		font-weight: 400;
 		padding: 0 1em;
-		position: fixed; /* Set the navbar to fixed position */
-		top: 0; /* Position the navbar at the top of the page */
+		position: fixed; 
+		top: 0;
 		width: 100%; /* Full width */
     background-color: #343A40;
 		color: #9A9DA0;
 		z-index: 999;
+		font-size: 18px;
 	}
 
 	ul {

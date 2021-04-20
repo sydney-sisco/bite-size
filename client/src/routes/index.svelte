@@ -1,6 +1,8 @@
 <script context="module">
 
   import RecipeCard from "../components/RecipecCard.svelte";
+
+	import logo from "../../static/logo.png";
   
   export async function preload(page, session) {
 		const res = await this.fetch(`${session.server}`, 
@@ -40,26 +42,40 @@
 </script>
 
 <style>
-	h1, p, h5, .home-buttons {
+
+	main {
+		background-color: #ebebeb;
+  	background-image: url("https://www.transparenttextures.com/patterns/exclusive-paper.png");
+	}
+
+	img {
+		display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+	}
+
+	p, .home-buttons {
     align-items: center;
 		text-align: center;
 		margin: 0 auto;
 	}
 
-	h1 {
+	/* h1 {
 		font-size: 2.8em;
 		text-transform: uppercase;
 		font-weight: 700;
 		margin: 0 0 0.5em 0;
-	}
+	} */
 
 	p {
 		margin: 1em auto;
+		font-size: 16pt;
 	}
 
-  h5 {
+  /* h5 {
     padding-bottom: 60px
-  }
+  } */
 
   .home-buttons {
 		display: flex;
@@ -72,6 +88,7 @@
 		flex-direction: row;
 		justify-content: center;
 		margin: 10px;
+		margin-top: 15px;
 	}
 		
 	.search-button {
@@ -97,46 +114,44 @@
 		justify-content: space-around;
 		width: 80vw;
 	}
-
-	@media (min-width: 480px) {
-		h1 {
-			font-size: 4em;
-		}
-	}
+	
 </style>
 
 <svelte:head>
 	<title>Bite Size</title>
 </svelte:head>
 
-<h1>Bite Size</h1>
-<h5>a more digestible recipe site</h5>
+<main class="main">
+	<img src="{logo}" alt="bite size logo">
 
-<p><strong>What do you want to eat?</strong></p>
+	<p>a more digestible recipe site</p>
 
-<div class="home-buttons">
-	<form on:submit|preventDefault="{submitSearch(searchTerm)}">
-		<input type="text" name="search" autocomplete="off" bind:value={searchTerm}>
-	</form>
-  <div class="search-browse">
-		<div class="search-button">
-			<Button on:click="{submitSearch(searchTerm)}" outline> Search Recipes</Button>
+	
+	<div class="home-buttons">
+		<form on:submit|preventDefault="{submitSearch(searchTerm)}">
+			<input type="text" name="search" autocomplete="off" placeholder="What do you want to eat?" bind:value={searchTerm}>
+		</form>
+		<div class="search-browse">
+			<div class="search-button">
+				<Button on:click="{submitSearch(searchTerm)}" outline> Search Recipes</Button>
+			</div>
+			<div class="browse-button">
+				<a href="recipes"><Button outline>Browse Recipes</Button></a>
+			</div>
 		</div>
-		<div class="browse-button">
-			<a href="recipes"><Button outline>Browse Recipes</Button></a>
+		<div class="featured-recipes">
+			<div class="fr-button">
+				<Button outline on:click={showFeatured}>Featured Recipes</Button>
+			</div>
 		</div>
-	</div>
-	<div class="featured-recipes">
-		<div class="fr-button">
-			<Button outline on:click={showFeatured}>Featured Recipes</Button>
-		</div>
-	</div>
-	<div class="fr-cards">
-		{#if featuredRecipes}
+		<div class="fr-cards">
+			{#if featuredRecipes}
 			{#each recipeList as recipe}
-				<RecipeCard recipe={recipe}/>
+			<RecipeCard recipe={recipe}/>
 			{/each}
-		{/if}
+			{/if}
+		</div>
 	</div>
-</div>
-
+</main>
+	
+	

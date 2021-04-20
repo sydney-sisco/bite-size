@@ -128,6 +128,10 @@
 
 <style>
 
+  main {
+    font-size: 17px;
+    padding-top: 56px;
+  }
   
   .rf-header {
     display: flex;
@@ -261,7 +265,7 @@
         <FormField name="Recipe Title" required>
           <!-- <TextField bind:value={title} /> -->
           <textarea 
-          rows="1" 
+          rows="2" 
           cols="50" 
           name="Recipe Title" 
           bind:value={title}></textarea> 
@@ -372,7 +376,7 @@
           {:else}
           <img src={image_url} alt="recipe" />
           <div class="change-photo-button">
-            <Button outline on:click={changePhoto}>Pick a different photo</Button>
+            <Button outline on:click={changePhoto}>Remove Image</Button>
           </div>
             {/if}
         </div>

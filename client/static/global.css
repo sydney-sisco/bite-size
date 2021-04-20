@@ -7,7 +7,9 @@ body {
 	color: #333;
 
 	/* background-color: #FFF0E5; */
-	background-color: #fff;
+	/* background-color: #fff; */
+	background-color: #ebebeb;
+	background-image: url("https://www.transparenttextures.com/patterns/exclusive-paper.png");
 }
 
 h1, h2, h3, h4, h5, h6 {

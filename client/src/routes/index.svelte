@@ -50,9 +50,9 @@
 
 	img {
 		display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 30%;
+		margin-left: auto;
+		margin-right: auto;
+		width: 30%;
 	}
 
 	p, .home-buttons {
@@ -109,6 +109,11 @@
     text-align: center;
     border-radius: 15px;
   }
+
+	a {
+		text-decoration: none;
+	}
+	
 </style>
 
 <svelte:head>

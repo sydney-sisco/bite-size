@@ -259,7 +259,15 @@ const findUnitOfMeasureID = unit => {
     'lb',
     'qt',
     'tbsp',
-    'tsp'
+    'tsp',
+    'slice',
+    'bottle',
+    'clove',
+    'dash',
+    'sprig',
+    'bunch',
+    'piece',
+    'strip'
   ];
 
   console.log('unit:', unit);

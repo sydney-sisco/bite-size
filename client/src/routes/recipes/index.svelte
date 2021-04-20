@@ -1,51 +1,38 @@
 <style>
   .our-main {
     display: flex;
-    flex-direction: row;
-    /* width: 100vh; */
+    flex-direction: column;
     height: 100vh;
-    justify-content: space-between;
+    /* position: relative */
   }
-
-  .left {
-    width: 70%;
-    /* max-width: 1000px; */
-    ;
-  }
-
-  .right {
-    width: 30%;
-    margin-top: 3em;
-    max-width: 336px;
-    height: 0%;
+    
+  .filter-container {
     text-align: center;
     display: flex;
     flex-direction: column;
-
-    /* keep the sidebar on screen when scrolling down */
-    /* position: sticky;
-    top: 80px; */
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    top: 85px;
+    left: 0;
+    width: 100%;
+    z-index: 50;
+    background-color: #FFF;
+    padding: 2em;
   }
 
-  .right h2 {
-    color: #000;
+  .filter-container .tags-container {
+    margin: 2em 2em 2em 0;
   }
-
-  /* .right ul {
-    background-color: grey;
-  } */
+  :global(.check-tags) {
+    justify-content: center;
+  }
 
   .recipe-container {
     display: flex;
     width: 100%;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
-    flex-basis: 30%;
-
-
-
-    /* background-color: #FFF0E5; */
   }
 
 </style>
@@ -53,7 +40,7 @@
 <script context="module">
 
   import RecipeCard from "../../components/RecipecCard.svelte";
-  import { onMount, afterUpdate } from 'svelte';
+  import { onMount } from 'svelte';
   import { CheckboxChipGroup, Button } from 'attractions';
   import { fly } from 'svelte/transition';
 
@@ -140,33 +127,24 @@
 </svelte:head>
 
 <div class="our-main">
-  <div class="left" transition:fly="{{ y: -1000, duration: 800 }}">
-    <h1>Recipes</h1>
-      {#if filter === false}
-        <Button on:click={showFilters}>Show Filters</Button>
-      {:else}
-        <Button on:click={showFilters}>Hide Filters</Button>
-      {/if}
-    <div class="recipe-container">
-      <div class="row row-cols-1 row-cols-md-3 g-4">
-        {#each filteredResults as recipe}
-        <div class="col">
-          <RecipeCard recipe={recipe} />
-        </div>
-      {/each}
-    </div>
-  </div>
-</div>
-
-  {#if filter }
-  <div class="right" transition:fly="{{ y: -500, duration: 800 }}">
-    <h2>Filters</h2>
-    Search: <SearchBar {recipeList} bind:searchResults={searchResults} bind:searchTerm={searchTerm}/>
-    <ul>
+  <div class="filter-container" transition:fly="{{ y: -500, duration: 800 }}">
+    {#if filter }
+    <!-- <h2>Filters</h2> -->
+    <SearchBar {recipeList} bind:searchResults={searchResults} bind:searchTerm={searchTerm}/>
+    <div class='tags-container'>
      {#if items}
-      <CheckboxChipGroup {items} on:change={filterResults} name="group1"  />
+      <CheckboxChipGroup {items} on:change={filterResults} name="group1" class="check-tags" />
       {/if}
-    </ul>  
+    </div>  
+    {/if}
+    <Button class='filter-button' on:click={showFilters}>{filter ? 'Hide Filter' : 'Show Filters'}</Button>
   </div>
-  {/if}
+  <!-- <div class="recipes" > -->
+    <!-- <h1>Recipes</h1> -->
+    <div class="recipe-container" transition:fly="{{ y: -1000, duration: 800 }}">
+      {#each filteredResults as recipe}
+        <RecipeCard recipe={recipe} />
+      {/each}
+  </div>
+<!-- </div> -->
 </div>

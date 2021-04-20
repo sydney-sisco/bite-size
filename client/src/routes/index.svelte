@@ -61,21 +61,10 @@
 		margin: 0 auto;
 	}
 
-	/* h1 {
-		font-size: 2.8em;
-		text-transform: uppercase;
-		font-weight: 700;
-		margin: 0 0 0.5em 0;
-	} */
-
 	p {
 		margin: 1em auto;
 		font-size: 16pt;
 	}
-
-  /* h5 {
-    padding-bottom: 60px
-  } */
 
   .home-buttons {
 		display: flex;
@@ -115,6 +104,11 @@
 		width: 80vw;
 	}
 	
+	input {
+    width: 600px;
+    text-align: center;
+    border-radius: 15px;
+  }
 </style>
 
 <svelte:head>

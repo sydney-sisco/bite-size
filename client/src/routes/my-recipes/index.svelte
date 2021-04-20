@@ -39,7 +39,7 @@
   .recipe-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
   }
 </style>

@@ -17,12 +17,22 @@
     left: 0;
     width: 100%;
     z-index: 50;
-    background-color: #FFF;
+    background-color: #ebebeb;
+	  background-image: url("https://www.transparenttextures.com/patterns/exclusive-paper.png");
     padding: 2em;
   }
 
+  .search-feature {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
   .filter-container .tags-container {
-    margin: 2em 2em 2em 0;
+    margin: 1em 2em 2em 0;
   }
   :global(.check-tags) {
     justify-content: center;
@@ -42,7 +52,7 @@
   import RecipeCard from "../../components/RecipecCard.svelte";
   import { onMount } from 'svelte';
   import { CheckboxChipGroup, Button } from 'attractions';
-  import { fly } from 'svelte/transition';
+  import { fly, fade } from 'svelte/transition';
 
   export async function preload(page, session) {
 		const { id } = page.params;
@@ -127,24 +137,26 @@
 </svelte:head>
 
 <div class="our-main">
-  <div class="filter-container" transition:fly="{{ y: -500, duration: 800 }}">
+  <div class="filter-container">
     {#if filter }
-    <!-- <h2>Filters</h2> -->
-    <SearchBar {recipeList} bind:searchResults={searchResults} bind:searchTerm={searchTerm}/>
-    <div class='tags-container'>
-     {#if items}
-      <CheckboxChipGroup {items} on:change={filterResults} name="group1" class="check-tags" />
+    <div class='search-feature' transition:fly="{{ y: -200, duration: 750 }}" >
+      <!-- <h2>Filters</h2> -->
+      <SearchBar {recipeList} bind:searchResults={searchResults} bind:searchTerm={searchTerm}/>
+      <div class='tags-container'>
+      {#if items}
+        <CheckboxChipGroup {items} on:change={filterResults} name="group1" class="check-tags" />
       {/if}
-    </div>  
+      </div>  
+    </div>
     {/if}
-    <Button class='filter-button' on:click={showFilters}>{filter ? 'Hide Filter' : 'Show Filters'}</Button>
+    <Button filled class='filter-button' on:click={showFilters}>{filter ? 'Hide Filter' : 'Show Filters'}</Button>
   </div>
   <!-- <div class="recipes" > -->
     <!-- <h1>Recipes</h1> -->
-    <div class="recipe-container" transition:fly="{{ y: -1000, duration: 800 }}">
-      {#each filteredResults as recipe}
-        <RecipeCard recipe={recipe} />
-      {/each}
+  <div class="recipe-container" transition:fly="{{ y: -1000, duration: 750 }}">
+    {#each filteredResults as recipe}
+      <RecipeCard recipe={recipe} />
+    {/each}
   </div>
 <!-- </div> -->
 </div>

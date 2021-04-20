@@ -8,7 +8,6 @@
 
 
 	main {
-		/* position: relative; */
 		padding: 8em 6em 4em;
 		width: 100%;
 		max-width: 90%;

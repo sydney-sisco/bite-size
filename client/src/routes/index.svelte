@@ -108,6 +108,7 @@
     width: 600px;
     text-align: center;
     border-radius: 15px;
+		padding: .375rem .75rem;
   }
 </style>
 

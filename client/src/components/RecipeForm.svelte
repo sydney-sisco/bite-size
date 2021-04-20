@@ -1,9 +1,3 @@
-<!-- <script context="module">
-  export async function preload(page, session) {
-   return session;
-  }
-</script> -->
-
 <script>
   import fetch from "cross-fetch";
   import { goto, stores } from '@sapper/app';
@@ -31,7 +25,6 @@
     items = [],
     image_url = null,
     servings = null,
-    // instructionSteps = ["", "", ""],
     unitOfMeasure = 1,
     quantity = 1,
   } = recipe[0];
@@ -57,9 +50,6 @@
     })
     console.log(items);
   })
-  
- 
-
   
   //built in checkbox callback - for each item in the checkbox list, updates state of checkbox to be passed to handleSubmit.
   function onCheckTag (e) {
@@ -137,17 +127,14 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    /* color: black; */
   }
 
   .form {
-    /* border: 3px solid black; */
     display: flex;
     flex-direction: row;
     margin-top: 15px;
   }
   .text-fields {
-    /* border: 2px solid red; */
     margin-right: 5px;
     width: 50%;
   }
@@ -181,14 +168,12 @@
   }
 
   .tags-photo {
-    /* border: 2px solid blue; */
     margin-left: 5px;
     width: 50%;
   }
 
 
   .tags {
-    /* border: 2px solid yellow; */
     margin: 15px;
   }
 
@@ -216,17 +201,12 @@
 
   .change-photo-button {
     display: block;
-    /* margin-left: auto;
-    margin-right: auto; */
     width: 50%;
     margin-top: 15px;
-    margin-left: 10px;
-  
-  
+    margin-left: 105px;
   }
 
   .rf-buttons {
-    /* border: 2px solid green; */
     display: flex;
     justify-content: center;
     margin: 15px;
@@ -239,14 +219,6 @@
   .submit {
     margin-left: 5px;
   }
-/* 
-  @media only screen and (max-width: 1230) {
-    
-    .form {
-      display: flex;
-      flex-direction: column;
-    }
-  } */
   
 </style>
 

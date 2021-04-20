@@ -26,7 +26,7 @@
     font-size: 36px;
   }
 
-  ul {
+  ul, ol {
     background-color: #fff;
     padding-top: 25px;
     padding-right: 40px;
@@ -35,49 +35,6 @@
     font-size: 17px;
   }
   
-  ul.instructions {
-    list-style-type: none;
-    
-  }
-
-  ul.instructions li {
-    position: relative;
-
-    margin: 0;
-    padding-bottom: 1em;
-    padding-left: 20px;
-    
-  }
-
-  /* The actual line being placed before each list item, tweak width and color as appropriate */
-  ul.instructions li:before {
-    background-color: #000;
-    width: 2px;
-    content: '';
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 5px;
-  }
-
-  /* Start the line further down on the first list item */
-  ul.instructions li:first-child:before { top: 10px; }
-
-  /* Stop the line short on the final list item */
-  ul.instructions li:last-child:before { height: 6px; }
-
-  ul.instructions li::after {
-    content: '';
-    position: absolute;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' aria-hidden='true' viewBox='0 0 32 32' focusable='false'%3E%3Ccircle stroke='none' fill='%23000' cx='16' cy='16' r='10'%3E%3C/circle%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-size: contain;
-    left: 0;
-    top: 2px;
-    width: 12px;
-    height: 12px;
-  }
-
   .right h2 {
     background-color: #343A40;
     color:  #FFF;
@@ -91,7 +48,6 @@
   }
 
   .favourites {
-    /* border: 3px solid green; */
     display: flex;
     justify-content: space-around;
     margin-top: 10px;
@@ -100,7 +56,6 @@
   }
 
   .emojis {
-    /* border: 3px solid red; */
     display: flex;
     justify-content: space-evenly;
     margin-top: 15px;
@@ -337,13 +292,13 @@
       {/each}
     </ul>
     <h3>Instructions</h3>
-    <ul class="instructions">
+    <ol class="instructions">
       {#each recipeDetails.instructions as { instruction }}
         <li>
           {instruction}
         </li>
       {/each}
-    </ul>
+    </ol>
   </div>
 
   <div class="right">

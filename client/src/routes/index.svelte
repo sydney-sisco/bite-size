@@ -20,6 +20,7 @@
 <script>
   import { Button } from 'attractions';
 	import { goto } from '@sapper/app';
+  import { fly } from 'svelte/transition';
   
   export let recipeList;
 
@@ -147,7 +148,9 @@
 		<div class="fr-cards">
 			{#if featuredRecipes}
 			{#each recipeList as recipe}
+    <div transition:fly="{{ y: 200, duration: 750 }}">
 			<RecipeCard recipe={recipe}/>
+    </div>
 			{/each}
 			{/if}
 		</div>

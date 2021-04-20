@@ -82,6 +82,10 @@
     padding-left: 68px;
   }
 
+  .ingredients {
+    padding-left: 68px;
+  }
+
 
 </style>
 
@@ -288,7 +292,7 @@
     <h3>{recipeDetails.recipe[0].title}</h3>
     <p class="description">{recipeDetails.recipe[0].description}</p>
     <h3>Ingredients</h3>
-    <ul>
+    <ul class="ingredients">
       {#each recipeDetails.ingredients as { name, unit, quantity }, id}
         <li>
           {formatIngredients(name, unit, quantity)}

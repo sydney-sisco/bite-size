@@ -3,7 +3,7 @@
   export async function preload(page, session) {
     const { user_id } = page.params;
 		
-		const res = await this.fetch(`http://${session.server}/users/${user_id}/recipes`, 
+		const res = await this.fetch(`${session.server}/users/${user_id}/recipes`,
 			{
 				method: "GET",
 			}

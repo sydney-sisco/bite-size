@@ -1,122 +1,152 @@
 <style>
-	.recipe-card {
-    width: 29%;
-		border: 1px solid #000;
-		padding: 0em 1em 1em 1em;
-		margin: 1em 0 1em 0;
-    font-weight: 400;
-    border-radius: 5%;
+* {
+	box-sizing: border-box;
+}
 
-    transition: transform .1s, box-shadow .1s;
-    transition-timing-function: ease-out;
+.card {
+	width: 360px;
+	height: 360px;
+	border-radius: 15px;
+	padding: 1.5rem;
+	background: white;
+	position: relative;
+	transition: 0.4s ease-out;
+	box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.5);
+  margin: 1em;
+  
+}
 
-    display: flex;
-    flex-direction: column;
-    background-color: #FFF;
-	}
+.card:hover {
+	transform: translateY(20px);
+}
 
-  .recipe-card:hover {
-    box-shadow: -5px 5px #000;
-    transform: translate(5px, -5px);
-  }
+.card:hover:before {
+	opacity: 1;
+}
 
-  a {
-    text-decoration: none;
-  }
+.card:hover .info {
+	opacity: 1;
+	transform: translateY(0px);
+}
 
-  h3 {
-    font-size: 36px;
-    margin: 0;
-  }
+.card:before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	border-radius: 15px;
+	background: rgba(0, 0, 0, 0.6);
+	z-index: 2;
+	transition: 0.5s;
+	opacity: 0;
+}
 
-  .info-line {
-    display: flex;
-    justify-content: left;
-  }
+.card img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	position: absolute;
+	top: 0;
+	left: 0;
+	border-radius: 15px;
+}
 
-  .content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
+.card a {
+  text-decoration: none;
+  height: 100%
+}
 
-  .text {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 45%;
-  }
+.card .favourite-star {
+  display: relative;
+  bottom: 0;
+  right: 0;
+}
 
-  .below {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    width: 100%;
-  }
+.card .info {
+  position: relative;
+  display: grid;
+	grid-template-rows: auto 1fr auto .75fr;
+  grid-template-columns: auto auto;
+  grid-template-areas:
+    "header header"
+    "desc desc"
+    "tags tags"
+    "user stars";
+  width: 100%;
+  height: 100%;
+	z-index: 3;
+	opacity: 0;
+	transform: translateY(30px);
+	transition: 0.5s;
+  color: #EBEBEB;
+}
 
-  img {
-    margin-top: 1em;
-    border: 1px solid #000;
-    /* height: auto; */
-  }
+.card .info h3 {
+	margin: 0px;
+  grid-area: header;
+}
 
-  .user-link :hover {
-    text-decoration: underline;
-  }
+.card .info .card-text {
+  grid-area: desc;
+	letter-spacing: 1px;
+	font-size: 15px;
+	margin-top: 8px;
+}
 
-  .difficulty-tag {
-    background-color: #000;
-    color: #FFF;
-    font-weight: 800;
-    margin-right: .5em;
-    padding: 0rem .15rem;
-  }
-
+.card .tags {
+  grid-area: tags;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0;
+}
+.card .tags p {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  background: #343A40;
+}
+.card .card-link {
+  grid-area: user;
+}
+.card .favourite-star {
+  grid-area: stars;
+  text-align: right;
+}
 </style>
 
 
 <script>
-
   export let recipe;
   let tags = recipe.tag;
 
   const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
-
 </script>
 
-<div class="recipe-card">
-  <a href="/recipes/{recipe.id}"><h3>{recipe.title}</h3>
-    <main>
-      <div class="info-line">
-        <span>&#9734;{recipe.favourites}</span>
-      </div>
-      <div class="content">
-        <div class="text">
-          {#if recipe.description}
-            <p>{recipe.description}</p>
-          {/if}
-
-          {#if tags}
-            <ul class="tag-list">
-              {#each tags as tag}
-                <li>{tag.name}</li>
-              {/each}
-            </ul>
-          {/if}
-          <div class="below">
-            <a class="user-link" href="/users/{recipe.user_id}"><span>@{recipe.username}</span></a>
-            {#if recipe.difficulty_id > 2}
-            <span class="difficulty-tag">{difficultyNames[recipe.difficulty_id - 1]}</span>
-            {/if}
-          </div>
-        </div>
-        {#if recipe.image_url}
-        <img style="width: 50%" src="{recipe.image_url}" alt="recipe">
-        {:else}
-        <img style="width: 50%" src="https://res.cloudinary.com/bitesizerecipes/image/upload/v1618603057/Bite-Size-Images/qo70e0mj3vobsoznw9yn.jpg" alt="Bite Size logo">
+  <div class='card'>
+    <a href="/recipes/{recipe.id}">
+    {#if recipe.image_url}
+    <img style="width: 100%" src="{recipe.image_url}" alt="recipe">
+  {:else}
+    <img style="width: 100%" src="https://res.cloudinary.com/bitesizerecipes/image/upload/v1618603057/Bite-Size-Images/qo70e0mj3vobsoznw9yn.jpg" alt="Bite Size logo">
+  {/if}
+    <div class="info" style="width: 100%">
+      <h3 class="card-title">{recipe.title}</h3>
+      <p class="card-text">{recipe.description}</p>
+      <div class="tags">
+        {#if tags.length > 0}
+        {#each tags as tag}
+        <p>{tag.name}</p>
+        {/each}
         {/if}
       </div>
-    </main>
-  </a>
-</div>
+      <p class="favourite-star">&#9734; &nbsp; {recipe.favourites}</p>
+      <a href="/users/{recipe.user_id}" class="card-link">@{recipe.username}</a>
+    </div>
+    </a>
+  </div>
+

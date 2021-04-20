@@ -6,7 +6,8 @@ body {
 	line-height: 1.5;
 	color: #333;
 
-	background-color: #FFF0E5;
+	/* background-color: #FFF0E5; */
+	background-color: #fff;
 }
 
 h1, h2, h3, h4, h5, h6 {

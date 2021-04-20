@@ -1,3 +1,11 @@
+<style>
+  input {
+    width: 60%;
+    text-align: center;
+    border-radius: 15px;
+  }
+</style>
+
 <script>
   import { onMount } from 'svelte'
   import Fuse from 'fuse.js'
@@ -48,4 +56,4 @@
   }
 </script>
 
-<input type="text" name="search" autocomplete="off" bind:value={searchTerm} on:change="{() => search(searchTerm)}">
+<input class="form-control" placeholder="Search for something yummy" type="text" name="search" autocomplete="off" bind:value={searchTerm} on:change="{() => search(searchTerm)}">

@@ -7,9 +7,9 @@
 <style>
 	main {
 		position: relative;
-		padding: 6em 6em 4em;
+		padding: 8em 6em 4em;
 		width: 100%;
-		max-width: 1440px;
+		max-width: 90%;
 		margin: 0 auto;
 		box-sizing: border-box;
 	}

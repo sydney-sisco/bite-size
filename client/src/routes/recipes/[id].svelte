@@ -78,6 +78,10 @@
     font-size: 17px;
   }
 
+  .instructions {
+    padding-left: 68px;
+  }
+
 
 </style>
 

@@ -1,3 +1,11 @@
+<style>
+  input {
+    width: 60%;
+    text-align: center;
+    border-radius: 15px;
+  }
+</style>
+
 <script>
   import { onMount } from 'svelte'
   import Fuse from 'fuse.js'

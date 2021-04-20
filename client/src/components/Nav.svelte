@@ -2,7 +2,7 @@
 	import { stores } from '@sapper/app';
   const { session, page } = stores();
 
-	import logo from 'images/logo.png';
+	import logo from 'images/logo2.png';
 </script>
 
 <style>
@@ -14,7 +14,8 @@
 		position: fixed; /* Set the navbar to fixed position */
 		top: 0; /* Position the navbar at the top of the page */
 		width: 100%; /* Full width */
-    background-color: #FFF0E5;
+    background-color: #343A40;
+		color: #9A9DA0;
 		z-index: 999;
 	}
 
@@ -33,7 +34,7 @@
 	li {
 		display: block;
 		float: left;
-		margin-top: 1em;
+		margin-top: 2em;
 		margin-right: 5px;
     margin-left: 5px;
 	}
@@ -53,7 +54,7 @@
 		content: '';
 		width: calc(100% - 1em);
 		height: 2px;
-		background-color: #000;
+		background-color: #fff;
 		display: block;
 		bottom: -1px;
 	}
@@ -99,7 +100,9 @@
 				<div class="nav-right">
 					{#if $session.user}
 					<li><a>Logged in as {$session.user.username}</a></li>
+					<li><a>Log out</a></li>
 					{:else}
+					<li><a rel=prefetch aria-current="{$page.path === '/register' ? 'page' : undefined}" href="register">Register</a></li>
 					<li><a rel=prefetch aria-current="{$page.path === '/login' ? 'page' : undefined}" href="login">Login</a></li>
 					{/if}
 				</div>

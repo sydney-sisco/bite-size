@@ -1,18 +1,19 @@
 <style>
-  main {
+  .our-main {
     display: flex;
-    width: 100%;
+    flex-direction: row;
+    /* width: 100vh; */
     height: 100vh;
-    justify-content: space-between
+    justify-content: space-between;
   }
 
   .left {
-    width: 67%;
-    max-width: 816px;
+    width: 70%;
+    /* max-width: 1000px; */
+    ;
   }
 
   .right {
-    background-color: #FFF;
     width: 30%;
     margin-top: 3em;
     max-width: 336px;
@@ -20,20 +21,31 @@
     text-align: center;
     display: flex;
     flex-direction: column;
+
+    /* keep the sidebar on screen when scrolling down */
+    /* position: sticky;
+    top: 80px; */
   }
 
   .right h2 {
-    background-color: #000;
-    color: #FF0;
-    padding-left: 1em;
+    color: #000;
   }
+
+  /* .right ul {
+    background-color: grey;
+  } */
 
   .recipe-container {
     display: flex;
+    width: 100%;
     flex-direction: row;
     justify-content: space-between;
     flex-wrap: wrap;
-    background-color: #FFF0E5;
+    flex-basis: 30%;
+
+
+
+    /* background-color: #FFF0E5; */
   }
 
 </style>
@@ -127,8 +139,8 @@
 	<title>Bite Size</title>
 </svelte:head>
 
-<main>
-  <div class="left" transition:fly="{{ x: -1000, duration: 800 }}">
+<div class="our-main">
+  <div class="left" transition:fly="{{ y: -1000, duration: 800 }}">
     <h1>Recipes</h1>
       {#if filter === false}
         <Button on:click={showFilters}>Show Filters</Button>
@@ -136,13 +148,18 @@
         <Button on:click={showFilters}>Hide Filters</Button>
       {/if}
     <div class="recipe-container">
-      {#each filteredResults as recipe}
-        <RecipeCard recipe={recipe} />
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        {#each filteredResults as recipe}
+        <div class="col">
+          <RecipeCard recipe={recipe} />
+        </div>
       {/each}
     </div>
   </div>
+</div>
+
   {#if filter }
-  <div class="right" transition:fly="{{ x: 500, duration: 800 }}">
+  <div class="right" transition:fly="{{ y: -500, duration: 800 }}">
     <h2>Filters</h2>
     Search: <SearchBar {recipeList} bind:searchResults={searchResults} bind:searchTerm={searchTerm}/>
     <ul>
@@ -152,4 +169,4 @@
     </ul>  
   </div>
   {/if}
-</main>
+</div>

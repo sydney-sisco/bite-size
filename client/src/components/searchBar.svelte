@@ -48,4 +48,4 @@
   }
 </script>
 
-<input type="text" name="search" autocomplete="off" bind:value={searchTerm} on:change="{() => search(searchTerm)}">
+<input class="form-control" placeholder="Search for something yummy" type="text" name="search" autocomplete="off" bind:value={searchTerm} on:change="{() => search(searchTerm)}">

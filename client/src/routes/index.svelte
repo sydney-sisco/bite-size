@@ -130,7 +130,7 @@
 	
 	<div class="home-buttons">
 		<form on:submit|preventDefault="{submitSearch(searchTerm)}">
-			<input type="text" name="search" autocomplete="off" placeholder="What do you want to eat?" bind:value={searchTerm}>
+			<input class="form-control" type="text" name="search" autocomplete="off" placeholder="What do you want to eat?" bind:value={searchTerm}>
 		</form>
 		<div class="search-browse">
 			<div class="search-button">

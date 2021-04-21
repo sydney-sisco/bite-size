@@ -9,7 +9,7 @@
 	
 	import logo from "../../static/logo.png";
 	import sapper_logo from "../../static/Sapper.png";
-	import svelte_logo from "../../static/svelte.png";
+	import svelte_logo from "../../static/svelte2.png";
 	import fastify_logo from "../../static/fastify-logo.png";
 	import syd from "../../static/syd.png";
 	import evan from "../../static/evan.png";

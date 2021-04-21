@@ -1,19 +1,10 @@
-<!-- <script context="module">
-
-
-	
-	
-</script> -->
-
 <script>
 	
 	import logo from "../../static/logo.png";
 	import sapper_logo from "../../static/Sapper.png";
-	import svelte_logo from "../../static/svelte2.png";
 	import fastify_logo from "../../static/fastify-logo.png";
 	import syd from "../../static/syd.png";
 	import evan from "../../static/evan.png";
-	// import eppalea from "../../static/eppalea.png";
 	import eppalea from "../../static/EL2.png";
 	import github from "../../static/githublogo.png";
   
@@ -32,6 +23,9 @@
 		display: block;
 		margin-left: auto;
 		margin-right: auto;
+	}
+
+	.logo {
 		width: 30%;
 	}
 
@@ -47,40 +41,32 @@
 	}
 
 	.stack {
-		/* border: 2px solid blue; */
 		display: flex;
 		height: 175px;
     margin: 25px;
 	}
 
 	.team {
-		/* border: 2px solid red; */
 		display: flex;
 	}
-/* 
-	.evan {
-		border:  2px solid green;
+
+	.team img {
+		width: 30%;
 	}
 
-	.syd {
-		border:  2px solid black;
-	} */
-
 	.eppalea {
-		/* border: 2px solid purple; */
 		width: 464px;
 		height: 256.23px;
-		
 	}
 
 	.el-img {
-		height: 137.99px;
-		width: 137.99px;
+		height: 120.3px;
+		width: 120.3px;
 	}
 
 	.el-gh {
-		height: 40.57px;
-		width: 137.99px;
+		height: 35.37px;
+		width: 120.3px;
 	}
 
 	
@@ -91,12 +77,12 @@
 </svelte:head>
 
 <main class="main">
-	<img src="{logo}" alt="bite size logo">
+	<img class="logo" src="{logo}" alt="bite size logo">
 
-	<p>a more digestible recipe site</p>
+	<!-- <p>a more digestible recipe site</p> -->
 
 	<div class="stack"> 
-		<img src="{svelte_logo}" alt="svelte logo">
+		<!-- <img src="{svelte_logo}" alt="svelte logo"> -->
 		<img src="{sapper_logo}" alt="sapper logo">
 		<img src="{fastify_logo}" alt="fastify logo">
 	</div>

@@ -24,7 +24,6 @@ curl -H "Content-Type: application/json" --request POST --data '{"user_id": 12, 
 curl -H "Content-Type: application/json" --request POST --data '{"user_id": 12, "title": "Chicken Lettuce Wraps", "difficulty_id": "1", "duration": "20", "image_url": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/delish-190611-asian-lettuce-wraps-522-landscape-pf-1561383352.png?crop=0.668xw:1.00xh;0.155xw,0&resize=480:*", "servings": 2, "description": "Tasty Chicken Lettuce Wraps", "unitOfMeasure": 1, "quantity": 1, "instructionSteps": "Mix hoisin sauce, rice wine vinegar and soya sauce to create the sauce.\nLightly coat the chicken with sauce and put the rest aside.\nCook chicken then mix into sauce.\nDice Jalapeños, green onions and basil.\nStuff butter lettuce with chicken and chopped greens.\nTop with salted peanuts.", "ingredientList": "2 Chicken breasts\n0.25 cup hoisin sauce\n4 tsp rice wine vinegar\n1 tbsp soya sauce\n1 jalapeños\n2 green onions\nsalted peanuts\nbasil", "tags": [{"id":4}] }' http://localhost:5001/recipes
 
 # Favourites for demo
-
 curl -H "Content-Type: application/json" --request POST --data '{"recipe_id": 25}' http://localhost:5001/users/1/favourites
 curl -H "Content-Type: application/json" --request POST --data '{"recipe_id": 25}' http://localhost:5001/users/2/favourites
 curl -H "Content-Type: application/json" --request POST --data '{"recipe_id": 25}' http://localhost:5001/users/3/favourites

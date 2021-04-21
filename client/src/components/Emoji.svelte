@@ -15,7 +15,7 @@
   const removeReaction = async emoji_id => {
     try {
       const res = await fetch(
-        `http://${$session.server}recipes/${recipeID}/emojis/${emoji_id}`,
+        `${$session.server}recipes/${recipeID}/emojis/${emoji_id}`,
         {
           method: 'DELETE',
           headers: {
@@ -31,7 +31,7 @@
   const addReaction = async emoji_id => {
     try {
       const res = await fetch(
-        `http://${$session.server}/recipes/${recipeID}/emojis`,
+        `${$session.server}/recipes/${recipeID}/emojis`,
         {
           method: 'POST',
           body: JSON.stringify({

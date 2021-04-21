@@ -322,7 +322,7 @@ const processIngredients = ingredients => {
     if (e.length > 1) {
 
       // if the first value isn't a number, use 1
-      if (!parseInt(e[0])) {
+      if (!parseFloat(e[0])) {
         obj.quantity = 1
         obj.ingredient = e.flat().join(' ');
         obj.unitOfMeasure = findUnitOfMeasureID(obj.unitOfMeasure);
@@ -330,7 +330,7 @@ const processIngredients = ingredients => {
         return obj;
       }
 
-      obj.quantity = parseInt(e[0]);
+      obj.quantity = parseFloat(e[0]);
 
       const ofIndex = e.findIndex(e => e === 'of');
 

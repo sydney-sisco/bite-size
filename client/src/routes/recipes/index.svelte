@@ -73,7 +73,7 @@
 
   //declare empty variables for functions to use below.
   let items;
-  let filter = true;
+  let filter = false;
   let filteredRecipes = [];
   
   let searchTerm = '';

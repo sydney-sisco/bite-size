@@ -270,8 +270,6 @@ const findUnitOfMeasureID = unit => {
     'strip'
   ];
 
-  console.log('unit:', unit);
-
   // if unit ends with an 's', remove it
   if (unit.slice(unit.length - 1) === 's') {
     unit = unit.slice(0, -1);
@@ -279,8 +277,6 @@ const findUnitOfMeasureID = unit => {
 
   // look for unit in the array
   unitsIndex = units.indexOf(unit); // returns -1 if not found
-
-  console.log('unit:', unit, 'index:', unitsIndex);
   
   // if not found, return 1 (indicating 'each')
   return unitsIndex > 0 ? unitsIndex : 1
@@ -301,15 +297,11 @@ const processIngredients = ingredients => {
     // let unit = 'each';
     // let ingredient = '';
 
-    console.log(e);
-
     const obj = {
       quantity: 1,
       unitOfMeasure: 'each', // needs to be an ID from `select * from units_of_measure;`
       ingredient: ''
     }
-    
-    console.log('detail:', e);
     
     if (e.length === 1) { // single word
       obj.ingredient = e[0];
@@ -347,7 +339,6 @@ const processIngredients = ingredients => {
       // obj.unitOfMeasure = 1; // hack it in for now
       return obj;
     }
-    console.log('returning e???', e);
     return e; // shouldn't get here
   })
   return details;

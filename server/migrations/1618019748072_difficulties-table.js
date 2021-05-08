@@ -8,7 +8,7 @@ exports.up = pgm => {
       type: 'SERIAL PRIMARY KEY',
       notNull: true
     },
-    unit: {
+    name: {
       type: 'VARCHAR(256)',
       notNull: true
     }

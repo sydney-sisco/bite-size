@@ -6,7 +6,7 @@ exports.shorthands = undefined
 
 exports.up = pgm => {
   pgm.createTable('users', {
-    user_id: {
+    id: {
       type: 'SERIAL PRIMARY KEY',
       notNull: true
     },

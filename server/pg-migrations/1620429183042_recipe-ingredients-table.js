@@ -19,7 +19,7 @@ exports.up = pgm => {
       onDelete: 'CASCADE'
     },
     quantity: {
-      type: 'INTEGER',
+      type: 'real',
       notNull: true
     },
     unit_of_measure_id: {

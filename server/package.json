@@ -6,8 +6,11 @@
   "scripts": {
     "dev": "fastify start -w -l info -P -o -p 5001 index.js",
     "fix": "standard --fix",
-    "migrate": "node-pg-migrate",
-    "seed": "./src/db/schema/recipe_seeds.sh"
+    "migrate": "node-pg-migrate -m ./pg-migrations",
+    "seed": "node-pg-migrate -m ./pg-seeds",
+    "migrate-up": "node-pg-migrate -m ./pg-migrations up && node-pg-migrate -m ./pg-seeds up",
+    "migrate-down": "node-pg-migrate -m ./pg-seeds down && node-pg-migrate -m ./pg-migrations down",
+    "seeds": "./src/db/schema/recipe_seeds.sh"
   },
   "keywords": [],
   "author": "",

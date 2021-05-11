@@ -7,9 +7,9 @@
     "dev": "fastify start -w -l info -P -o -p 5001 index.js",
     "fix": "standard --fix",
     "migrate": "node-pg-migrate -m ./pg-migrations",
-    "seed": "node-pg-migrate -m ./pg-seeds",
-    "migrate-up": "node-pg-migrate -m ./pg-migrations up && node-pg-migrate -m ./pg-seeds up",
-    "migrate-down": "node-pg-migrate -m ./pg-seeds down && node-pg-migrate -m ./pg-migrations down",
+    "seed": "node-pg-migrate -m ./pg-seeds --no-check-order",
+    "migrate-up": "node-pg-migrate -m ./pg-migrations up && node-pg-migrate -m ./pg-seeds --no-check-order up",
+    "migrate-down": "node-pg-migrate -m ./pg-seeds --no-check-order down 5 && node-pg-migrate -m ./pg-migrations down 100",
     "seeds": "./src/db/schema/recipe_seeds.sh"
   },
   "keywords": [],

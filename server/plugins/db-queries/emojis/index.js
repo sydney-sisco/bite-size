@@ -12,13 +12,13 @@ async function emojiQueries (fastify) {
         `, [emojiId, recipeId, userId]
       )
     },
-      removeReaction: async (emojiId, recipeId, userId) => {
-        return query(`
-          DELETE FROM user_emoji_reactions
-          WHERE emoji_id = $1
-          AND recipe_id = $2
-          AND user_id = $3
-          `, [emojiId, recipeId, userId]
+    removeReaction: async (emojiId, recipeId, userId) => {
+      return query(`
+        DELETE FROM user_emoji_reactions
+        WHERE emoji_id = $1
+        AND recipe_id = $2
+        AND user_id = $3
+        `, [emojiId, recipeId, userId]
       )
     }
   })

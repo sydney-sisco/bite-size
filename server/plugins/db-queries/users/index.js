@@ -1,34 +1,36 @@
+const fastifyPlugin = require('fastify-plugin')
 
+async function userQueries (fastify) {
+  const { pg: { query } } = fastify
 
-const getUsers = async (fastify) => {
-  const client = await fastify.pg.connect()
-  const { rows } = await client.query(
-    'SELECT * FROM users'
-  )
-  client.release()
-  return rows;
-};
+  fastify.decorate('userQuery', {
+    getAll: async () => {
+      return query(`
+      SELECT * FROM users
+      `
+      )
+    },
+    getUser: async (id) => {
+      return query(`
+      SELECT * FROM users WHERE id=$1
+      `, [id]
+      )
+    },
+    getUserByEmail: async (email) => {
+      return query(`
+      SELECT * FROM users WHERE email_address=$1
+      `, [email])
+    }
+  })
 
-const getUser = async (fastify, id) => {
-  const client = await fastify.pg.connect()
-    const { rows } = await client.query(
-      'SELECT * FROM users WHERE id=$1', [id]
-    )
-    client.release()
-    return rows;
-};
-
-const getUserByEmail = async (fastify, email) => {
-  const client = await fastify.pg.connect()
-  const { rows } = await client.query(
-    'SELECT * FROM users WHERE email_address=$1', [email]
-  )
-  client.release()
-  return rows;
 }
 
-module.exports = {
-  getUsers,
-  getUser,
-  getUserByEmail
-}
+module.exports = fastifyPLugin(userQueries, {
+  name: 'user-queries',
+  decorators: {
+    fastify: ['pg']
+  },
+  dependencies: [
+    'fastify-postgres'
+  ]
+})

@@ -1,7 +1,3 @@
-<style>
-
-</style>
-
 <script>
 
   import { stores } from "@sapper/app";
@@ -9,13 +5,13 @@
 
   import { Button } from 'attractions';
 
-  export let recipeID;
+  export let recipeId;
   export let emojiReaction;
 
-  const removeReaction = async emoji_id => {
+  const removeReaction = async emojiId => {
     try {
       const res = await fetch(
-        `${$session.server}/recipes/${recipeID}/emojis/${emoji_id}`,
+        `${$session.server}/recipes/${recipeId}/emojis/${emojiId}`,
         {
           method: 'DELETE',
           headers: {
@@ -28,14 +24,14 @@
     }
   }
 
-  const addReaction = async emoji_id => {
+  const addReaction = async emojiId => {
     try {
       const res = await fetch(
-        `${$session.server}/recipes/${recipeID}/emojis`,
+        `${$session.server}/recipes/${recipeId}/emojis`,
         {
           method: 'POST',
           body: JSON.stringify({
-            emoji_id,
+            emojiId,
           }),
           headers: {
             Authorization: $session.token? `Bearer ${$session.token}` : null,

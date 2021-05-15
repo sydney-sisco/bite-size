@@ -28,11 +28,11 @@
 
     let {
       title,
-      difficulty_id,
+      difficultyId,
       items,
       hours,
       minutes,
-      image_url,
+      imageUrl,
       servings,
       description,
       instructionSteps,
@@ -53,7 +53,7 @@
       duration;
     }
 
-    let user_id = $session.user.id;
+    let userId = $session.user.id;
 
     let tags = items
       .filter(({ checked }) => checked)
@@ -66,12 +66,12 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          user_id,
+          userId,
           title,
-          difficulty_id,
+          difficultyId,
           duration,
           tags,
-          image_url,
+          imageUrl,
           servings,
           description,
           instructionSteps,

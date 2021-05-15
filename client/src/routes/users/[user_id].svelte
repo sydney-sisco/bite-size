@@ -1,9 +1,9 @@
 <script context="module">
 
   export async function preload(page, session) {
-    const { user_id } = page.params;
+    const { userId } = page.params;
 		
-		const res = await this.fetch(`${session.server}/users/${user_id}/recipes`,
+		const res = await this.fetch(`${session.server}/users/${userId}/recipes`,
 			{
 				method: "GET",
 			}

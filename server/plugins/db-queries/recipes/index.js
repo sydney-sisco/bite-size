@@ -1,6 +1,6 @@
 const fastifyPlugin = require('fastify-plugin')
 
-async function recipeQueries (fastify) {
+async function recipeQueries(fastify) {
   const { pg: { query, transact } } = fastify
 
   fastify.decorate('recipeQuery', {
@@ -19,7 +19,7 @@ async function recipeQueries (fastify) {
         JOIN favourites f ON r.id = f.recipe_id
         GROUP BY r.id, u.username
         ORDER BY r.id
-      `) 
+      `)
     },
     postNewRecipe: async (newRecipe) => {
       let {
@@ -32,10 +32,10 @@ async function recipeQueries (fastify) {
         servings,
         description,
         instructionSteps,
-        ingredientList,
+        ingredientList
       } = newRecipe
 
-      
+
       const { rows: recipe } = await transact(async client => {
         return client.query(`
         INSERT INTO recipes (user_id, title, difficulty_id, duration, image_url, servings, description)
@@ -64,8 +64,8 @@ async function recipeQueries (fastify) {
         return newInstructions
       })
       const processedIngredients = processIngredients(ingredientList);
-    
-       const ingredients = await transact(async client => {
+
+      const ingredients = await transact(async client => {
         const newIngredients = []
         for (const ingredient of processedIngredients) {
           if (ingredient) {
@@ -74,9 +74,9 @@ async function recipeQueries (fastify) {
               VALUES ($1)
               RETURNING *;
             `, [ingredient.ingredient])
-    
+
             const ingredientId = rows[0].id
-    
+
             const { rows: newQuantity } = await client.query(`
               INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_of_measure_id) 
               VALUES ($1, $2, $3, $4)
@@ -95,7 +95,7 @@ async function recipeQueries (fastify) {
       })
 
       const recipeTags = await transact(async client => {
-        for (const tag of tags) {         
+        for (const tag of tags) {
           if (tag) {
             await client.query(`
             INSERT INTO recipe_tags (recipe_id, tag)
@@ -108,27 +108,27 @@ async function recipeQueries (fastify) {
       return { recipe: recipe[0], instructions, ingredients, recipeTags }
     },
 
-    editRecipe: async (editRecipe, recipeID) => {
+    editRecipe: async (editRecipe, recipeId) => {
       let {
         userId,
         title,
-        difficulty_id,
+        difficultyId,
         duration,
         tags,
-        image_url,
+        imageUrl,
         servings,
         description,
         instructionSteps,
         ingredientList,
       } = editRecipe
-    
+
       const { rows: recipe } = await transact(async client => {
         return client.query(`
             UPDATE recipes 
             SET user_id = $1, title = $2, difficulty_id = $3, duration = $4, image_url = $5, servings = $6, description = $7
             WHERE id = $8
             RETURNING *;
-          `, [userId, title, difficulty_id, duration, image_url, servings, description, recipeID]
+          `, [userId, title, difficultyId, duration, imageUrl, servings, description, recipeId]
         )
       })
 
@@ -137,12 +137,12 @@ async function recipeQueries (fastify) {
         return client.query(`
           DELETE FROM instructions 
           WHERE recipe_id = $1;
-        `, [recipeID]
+        `, [recipeId]
         );
       });
 
       instructionSteps = instructionSteps.split('\n').map((e, i) => [i, e]);
-      
+
       const instructions = await transact(async client => {
         const newInstructions = []
         for (const [index, step] of instructionSteps) {
@@ -151,7 +151,7 @@ async function recipeQueries (fastify) {
               INSERT INTO instructions (instruction, step, recipe_id)
               VALUES ($1, $2, $3)
               RETURNING *;
-            `, [step, (index + 1), recipeID]
+            `, [step, (index + 1), recipeId]
             )
             newInstructions.push(rows[0])
           }
@@ -165,12 +165,12 @@ async function recipeQueries (fastify) {
         return client.query(`
           DELETE FROM recipe_ingredients 
           WHERE recipe_id = $1;
-        `, [recipeID]
+        `, [recipeId]
         );
       });
-      
+
       const processedIngredients = processIngredients(ingredientList);
-    
+
       const ingredients = await transact(async client => {
         const newIngredients = []
         for (const ingredient of processedIngredients) {
@@ -180,9 +180,9 @@ async function recipeQueries (fastify) {
               VALUES ($1)
               RETURNING *;
             `, [ingredient.ingredient])
-    
+
             const ingredientId = rows[0].id
-    
+
             const { rows: newQuantity } = await client.query(`
               INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_of_measure_id) 
               VALUES ($1, $2, $3, $4)
@@ -204,27 +204,27 @@ async function recipeQueries (fastify) {
         return client.query(`
           DELETE FROM recipe_tags
           WHERE recipe_id = $1;
-        `, [recipeID]
+        `, [recipeId]
         );
       });
 
       const recipeTags = await transact(async client => {
-        for (const tag of tags) {         
+        for (const tag of tags) {
           if (tag) {
             await client.query(`
             INSERT INTO recipe_tags (recipe_id, tag)
             VALUES ($1, $2)
             RETURNING *;
-            `, [recipeID, tag.id])
+            `, [recipeId, tag.id])
           }
         }
       })
 
       // return { recipe: recipe[0], instructions, ingredients }
-      return { recipe: recipe[0]}
+      return { recipe: recipe[0] }
     }
 
-    
+
   })
 }
 
@@ -277,7 +277,7 @@ const findUnitOfMeasureID = unit => {
 
   // look for unit in the array
   unitsIndex = units.indexOf(unit); // returns -1 if not found
-  
+
   // if not found, return 1 (indicating 'each')
   return unitsIndex > 0 ? unitsIndex : 1
 }
@@ -302,7 +302,7 @@ const processIngredients = ingredients => {
       unitOfMeasure: 'each', // needs to be an ID from `select * from units_of_measure;`
       ingredient: ''
     }
-    
+
     if (e.length === 1) { // single word
       obj.ingredient = e[0];
       // return [quantity, unit, ingredient];
@@ -330,7 +330,7 @@ const processIngredients = ingredients => {
         obj.ingredient = e.slice(1, e.length).flat().join(' ');
       }
 
-      if ( ofIndex > 0) { // split array based on location of 'of'
+      if (ofIndex > 0) { // split array based on location of 'of'
         obj.unitOfMeasure = e.slice(1, ofIndex).flat().join(' ');
         obj.ingredient = e.slice(ofIndex + 1, e.length).flat().join(' ');
       }

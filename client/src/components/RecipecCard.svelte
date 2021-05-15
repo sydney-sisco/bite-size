@@ -129,8 +129,8 @@
 
   <div class='card'>
     <a href="/recipes/{recipe.id}">
-    {#if recipe.image_url}
-    <img style="width: 100%" src="{recipe.image_url}" alt="recipe">
+    {#if recipe.imageUrl}
+    <img style="width: 100%" src="{recipe.imageUrl}" alt="recipe">
   {:else}
     <img style="width: 100%" src="https://res.cloudinary.com/bitesizerecipes/image/upload/v1618603057/Bite-Size-Images/qo70e0mj3vobsoznw9yn.jpg" alt="Bite Size logo">
   {/if}
@@ -145,7 +145,7 @@
         {/if}
       </div>
       <p class="favourite-star">&#9734; &nbsp; {recipe.favourites}</p>
-      <a href="/users/{recipe.user_id}" class="card-link">@{recipe.username}</a>
+      <a href="/users/{recipe.userId}" class="card-link">@{recipe.username}</a>
     </div>
     </a>
   </div>

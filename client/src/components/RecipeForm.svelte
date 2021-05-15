@@ -18,12 +18,12 @@
   export let recipe = [{}];
   let tagProps = $$props.tags
   let { 
-    difficulty_id = 2,
+    difficultyId = 2,
     description = null,
     title = null,
     duration = 0,
     items = [],
-    image_url = null,
+    imageUrl = null,
     servings = null,
     unitOfMeasure = 1,
     quantity = 1,
@@ -105,12 +105,12 @@
         body: data,
       }
       );
-      const { secure_url } = await res.json();
-      image_url = secure_url;
+      const { secureUrl } = await res.json();
+      imageUrl = secureUrl;
     };
     
     const changePhoto = () => {
-      image_url = null;
+      imageUrl = null;
     };
     
     
@@ -286,12 +286,12 @@
           type="range"
           min="1"
           max="3"
-          bind:value={difficulty_id}
+          bind:value={difficultyId}
           class="slider"
           name="difficulty-slider"
           />
           <output for="difficulty-slider">
-            {difficultyNames[difficulty_id - 1]}
+            {difficultyNames[difficultyId - 1]}
           </output>
         </FormField>
       </div>
@@ -339,14 +339,14 @@
         </div>
       
         <div class="photo">
-          {#if !image_url}
+          {#if !imageUrl}
           <div class="select-photo-button">
             <FileDropzone accept="image/*" max={1} on:change={uploadImage}>
               <span type=text slot='empty-layer'>Choose an Image</span>
             </FileDropzone>
           </div>
           {:else}
-          <img src={image_url} alt="recipe" />
+          <img src={imageUrl} alt="recipe" />
           <div class="change-photo-button">
             <Button outline on:click={changePhoto}>Remove Image</Button>
           </div>
@@ -361,10 +361,10 @@
         <Button filled class="btn" on:click={() => handleSubmit({
           userId: $session.user.id,
           title,
-          difficulty_id,
+          difficultyId,
           hours,
           minutes,
-          image_url,
+          imageUrl,
           servings,
           description,
           items,

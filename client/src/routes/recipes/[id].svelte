@@ -131,10 +131,10 @@
     recipe: [{
       title,
       description,
-      image_url,
+      imageUrl,
       difficulty,
       userFavourite,
-      favourite_count,
+      favouriteCount,
       duration,
       servings
     }],
@@ -155,7 +155,7 @@
 
   let loadingState = false;
   
-  const handleSubmit = async (recipeObject, recipeID) => {
+  const handleSubmit = async (recipeObject, recipeId) => {
     //Create an if statement to make sure we have everything to make a recipe...
     console.log('recipe object from edit form:', recipeObject);
     
@@ -163,11 +163,11 @@
 
     let {
       title,
-      difficulty_id,
+      difficultyId,
       items,
       hours,
       minutes,
-      image_url,
+      imageUrl,
       servings,
       description,
       instructionSteps,
@@ -187,23 +187,23 @@
       duration
     }
 
-    let user_id = $session.user.id;
+    let userId = $session.user.id;
 
     let tags = items
       .filter(({ checked }) => checked)
       .map(({ value, label }) => ({ id: value, name: label }));
 
       try {
-        const res = await fetch(`${$session.server}/recipes/${recipeID}`, {
+        const res = await fetch(`${$session.server}/recipes/${recipeId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            userId: $session.user.id,
+            userId,
             title,
-            difficulty_id,
+            difficultyId,
             duration,
             tags,
-            image_url,
+            imageUrl,
             servings,
             description,
             instructionSteps,
@@ -249,11 +249,11 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-        recipe_id: id
+        recipeId: id
         }),
       });
       userFavourite = true
-      recipeDetails.recipe[0].favourite_count++;
+      recipeDetails.recipe[0].favouriteCount++;
       // goto('/') //redirect to user's recipes (once built)
     }
     catch (error) {
@@ -270,7 +270,7 @@
   
       });
       userFavourite = false
-      recipeDetails.recipe[0].favourite_count--;
+      recipeDetails.recipe[0].favouriteCount--;
       // goto('/') //redirect to user's recipes (once built)
     }
     catch (error) {
@@ -311,8 +311,8 @@
 
   <div class="right">
     <h2>Recipe Info</h2>
-    {#if recipeDetails.recipe[0].image_url}
-    <img src="{recipeDetails.recipe[0].image_url}" alt="recipe">
+    {#if recipeDetails.recipe[0].imageUrl}
+    <img src="{recipeDetails.recipe[0].imageUrl}" alt="recipe">
     {:else}
     <img src="https://res.cloudinary.com/bitesizerecipes/image/upload/v1618603057/Bite-Size-Images/qo70e0mj3vobsoznw9yn.jpg" alt="Bite Size logo">
     {/if}
@@ -324,7 +324,7 @@
       <li>{name}</li>
       {/each}
       <div class="favourites">
-        <p>&#9734;{recipeDetails.recipe[0].favourite_count}</p>
+        <p>&#9734;{recipeDetails.recipe[0].favouriteCount}</p>
         {#if userFavourite}
           <Button  on:click={() => unfavouriteRecipe()} filled>Unfavourite Recipe</Button>
         {:else}
@@ -333,14 +333,14 @@
       </div>
       <div class="emojis">
         {#each emojiReactions as emojiReaction }
-        <Emoji recipeID={id} {emojiReaction} />
+        <Emoji recipeId={id} {emojiReaction} />
         {/each}
       </div>
       <div class="buttons">
-        {#if recipeDetails.recipe[0].user_id === $session.user.id}
+        {#if recipeDetails.recipe[0].userId === $session.user.id}
         <Button outline on:click={() => editRecipe()}>Edit Recipe</Button>
         {/if}
-        {#if recipeDetails.recipe[0].user_id === $session.user.id}
+        {#if recipeDetails.recipe[0].userId === $session.user.id}
         <Button outline on:click={() => deleteRecipe()}>Delete Recipe</Button>
         {/if}
       </div>

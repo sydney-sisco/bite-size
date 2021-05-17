@@ -25,7 +25,7 @@ async function userQueries (fastify) {
 
 }
 
-module.exports = fastifyPLugin(userQueries, {
+module.exports = fastifyPlugin(userQueries, {
   name: 'user-queries',
   decorators: {
     fastify: ['pg']

@@ -4,7 +4,7 @@ const { join } = require('path')
 module.exports = async function (fastify, options) {
   fastify.register(autoload, {
     dir: join(__dirname, 'plugins'),
-    maxDepth: 1
+    maxDepth: 2
   })
 
   fastify.register(autoload, {

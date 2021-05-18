@@ -332,8 +332,25 @@ async function recipeQueries(fastify) {
 
       // return { recipe: recipe[0], instructions, ingredients }
       return { recipe: recipe[0] }
-    }
+    },
 
+    deleteRecipe: async (recipeId) => {
+      return query(`
+        DELETE FROM recipes
+        WHERE id=$1
+        `, [recipeId]
+      )
+    },
+
+    getRecipesForUser: async (userId) => {
+      return query(`
+      SELECT r.*, u.username, count(f.*) AS favourites FROM recipes r
+    JOIN users u ON u.id = r.user_id
+    LEFT JOIN favourites f ON r.id = f.recipe_id
+    WHERE r.user_id = $1
+    GROUP BY r.id, u.username
+    ORDER BY r.id`, [userId])
+    }
 
   })
 }

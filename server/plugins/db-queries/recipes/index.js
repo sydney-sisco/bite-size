@@ -4,12 +4,26 @@ async function recipeQueries(fastify) {
   const { pg: { query, transact } } = fastify
 
   fastify.decorate('recipeQuery', {
+    getUserEmojiReactions: async (userId, recipeId) => {
+      return query(`
+        SELECT e.id,
+        CASE 
+          WHEN u.id IS NULL THEN 0
+          ELSE 1
+        END AS selected
+        FROM emojis e
+        LEFT JOIN user_emoji_reactions u ON e.id = u.emoji_id AND u.user_id = $1 AND u.recipe_id = $2
+        ORDER BY e.id;`, [userId, recipeId]
+      )
+    },
+
     getEmojis: async (recipeId) => {
       return query(`
         SELECT e.*, count(u.*) AS count FROM emojis e
         LEFT JOIN user_emoji_reactions u ON e.id = u.emoji_id
         AND u.recipe_id = $1
-        GROUP BY e.id;
+        GROUP BY e.id
+        ORDER BY e.id;
       `, [recipeId])
     },
     getAll: async () => {
@@ -21,6 +35,56 @@ async function recipeQueries(fastify) {
         ORDER BY r.id
       `)
     },
+
+    getRecipes: async () => {
+      return query(`
+        SELECT r.*, u.username, count(f.*) AS favourites, string_agg(i.name, ',') AS ingredients, string_agg(t.name, ',') AS tags FROM recipes r
+        JOIN users u ON u.id = r.user_id
+        LEFT JOIN favourites f ON r.id = f.recipe_id
+        LEFT JOIN recipe_ingredients ri ON ri.recipe_id = r.id
+        LEFT JOIN ingredients i ON i.id = ri.ingredient_id
+        LEFT JOIN recipe_tags rt ON rt.recipe_id = r.id
+        LEFT JOIN tags t ON rt.tag = t.id
+        GROUP BY r.id, u.username
+        ORDER BY r.id`
+      )
+    },
+
+    getRecipe: async (id) => {
+      return query(`
+        SELECT r.*, d.name AS difficulty, COUNT(f.*) as favourite_count FROM recipes r
+        LEFT JOIN difficulties d ON d.id = r.difficulty_id
+        LEFT JOIN favourites f ON f.recipe_id = r.id
+        WHERE r.id=$1
+        GROUP BY r.id, d.name`, [id]
+      )
+    },
+
+    getInstructions: async (id) => {
+      return query(`
+        SELECT * FROM instructions
+        WHERE recipe_id = $1
+        ORDER BY step`, [id]
+      )
+    },
+
+    getIngredients: async (id) => {
+      return query(`
+        SELECT * FROM recipe_ingredients ri
+        LEFT JOIN ingredients i ON i.id = ri.ingredient_id
+        LEFT JOIN units_of_measure u ON u.id = ri.unit_of_measure_id
+        WHERE ri.recipe_id = $1;`, [id]
+      )
+    },
+
+    getTags: async (id) => {
+      return query(`
+        SELECT * FROM recipe_tags rt
+        LEFT JOIN tags t ON t.id = rt.tag
+        WHERE rt.recipe_id = $1;`, [id]
+      )
+    },
+
     postNewRecipe: async (newRecipe) => {
       let {
         userId,

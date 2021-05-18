@@ -13,7 +13,8 @@ async function recipeQueries(fastify) {
         END AS selected
         FROM emojis e
         LEFT JOIN user_emoji_reactions u ON e.id = u.emoji_id AND u.user_id = $1 AND u.recipe_id = $2
-        ORDER BY e.id;`, [userId, recipeId]
+        ORDER BY e.id;
+        `, [userId, recipeId]
       )
     },
 
@@ -46,7 +47,8 @@ async function recipeQueries(fastify) {
         LEFT JOIN recipe_tags rt ON rt.recipe_id = r.id
         LEFT JOIN tags t ON rt.tag = t.id
         GROUP BY r.id, u.username
-        ORDER BY r.id`
+        ORDER BY r.id
+        `
       )
     },
 
@@ -56,7 +58,8 @@ async function recipeQueries(fastify) {
         LEFT JOIN difficulties d ON d.id = r.difficulty_id
         LEFT JOIN favourites f ON f.recipe_id = r.id
         WHERE r.id=$1
-        GROUP BY r.id, d.name`, [id]
+        GROUP BY r.id, d.name
+        `, [id]
       )
     },
 
@@ -81,7 +84,8 @@ async function recipeQueries(fastify) {
       return query(`
         SELECT * FROM recipe_tags rt
         LEFT JOIN tags t ON t.id = rt.tag
-        WHERE rt.recipe_id = $1;`, [id]
+        WHERE rt.recipe_id = $1;
+        `, [id]
       )
     },
 
@@ -104,6 +108,27 @@ async function recipeQueries(fastify) {
         })
       }
       return recipeDetails;
+    },
+
+    hasUserFavourited: async (userId, recipeId) => {
+      return query(`
+        SELECT * FROM favourites    
+        WHERE user_id = $1
+        AND recipe_id = $2;
+        `, [userId, recipeId]
+      )
+      //return rows.lenght !== 0;
+    },
+
+    favsForFeatured: async () => {
+      return query(`
+        SELECT u.username, count(f.*) AS favourites, r.* FROM recipes r
+        JOIN users u ON u.id = r.user_id
+        LEFT JOIN favourites f ON f.recipe_id = r.id
+        GROUP by r.id, u.username
+        ORDER BY favourites DESC
+        LIMIT 3; 
+      `)
     },
 
     postNewRecipe: async (newRecipe) => {

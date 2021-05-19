@@ -344,12 +344,14 @@ async function recipeQueries(fastify) {
 
     getRecipesForUser: async (userId) => {
       return query(`
-      SELECT r.*, u.username, count(f.*) AS favourites FROM recipes r
-    JOIN users u ON u.id = r.user_id
-    LEFT JOIN favourites f ON r.id = f.recipe_id
-    WHERE r.user_id = $1
-    GROUP BY r.id, u.username
-    ORDER BY r.id`, [userId])
+        SELECT r.*, u.username, count(f.*) AS favourites FROM recipes r
+        JOIN users u ON u.id = r.user_id
+        LEFT JOIN favourites f ON r.id = f.recipe_id
+        WHERE r.user_id = $1
+        GROUP BY r.id, u.username
+        ORDER BY r.id
+        `, [userId]
+      )
     }
 
   })
@@ -434,7 +436,6 @@ const processIngredients = ingredients => {
       obj.ingredient = e[0];
       // return [quantity, unit, ingredient];
       obj.unitOfMeasure = findUnitOfMeasureID(obj.unitOfMeasure);
-      console.log(obj);
       return obj;
     }
 
@@ -445,7 +446,6 @@ const processIngredients = ingredients => {
         obj.quantity = 1
         obj.ingredient = e.flat().join(' ');
         obj.unitOfMeasure = findUnitOfMeasureID(obj.unitOfMeasure);
-        console.log(obj);
         return obj;
       }
 

@@ -1,4 +1,3 @@
-const { favsForFeatured, getRecipeTags } = require('../../src/db/recipe_queries');
 
 const homepageRoute = async (fastify) => {
   fastify.get('/', async (req, reply) => {

@@ -1,6 +1,3 @@
-const { getRecipeDetails, getRecipes, deleteSpecificRecipe, getRecipeTags } = require('../../src/db/recipe_queries');
-const   { addEmojiReaction, removeEmojiReaction } = require('../../src/db/emoji_queries');
-
 
 const recipesRoutes = async (fastify) => {
   const { recipeQuery } = fastify

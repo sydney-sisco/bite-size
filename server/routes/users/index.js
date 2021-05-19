@@ -1,7 +1,3 @@
-const { getUsers, getUser, getUserByEmail } = require('../../src/db/user_queries');
-const { getRecipesForUser , getRecipeTags } = require('../../src/db/recipe_queries');
-
-
 
 const usersRoute = async (fastify) => {
   fastify.get('/users', async (req, reply) => {

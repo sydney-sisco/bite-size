@@ -1,10 +1,12 @@
 
 const homepageRoute = async (fastify) => {
+  const { recipeQuery } = fastify;
   fastify.get('/', async (req, reply) => {
-    const rows = await favsForFeatured(fastify);
+    const { rows } = await recipeQuery.favsForFeatured();
+    console.log(rows);
     const recipesWithTags = []
     for (recipe of rows) {
-      recipe.tag = await getRecipeTags(fastify, recipe.id)
+      recipe.tag = await recipeQuery.getTags(fastify, recipe.id)
       recipesWithTags.push(recipe)
     }
     reply.send(recipesWithTags);

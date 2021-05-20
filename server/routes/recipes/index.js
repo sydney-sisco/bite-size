@@ -1,12 +1,11 @@
-
 const recipesRoutes = async (fastify) => {
   const { recipeQuery } = fastify
 
   fastify.get('/recipes', async (req, reply) => {
-    const allRecipes = await getRecipes(fastify);
+    const allRecipes = await recipeQuery.getRecipes();
     const recipesWithTags = []
     for (recipe of allRecipes) {
-      recipe.tag = await getRecipeTags(fastify, recipe.id)
+      recipe.tag = await recipeQuery.getTags(recipe.id)
       recipesWithTags.push(recipe)
     }
     reply.send(recipesWithTags);
@@ -21,7 +20,7 @@ const recipesRoutes = async (fastify) => {
       decoded = fastify.jwt.verify(token);
     }
 
-    const recipeDetails = await getRecipeDetails(fastify, request.params.id, decoded && decoded.id);
+    const recipeDetails = await recipeQuery.getRecipeDetails(fastify, request.params.id, decoded && decoded.id);
 
     reply.send(recipeDetails);
   })
@@ -34,11 +33,8 @@ const recipesRoutes = async (fastify) => {
                
   fastify.patch('/recipes/:id', async (req, reply) => {
     const { body } = req
-    // console.log("edit Body:",body)
-    // console.log("edit RQ:", recipeQuery);
     const editRecipe = await recipeQuery.editRecipe(body, req.params.id);
     console.log('editRecipe', editRecipe);
-    // reply.send(editRecipe)
     const recipeDetails = await getRecipeDetails(fastify, req.params.id);
     reply.send(recipeDetails);
   })

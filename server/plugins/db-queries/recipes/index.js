@@ -1,9 +1,10 @@
 const fastifyPlugin = require('fastify-plugin')
 
 async function recipeQueries(fastify) {
-  const { pg: { query, transact } } = fastify
+  const { pg: { query, transact }, recipeQuery } = fastify
 
   fastify.decorate('recipeQuery', {
+    
     getUserEmojiReactions: async (userId, recipeId) => {
       return query(`
         SELECT e.id,
@@ -89,14 +90,14 @@ async function recipeQueries(fastify) {
       )
     },
 
-    getRecipeDetails: async (recipeId, userId) => {
+    getRecipeDetails: async (recipe_id, user_id) => {
       const recipeDetails = {};
 
-      recipeDetails.recipe = await recipeQuery.getRecipe(recipeId);
-      recipeDetails.instructions = await recipeQuery.getInstructions(recipeId);
-      recipeDetails.ingredients = await recipeQuery.getIngredients(recipeId);
-      recipeDetails.emojiReactions = await recipeQuery.getUserEmojiReactions(recipeId);
-      recipeDetails.tags = await recipeQuery.getTags(recipeId);
+      recipeDetails.recipe = await recipeQuery.getRecipe(recipe_id);
+      recipeDetails.instructions = await recipeQuery.getInstructions(recipe_id);
+      recipeDetails.ingredients = await recipeQuery.getIngredients(recipe_id);
+      recipeDetails.emojiReactions = await recipeQuery.getUserEmojiReactions(recipe_id);
+      recipeDetails.tags = await recipeQuery.getTags(recipe_id);
 
       if (userId) {
         recipeDetails.recipe[0].userFavourite = await recipeQuery.hasUserFavourited(userId, recipeId);
@@ -297,7 +298,7 @@ async function recipeQueries(fastify) {
               INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit_of_measure_id) 
               VALUES ($1, $2, $3, $4)
               RETURNING *;
-            `, [recipeID, ingredientId, ingredient.quantity, ingredient.unitOfMeasure])
+            `, [recipeId, ingredientId, ingredient.quantity, ingredient.unitOfMeasure])
 
             newIngredients.push({
               ingredient: rows[0],

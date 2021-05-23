@@ -90,14 +90,14 @@ async function recipeQueries(fastify) {
       )
     },
 
-    getRecipeDetails: async (recipe_id, user_id) => {
+    getRecipeDetails: async (recipeId, userId) => {
       const recipeDetails = {};
 
-      recipeDetails.recipe = await recipeQuery.getRecipe(recipe_id);
-      recipeDetails.instructions = await recipeQuery.getInstructions(recipe_id);
-      recipeDetails.ingredients = await recipeQuery.getIngredients(recipe_id);
-      recipeDetails.emojiReactions = await recipeQuery.getUserEmojiReactions(recipe_id);
-      recipeDetails.tags = await recipeQuery.getTags(recipe_id);
+      recipeDetails.recipe = await recipeQuery.getRecipe(recipeId);
+      recipeDetails.instructions = await recipeQuery.getInstructions(recipeId);
+      recipeDetails.ingredients = await recipeQuery.getIngredients(recipeId);
+      recipeDetails.emojiReactions = await recipeQuery.getUserEmojiReactions(recipeId);
+      recipeDetails.tags = await recipeQuery.getTags(recipeId);
 
       if (userId) {
         recipeDetails.recipe[0].userFavourite = await recipeQuery.hasUserFavourited(userId, recipeId);

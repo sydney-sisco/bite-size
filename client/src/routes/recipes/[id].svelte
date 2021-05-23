@@ -198,7 +198,7 @@
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            userId,
+            userId: $session.user.id,
             title,
             difficultyId,
             duration,
@@ -337,10 +337,10 @@
         {/each}
       </div>
       <div class="buttons">
-        {#if recipeDetails.recipe[0].userId === $session.user.id}
+        {#if recipeDetails.recipe[0].user_id === $session.user.id}
         <Button outline on:click={() => editRecipe()}>Edit Recipe</Button>
         {/if}
-        {#if recipeDetails.recipe[0].userId === $session.user.id}
+        {#if recipeDetails.recipe[0].user_id === $session.user.id}
         <Button outline on:click={() => deleteRecipe()}>Delete Recipe</Button>
         {/if}
       </div>

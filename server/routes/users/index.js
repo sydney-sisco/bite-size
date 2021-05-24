@@ -1,46 +1,48 @@
 const usersRoute = async (fastify) => {
-  const { userQuery, recipeQuery } = fastify;
+  const { userQuery, recipeQuery } = fastify
 
   fastify.get('/users', async (req, reply) => {
-    const rows = await userQuery.getAll(fastify);
-    reply.send(rows);
+    const { rows } = await userQuery.getAll()
+    reply.send(rows)
   })
 
   fastify.get('/users/:id', async (req, reply) => {
-    const rows = await userQuery.getUser(fastify, req.params.id);
-    reply.send(rows);
+    const { params: { id } } = req
+    const { rows } = await userQuery.getUser(id)
+    reply.send(rows)
   })
 
   fastify.post('/login', async (req, reply) => {
-    const user = await userQuery.getUserByEmail(fastify, req.body.email);
+    const { body: { email, password } } = req
+    const { rows } = await userQuery.getUserByEmail(email)
 
-    if (user.length === 0) {
-      reply.send({error: 'Invalid email.'});
-      return;
+    if (rows.length < 1) {
+      reply.send({error: 'Invalid email.'})
     }
 
-    if (user[0].password !== req.body.password) { // TODO: hash the passwords at the very least
-      reply.send({error: 'Invalid Password.'});
-      return;
+    // TODO: hash the passwords at the very least
+    if (rows[0].password !== password) { 
+      reply.send({error: 'Invalid password.'})
     }
 
-    const token = fastify.jwt.sign({ ...user[0], password: null })
+    const token = fastify.jwt.sign({ ...rows[0], password: null })
     reply.send({
       token,
-      user: {...user[0], password: null}
+      user: {...rows[0], password: null}
     })
   })
 
-  fastify.get('/users/:id/recipes', async (request, reply) => {
-    
-    const rows = await recipeQuery.getRecipesForUser(fastify, request.params.id);
-    const recipesWithTags = []
-    for (recipe of rows) {
-      recipe.tag = await recipeQuery.getRecipeTags(fastify, recipe.id)
-      recipesWithTags.push(recipe)
+  fastify.get('/users/:id/recipes', async (req, reply) => {
+    const { params: { id } } = req
+    const { rows } = await recipeQuery.getRecipesForUser(id)
+    const recipes = []
+    for (const recipe of rows) {
+      const { rows } = await recipeQuery.getRecipeTags(recipe.id)
+      recipe.tag = rows
+      recipes.push(recipe)
     }
 
-    reply.send({recipes: recipesWithTags})
+    reply.send({ recipes })
   })
 }
 

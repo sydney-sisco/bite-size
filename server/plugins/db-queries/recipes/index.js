@@ -1,7 +1,7 @@
 const fastifyPlugin = require('fastify-plugin')
 
 async function recipeQueries(fastify) {
-  const { pg: { query, transact }, recipeQuery } = fastify
+  const { pg: { query, transact } } = fastify
 
   fastify.decorate('recipeQuery', {
     
@@ -83,33 +83,33 @@ async function recipeQueries(fastify) {
 
     getTags: async (id) => {
       return query(`
-        SELECT * FROM recipe_tags rt
-        LEFT JOIN tags t ON t.id = rt.tag
-        WHERE rt.recipe_id = $1;
+        SELECT * FROM recipe_tags
+        LEFT JOIN tags ON tags.id = recipe_tags.tag
+        WHERE recipe_tags.recipe_id = $1;
         `, [id]
       )
     },
 
-    getRecipeDetails: async (recipeId, userId) => {
-      const recipeDetails = {};
+    // getRecipeDetails: async (recipeId, userId) => {
+    //   const recipeDetails = {};
 
-      recipeDetails.recipe = await recipeQuery.getRecipe(recipeId);
-      recipeDetails.instructions = await recipeQuery.getInstructions(recipeId);
-      recipeDetails.ingredients = await recipeQuery.getIngredients(recipeId);
-      recipeDetails.emojiReactions = await recipeQuery.getUserEmojiReactions(recipeId);
-      recipeDetails.tags = await recipeQuery.getTags(recipeId);
+    //   const { rows: { recipe } } = await recipeQuery.getRecipe(recipeId);
+    //   recipeDetails.instructions = await recipeQuery.getInstructions(recipeId);
+    //   recipeDetails.ingredients = await recipeQuery.getIngredients(recipeId);
+    //   recipeDetails.emojiReactions = await recipeQuery.getUserEmojiReactions(recipeId);
+    //   recipeDetails.tags = await recipeQuery.getTags(recipeId);
 
-      if (userId) {
-        recipeDetails.recipe[0].userFavourite = await recipeQuery.hasUserFavourited(userId, recipeId);
+    //   if (userId) {
+    //     recipeDetails.recipe[0].userFavourite = await recipeQuery.hasUserFavourited(userId, recipeId);
 
-        const userEmojiReactions = await recipeQuery.getUserEmojiReactions(userId, recipeId);
-        recipeDetails.emojiReactions.map((emojiReaction, index) => {
-          emojiReaction.selected = userEmojiReactions[index].selected;
-          return emojiReaction;
-        })
-      }
-      return recipeDetails;
-    },
+    //     const userEmojiReactions = await recipeQuery.getUserEmojiReactions(userId, recipeId);
+    //     recipeDetails.emojiReactions.map((emojiReaction, index) => {
+    //       emojiReaction.selected = userEmojiReactions[index].selected;
+    //       return emojiReaction;
+    //     })
+    //   }
+    //   return recipeDetails;
+    // },
 
     hasUserFavourited: async (userId, recipeId) => {
       return query(`
@@ -118,7 +118,6 @@ async function recipeQueries(fastify) {
         AND recipe_id = $2;
         `, [userId, recipeId]
       )
-      //return rows.lenght !== 0;
     },
 
     favsForFeatured: async () => {
@@ -219,8 +218,8 @@ async function recipeQueries(fastify) {
       return { recipe: recipe[0], instructions, ingredients, recipeTags }
     },
 
-    editRecipe: async (editRecipe, recipeId) => {
-      let {
+    editRecipe: async (body, recipeId) => {
+      const {
         userId,
         title,
         difficultyId,
@@ -231,7 +230,7 @@ async function recipeQueries(fastify) {
         description,
         instructionSteps,
         ingredientList,
-      } = editRecipe
+      } = body
 
       const { rows: recipe } = await transact(async client => {
         return client.query(`
@@ -331,7 +330,6 @@ async function recipeQueries(fastify) {
         }
       })
 
-      // return { recipe: recipe[0], instructions, ingredients }
       return { recipe: recipe[0] }
     },
 

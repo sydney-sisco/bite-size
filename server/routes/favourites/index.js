@@ -1,26 +1,34 @@
 const favouritesRoutes = async (fastify) => {
-  fastify.get('/users/:user_id/favourites', async (req, reply) => {
-    const rows = await favouriteQuery.getUserFavourites(fastify, req.params.user_id);
-    const recipesWithTags = []
-    for (recipe of rows) {
-      recipe.tag = await getRecipeTags(fastify, recipe.id)
-      recipesWithTags.push(recipe)
+  const { favouriteQuery, recipeQuery } = fastify
+
+  fastify.get('/users/:userId/favourites', async (req, reply) => {
+    const { params: { userId} } = req
+    const { rows } = await favouriteQuery.getUserFavourites(userId)
+    const favourites = []
+
+    for (const recipe of rows) {
+      const { rows } = await recipeQuery.getTags(recipe.id)
+      recipe.tag = rows[0]
+      favourites.push(recipe)
     }
-    reply.send({favourites: recipesWithTags});
+
+    reply.send({ favourites })
   })
 
-  fastify.post('/users/:user_id/favourites', async (req, reply) => {
-    const { body } = req
-    console.log('post body', body)
-    await favouriteQuery.addUserFavourite(fastify, req.params.user_id, body.recipe_id)
+  fastify.post('/users/:userId/favourites', async (req, reply) => {
+    const { body: { recipe_id }, params: { userId } } = req
+
+    await favouriteQuery.addUserFavourite(userId, recipe_id)
+    // SHOULD NOT RETURN 204 As its a 'nothing' response. Always send 'something' response to catch errors 
     reply.code(204)
   })
 
-  fastify.delete('/users/:user_id/favourites/:recipe_id', async (req, reply) => {
-    const { body } = req
-    console.log('delete body', body)
-    const deleteFavourite = await favouriteQuery.deleteUserFvourite(fastify, req.params.user_id, req.params.recipe_id);
-    reply.send(deleteFavourite);
+  fastify.delete('/users/:userId/favourites/:recipeId', async (req, reply) => {
+    const { params: { userId, recipeId } } = req
+
+    const { rows } = await favouriteQuery.deleteUserFvourite(userId, recipeId)
+    
+    reply.send(rows)
   })
 
 }

@@ -93,16 +93,16 @@ async function recipeQueries(fastify) {
     // getRecipeDetails: async (recipeId, userId) => {
     //   const recipeDetails = {};
 
-    //   const { rows: { recipe } } = await recipeQuery.getRecipe(recipeId);
-    //   recipeDetails.instructions = await recipeQuery.getInstructions(recipeId);
-    //   recipeDetails.ingredients = await recipeQuery.getIngredients(recipeId);
-    //   recipeDetails.emojiReactions = await recipeQuery.getUserEmojiReactions(recipeId);
-    //   recipeDetails.tags = await recipeQuery.getTags(recipeId);
+    //   const { rows: { recipe } } = await this.getRecipe(recipeId);
+    //   recipeDetails.instructions = await this.getInstructions(recipeId);
+    //   recipeDetails.ingredients = await this.getIngredients(recipeId);
+    //   recipeDetails.emojiReactions = await this.getUserEmojiReactions(recipeId);
+    //   recipeDetails.tags = await this.getTags(recipeId);
 
     //   if (userId) {
-    //     recipeDetails.recipe[0].userFavourite = await recipeQuery.hasUserFavourited(userId, recipeId);
+    //     recipeDetails.recipe[0].userFavourite = await this.hasUserFavourited(userId, recipeId);
 
-    //     const userEmojiReactions = await recipeQuery.getUserEmojiReactions(userId, recipeId);
+    //     const userEmojiReactions = await this.getUserEmojiReactions(userId, recipeId);
     //     recipeDetails.emojiReactions.map((emojiReaction, index) => {
     //       emojiReaction.selected = userEmojiReactions[index].selected;
     //       return emojiReaction;

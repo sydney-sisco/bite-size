@@ -129,21 +129,12 @@
 
   let {
     recipe: [{
-      title,
-      description,
-      imageUrl,
-      difficulty,
       userFavourite,
-      favouriteCount,
-      duration,
-      servings
     }],
     emojiReactions,
-    ingredients,
-    instructions
  } = recipeDetails
 
-//  console.log('recipe deets:', recipeDetails);
+//  console.log('recipe deets:', emojiReactions);
 
   async function editRecipe() {
    mode = EDIT;
@@ -153,11 +144,11 @@
     mode = VIEW;
   } 
 
-  let loadingState = false;
+  // let loadingState = false;
   
   const handleSubmit = async (recipeObject, recipeId) => {
     //Create an if statement to make sure we have everything to make a recipe...
-    console.log('recipe object from edit form:', recipeObject);
+    // console.log('recipe object from edit form:', recipeObject);
     
     loadingState = true
 
@@ -213,7 +204,7 @@
         loadingState = false
 
         const recipeDetailsFromServer = await res.json()
-        console.log('recipe details from server after patch:', recipeDetailsFromServer);
+        // console.log('recipe details from server after patch:');
         
         recipeDetails = recipeDetailsFromServer;
         
@@ -242,7 +233,7 @@
   }  
 
   async function favouriteRecipe() {
-   console.log("fav recipe id is:", id)
+  //  console.log("fav recipe id is:", id)
     try {
       await fetch(`${$session.server}/users/${$session.user.id}/favourites`,
       {
@@ -262,7 +253,7 @@
   };
 
   async function unfavouriteRecipe() {
-   console.log("the unfav id is:", id)
+  //  console.log("the unfav id is:", id)
     try {
       await fetch(`${$session.server}/users/${$session.user.id}/favourites/${id}`,
       {

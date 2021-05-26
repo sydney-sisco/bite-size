@@ -36,7 +36,6 @@
 	let searchTerm = '';
 
 	const submitSearch = searchTerm => {
-		console.log('??', searchTerm);
 		goto(`/recipes?search=${searchTerm}`);
 	}
 

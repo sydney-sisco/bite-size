@@ -37,7 +37,7 @@ const usersRoute = async (fastify) => {
     const { rows } = await recipeQuery.getRecipesForUser(id)
     const recipes = []
     for (const recipe of rows) {
-      const { rows } = await recipeQuery.getRecipeTags(recipe.id)
+      const { rows } = await recipeQuery.getTags(recipe.id)
       recipe.tag = rows
       recipes.push(recipe)
     }

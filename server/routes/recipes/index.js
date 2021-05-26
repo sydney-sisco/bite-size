@@ -35,8 +35,8 @@ const recipesRoutes = async (fastify) => {
   fastify.patch('/recipes/:id', async (req, reply) => {
     const { body, params: { id } } = req
     await recipeQuery.editRecipe(body , id)
-    const { rows } = await recipeQuery.getRecipeDetails(id)
-    reply.send(rows)
+    const recipeDetails = await recipeQuery.getRecipeDetails(id)
+    reply.send(recipeDetails)
   })
 
   fastify.delete('/recipes/:id', async (req, reply) => {
@@ -55,7 +55,7 @@ const recipesRoutes = async (fastify) => {
     if (authorization === 'null') {
       reply.code(403)
     }
-    const token = auth.split(' ')[1]
+    const token = authorization.split(' ')[1]
     const decoded = fastify.jwt.verify(token)
 
     await emojiQuery.addReaction(JSON.parse(body).emoji_id, recipeId, decoded.id)
@@ -71,7 +71,7 @@ const recipesRoutes = async (fastify) => {
       reply.code(403)
     }
 
-    const token = auth.split(' ')[1]
+    const token = authorization.split(' ')[1]
     const decoded = fastify.jwt.verify(token)
 
     await emojiQuery.removeReaction(emojiId, recipeId, decoded.id)

@@ -4,20 +4,19 @@ async function recipeQueries(fastify) {
   const { pg: { query, transact } } = fastify
 
   fastify.decorate('recipeQuery', {
-    
-    getUserEmojiReactions: async (userId, recipeId) => {
-      return query(`
-        SELECT e.id,
-        CASE 
-          WHEN u.id IS NULL THEN 0
-          ELSE 1
-        END AS selected
-        FROM emojis e
-        LEFT JOIN user_emoji_reactions u ON e.id = u.emoji_id AND u.user_id = $1 AND u.recipe_id = $2
-        ORDER BY e.id;
-        `, [userId, recipeId]
-      )
-    },
+    // getUserEmojiReactions: async (userId, recipeId) => {
+    //   return query(`
+    //     SELECT e.id,
+    //     CASE 
+    //       WHEN u.id IS NULL THEN 0
+    //       ELSE 1
+    //     END AS selected
+    //     FROM emojis e
+    //     LEFT JOIN user_emoji_reactions u ON e.id = u.emoji_id AND u.user_id = $1 AND u.recipe_id = $2
+    //     ORDER BY e.id;
+    //     `, [userId, recipeId]
+    //   )
+    // },
 
     getEmojis: async (recipeId) => {
       return query(`
@@ -53,33 +52,33 @@ async function recipeQueries(fastify) {
       )
     },
 
-    getRecipe: async (id) => {
-      return query(`
-        SELECT r.*, d.name AS difficulty, COUNT(f.*) as favourite_count FROM recipes r
-        LEFT JOIN difficulties d ON d.id = r.difficulty_id
-        LEFT JOIN favourites f ON f.recipe_id = r.id
-        WHERE r.id=$1
-        GROUP BY r.id, d.name
-        `, [id]
-      )
-    },
+    // getRecipe: async (id) => {
+    //   return query(`
+    //     SELECT r.*, d.name AS difficulty, COUNT(f.*) as favourite_count FROM recipes
+    //     LEFT JOIN difficulties d ON d.id = r.difficulty_id
+    //     LEFT JOIN favourites f ON f.recipe_id = r.id
+    //     WHERE r.id=$1
+    //     GROUP BY r.id, d.name
+    //     `, [id]
+    //   )
+    // },
 
-    getInstructions: async (id) => {
-      return query(`
-        SELECT * FROM instructions
-        WHERE recipe_id = $1
-        ORDER BY step`, [id]
-      )
-    },
+    // getInstructions: async (id) => {
+    //   return query(`
+    //     SELECT * FROM instructions
+    //     WHERE recipe_id = $1
+    //     ORDER BY step`, [id]
+    //   )
+    // },
 
-    getIngredients: async (id) => {
-      return query(`
-        SELECT * FROM recipe_ingredients ri
-        LEFT JOIN ingredients i ON i.id = ri.ingredient_id
-        LEFT JOIN units_of_measure u ON u.id = ri.unit_of_measure_id
-        WHERE ri.recipe_id = $1;`, [id]
-      )
-    },
+    // getIngredients: async (id) => {
+    //   return query(`
+    //     SELECT * FROM recipe_ingredients ri
+    //     LEFT JOIN ingredients i ON i.id = ri.ingredient_id
+    //     LEFT JOIN units_of_measure u ON u.id = ri.unit_of_measure_id
+    //     WHERE ri.recipe_id = $1;`, [id]
+    //   )
+    // },
 
     getTags: async (id) => {
       return query(`
@@ -90,35 +89,92 @@ async function recipeQueries(fastify) {
       )
     },
 
-    // getRecipeDetails: async (recipeId, userId) => {
-    //   const recipeDetails = {};
+    getRecipeDetails: async (recipeId, userId) => {
 
-    //   const { rows: { recipe } } = await this.getRecipe(recipeId);
-    //   recipeDetails.instructions = await this.getInstructions(recipeId);
-    //   recipeDetails.ingredients = await this.getIngredients(recipeId);
-    //   recipeDetails.emojiReactions = await this.getUserEmojiReactions(recipeId);
-    //   recipeDetails.tags = await this.getTags(recipeId);
-
-    //   if (userId) {
-    //     recipeDetails.recipe[0].userFavourite = await this.hasUserFavourited(userId, recipeId);
-
-    //     const userEmojiReactions = await this.getUserEmojiReactions(userId, recipeId);
-    //     recipeDetails.emojiReactions.map((emojiReaction, index) => {
-    //       emojiReaction.selected = userEmojiReactions[index].selected;
-    //       return emojiReaction;
-    //     })
-    //   }
-    //   return recipeDetails;
-    // },
-
-    hasUserFavourited: async (userId, recipeId) => {
-      return query(`
-        SELECT * FROM favourites    
-        WHERE user_id = $1
-        AND recipe_id = $2;
-        `, [userId, recipeId]
+      const { rows: recipe } = await query(`
+        SELECT r.*, d.name AS difficulty, COUNT(f.*) as favourite_count FROM recipes r
+        LEFT JOIN difficulties d ON d.id = r.difficulty_id
+        LEFT JOIN favourites f ON f.recipe_id = r.id
+        WHERE r.id=$1
+        GROUP BY r.id, d.name
+        `, [recipeId]
       )
+
+      const { rows: instructions } = await query(`
+        SELECT * FROM instructions
+        WHERE recipe_id = $1
+        ORDER BY step`, [recipeId]
+      )
+
+      const { rows: ingredients } = await query(`
+        SELECT * FROM recipe_ingredients ri
+        LEFT JOIN ingredients i ON i.id = ri.ingredient_id
+        LEFT JOIN units_of_measure u ON u.id = ri.unit_of_measure_id
+        WHERE ri.recipe_id = $1;`, [recipeId]
+      )
+
+      const { rows: emojiReactions } = await query(`
+        SELECT e.*, count(u.*) AS count FROM emojis e
+        LEFT JOIN user_emoji_reactions u ON e.id = u.emoji_id
+          AND u.recipe_id = $1
+        GROUP BY e.id
+        ORDER BY e.id;`, [recipeId]
+      )
+
+      const { rows: tags } = await query(`
+        SELECT * FROM recipe_tags
+        LEFT JOIN tags ON tags.id = recipe_tags.tag
+        WHERE recipe_tags.recipe_id = $1;
+        `, [recipeId]
+      )
+
+      // let userEmojiReactions
+
+      if (userId) {
+        // recipeDetails.recipe[0].userFavourite = await this.hasUserFavourited(userId, recipeId);
+        // const userEmojiReactions = await this.getUserEmojiReactions(userId, recipeId);
+        const { rows: userFavourite } = await query(`
+          SELECT * FROM favourites    
+          WHERE user_id = $1
+          AND recipe_id = $2;
+          `, [userId, recipeId]
+        )
+        recipe[0].userFavourite = userFavourite
+
+        const { rows: userEmojiReactions } = await query(`
+          SELECT e.id,
+          CASE 
+            WHEN u.id IS NULL THEN 0
+            ELSE 1
+          END AS selected
+          FROM emojis e
+          LEFT JOIN user_emoji_reactions u ON e.id = u.emoji_id AND u.user_id = $1 AND u.recipe_id = $2
+          ORDER BY e.id;
+          `, [userId, recipeId]
+        )
+
+        emojiReactions.map((emojiReaction, index) => {
+          emojiReaction.selected = userEmojiReactions[index].selected;
+          return emojiReaction;
+        })
+      }
+      return {
+        recipe,
+        instructions,
+        ingredients,
+        emojiReactions,
+        tags,
+      };
     },
+
+    // hasUserFavourited: async (userId, recipeId) => {
+    //   return query(`
+    //     SELECT * FROM favourites    
+    //     WHERE user_id = $1
+    //     AND recipe_id = $2;
+    //     `, [userId, recipeId]
+    //   )
+    // },
 
     favsForFeatured: async () => {
       return query(`

@@ -10,7 +10,7 @@
 
   const removeReaction = async emojiId => {
     try {
-      const res = await fetch(
+      await fetch(
         `${$session.server}/recipes/${recipeId}/emojis/${emojiId}`,
         {
           method: 'DELETE',
@@ -26,7 +26,7 @@
 
   const addReaction = async emojiId => {
     try {
-      const res = await fetch(
+      await fetch(
         `${$session.server}/recipes/${recipeId}/emojis`,
         {
           method: 'POST',

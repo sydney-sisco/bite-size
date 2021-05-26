@@ -100,8 +100,8 @@
 				</div>
 				<div class="nav-right">
 					{#if $session.user}
-					<li><a>Logged in as {$session.user.username}</a></li>
-					<li><a>Log out</a></li>
+					<li><a href="/">Logged in as {$session.user.username}</a></li>
+					<li><a href="/">Log out</a></li>
 					{:else}
 					<li><a rel=prefetch aria-current="{$page.path === '/register' ? 'page' : undefined}" href="register">Register</a></li>
 					<li><a rel=prefetch aria-current="{$page.path === '/login' ? 'page' : undefined}" href="login">Login</a></li>

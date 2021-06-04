@@ -123,8 +123,6 @@
 <script>
   export let recipe;
   let tags = recipe.tag;
-
-  const difficultyNames = ["Beginner", "Intermediate", "Advanced"];
 </script>
 
   <div class='card'>
